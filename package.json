@@ -1,0 +1,45 @@
+{
+  "name": "@imbricate/origin-file-system",
+  "packageManager": "yarn@4.1.1",
+  "version": "1.0.1",
+  "description": "File System Origin Implementation for Imbricate",
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "build": "tsc --project typescript/tsconfig.build.json",
+    "license": "sdb license",
+    "release": "yarn lint && yarn test && yarn license && yarn build",
+    "publish-dry-run": "yarn release && sdb --only publish-dry-run",
+    "publish": "yarn release && sdb --only publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Imbricate/Imbricate-Origin-File-System.git"
+  },
+  "keywords": [
+    "API"
+  ],
+  "author": "WMXPY",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Imbricate/Imbricate-Origin-File-System/issues"
+  },
+  "homepage": "https://imbricate.io",
+  "dependencies": {
+    "@sudoo/io": "^1.8.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7",
+    "@babel/preset-env": "^7",
+    "@babel/preset-typescript": "^7",
+    "@types/jest": "^29",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
+    "babel-jest": "^29",
+    "eslint": "^8",
+    "jest": "^29",
+    "ts-node": "^10",
+    "typescript": "^5"
+  }
+}
