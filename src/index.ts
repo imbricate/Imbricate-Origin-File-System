@@ -5,4 +5,7 @@
  */
 
 export * from "./collection";
+export * from "./definition/collection";
+export * from "./definition/origin";
 export * from "./origin";
+
