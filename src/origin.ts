@@ -4,9 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, ImbricateOriginMetadata, ImbricateScriptMetadata, SandboxFeature, executeSandboxScript } from "@imbricate/core";
-import { SandboxExecuteConfig } from "@imbricate/core/sandbox/definition/config";
-import { SandboxEnvironment } from "@imbricate/core/sandbox/definition/environment";
+import { IImbricateOrigin, IImbricateOriginCollection, ImbricateOriginMetadata, ImbricateScriptMetadata, SandboxEnvironment, SandboxExecuteConfig, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { MarkedResult } from "@sudoo/marked";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
