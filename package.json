@@ -27,12 +27,14 @@
   },
   "homepage": "https://imbricate.io",
   "dependencies": {
-    "@sudoo/io": "^1.8.0"
+    "@sudoo/io": "^1.8.0",
+    "@sudoo/uuid": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7",
     "@babel/preset-env": "^7",
     "@babel/preset-typescript": "^7",
+    "@imbricate/core": "^1.0.1",
     "@types/jest": "^29",
     "@typescript-eslint/eslint-plugin": "^7",
     "@typescript-eslint/parser": "^7",
