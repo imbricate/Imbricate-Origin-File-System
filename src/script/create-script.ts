@@ -4,7 +4,7 @@
  * @description Create Script
  */
 
-import { ImbricateScriptMetadata } from "@imbricate/core";
+import { ImbricateScriptSnapshot } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
@@ -13,7 +13,7 @@ import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from ".
 export const fileSystemOriginCreateScript = async (
     basePath: string,
     scriptName: string,
-): Promise<ImbricateScriptMetadata> => {
+): Promise<ImbricateScriptSnapshot> => {
 
     await ensureScriptFolders(basePath);
 
