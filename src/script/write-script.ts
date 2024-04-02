@@ -1,24 +1,23 @@
 /**
  * @author WMXPY
  * @namespace FileSystem_Script
- * @description Get Script
+ * @description Write Script
  */
 
-import { readTextFile } from "@sudoo/io";
+import { writeTextFile } from "@sudoo/io";
 import { getScriptsFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixScriptFileName } from "./common";
 
-export const fileSystemOriginGetScript = async (
+export const fileSystemOriginWriteScript = async (
     basePath: string,
     identifier: string,
-): Promise<string> => {
+    content: string,
+): Promise<void> => {
 
     await ensureScriptFolders(basePath);
 
     const scriptFileName: string = fixScriptFileName(identifier);
     const scriptFolderPath: string = getScriptsFolderPath(basePath, scriptFileName);
 
-    const scriptContent = await readTextFile(scriptFolderPath);
-
-    return scriptContent;
+    await writeTextFile(scriptFolderPath, content);
 };

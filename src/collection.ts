@@ -4,12 +4,11 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricateOriginCollectionListPagesResponse, ImbricateSearchSnippet } from "@imbricate/core";
+import { IImbricateOriginCollection, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
 import { attemptMarkDir, directoryFiles, isFolder, pathExists, readTextFile, removeFile, writeTextFile } from "@sudoo/io";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
-import { executeCommand } from "./util/execute";
 import { getCollectionFolderPath, joinCollectionFolderPath } from "./util/path-joiner";
 
 const metadataFolderName: string = ".metadata";
@@ -64,7 +63,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         throw new Error("Method not implemented.");
     }
 
-    public async listPages(): Promise<ImbricateOriginCollectionListPagesResponse[]> {
+    public async listPages(): Promise<ImbricatePageSnapshot[]> {
 
         await this._ensureCollectionFolder();
 
@@ -97,7 +96,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     public async createPage(
         title: string,
         initialContent: string = "",
-    ): Promise<ImbricateOriginCollectionListPagesResponse> {
+    ): Promise<ImbricatePageSnapshot> {
 
         await this._ensureCollectionFolder();
         const uuid: string = UUIDVersion1.generateString();
@@ -148,19 +147,6 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         await removeFile(metaFilePath);
     }
 
-    public async openPage(identifier: string): Promise<void> {
-
-        await this._ensureCollectionFolder();
-
-        const targetFilePath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-            this._fixFileNameFromIdentifier(identifier),
-        );
-
-        await this._openEditor(targetFilePath);
-    }
-
     public async readPage(identifier: string): Promise<string> {
 
         await this._ensureCollectionFolder();
@@ -174,20 +160,33 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await readTextFile(targetFilePath);
     }
 
+    public async writePage(identifier: string, content: string): Promise<void> {
+
+        await this._ensureCollectionFolder();
+
+        const targetFilePath = joinCollectionFolderPath(
+            this._basePath,
+            this._collectionName,
+            this._fixFileNameFromIdentifier(identifier),
+        );
+
+        await writeTextFile(targetFilePath, content);
+    }
+
     public async hasPage(title: string): Promise<boolean> {
 
-        const pages: ImbricateOriginCollectionListPagesResponse[] = await this.listPages();
+        const pages: ImbricatePageSnapshot[] = await this.listPages();
 
-        return pages.some((page: ImbricateOriginCollectionListPagesResponse) => {
+        return pages.some((page: ImbricatePageSnapshot) => {
             return page.title === title;
         });
     }
 
     public async searchPages(
         keyword: string,
-    ): Promise<Array<ImbricateSearchSnippet<IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE>>> {
+    ): Promise<ImbricatePageSearchSnippet[]> {
 
-        const pages: ImbricateOriginCollectionListPagesResponse[] = await this.listPages();
+        const pages: ImbricatePageSnapshot[] = await this.listPages();
 
         const snippets: Array<ImbricateSearchSnippet<IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE>> = [];
 
@@ -316,16 +315,6 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         );
 
         await writeTextFile(targetFilePath, content);
-    }
-
-    private async _openEditor(path: string): Promise<string> {
-
-        const command: string = this._payloads.startEditorCommand
-            .replace("{path}", `"${path}"`);
-
-        const output = await executeCommand(command);
-
-        return output;
     }
 
     private _fixMetaFileName(fileName: string, uuid: string): string {

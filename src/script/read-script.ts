@@ -1,18 +1,16 @@
 /**
  * @author WMXPY
  * @namespace FileSystem_Script
- * @description Open Script
+ * @description Read Script
  */
 
-import { FileSystemOriginPayload } from "../definition/origin";
-import { executeCommand } from "../util/execute";
+import { readTextFile } from "@sudoo/io";
 import { getScriptsFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixScriptFileName } from "./common";
 
-export const fileSystemOriginOpenScript = async (
+export const fileSystemOriginReadScript = async (
     basePath: string,
     identifier: string,
-    payload: FileSystemOriginPayload,
 ): Promise<string> => {
 
     await ensureScriptFolders(basePath);
@@ -20,10 +18,7 @@ export const fileSystemOriginOpenScript = async (
     const scriptFileName: string = fixScriptFileName(identifier);
     const scriptFolderPath: string = getScriptsFolderPath(basePath, scriptFileName);
 
-    const command: string = payload.startEditorCommand
-        .replace("{path}", `"${scriptFolderPath}"`);
+    const scriptContent = await readTextFile(scriptFolderPath);
 
-    const output = await executeCommand(command);
-
-    return output;
+    return scriptContent;
 };

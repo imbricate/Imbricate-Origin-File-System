@@ -7,5 +7,4 @@
 export type FileSystemOriginPayload = {
 
     readonly basePath: string;
-    readonly startEditorCommand: string;
 };

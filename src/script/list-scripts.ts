@@ -4,14 +4,14 @@
  * @description List Scripts
  */
 
-import { ImbricateScriptMetadata } from "@imbricate/core";
+import { ImbricateScriptSnapshot } from "@imbricate/core";
 import { directoryFiles } from "@sudoo/io";
 import { getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { SCRIPT_META_FILE_EXTENSION, ensureScriptFolders } from "./common";
 
 export const fileSystemOriginListScripts = async (
     basePath: string,
-): Promise<ImbricateScriptMetadata[]> => {
+): Promise<ImbricateScriptSnapshot[]> => {
 
     await ensureScriptFolders(basePath);
 

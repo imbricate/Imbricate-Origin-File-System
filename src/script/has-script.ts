@@ -4,7 +4,7 @@
  * @description Has Script
  */
 
-import { ImbricateScriptMetadata } from "@imbricate/core";
+import { ImbricateScriptSnapshot } from "@imbricate/core";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginHasScript = async (
@@ -12,8 +12,11 @@ export const fileSystemOriginHasScript = async (
     scriptName: string,
 ): Promise<boolean> => {
 
-    const scriptList: ImbricateScriptMetadata[] =
+    const scriptList: ImbricateScriptSnapshot[] =
         await fileSystemOriginListScripts(basePath);
 
-    return scriptList.some((script: ImbricateScriptMetadata) => script.scriptName === scriptName);
+    return scriptList.some((script: ImbricateScriptSnapshot) => {
+
+        return script.scriptName === scriptName;
+    });
 };
