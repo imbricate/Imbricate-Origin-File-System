@@ -4,18 +4,15 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, ImbricateOriginMetadata, ImbricateScriptSnapshot, SandboxEnvironment, SandboxExecuteConfig, SandboxFeature, executeSandboxScript } from "@imbricate/core";
-import { MarkedResult } from "@sudoo/marked";
+import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptSnapshot } from "@imbricate/core";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
-import { createFileSystemOriginExecuteFeature } from "./execute/feature";
 import { fileSystemOriginCreateScript } from "./script/create-script";
+import { fileSystemOriginGetScript } from "./script/get-script";
 import { fileSystemOriginHasScript } from "./script/has-script";
 import { fileSystemOriginListScripts } from "./script/list-scripts";
-import { fileSystemOriginReadScript } from "./script/read-script";
 import { fileSystemOriginRemoveScript } from "./script/remove-script";
-import { fileSystemOriginWriteScript } from "./script/write-script";
 import { createOrGetFile, putFile } from "./util/io";
 import { joinCollectionMetaFilePath } from "./util/path-joiner";
 
@@ -143,20 +140,12 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         );
     }
 
-    public async readScript(scriptIdentifier: string): Promise<string | null> {
+    public async getScript(scriptIdentifier: string): Promise<IImbricateScript | null> {
 
-        return await fileSystemOriginReadScript(
+        return await fileSystemOriginGetScript(
             this._basePath,
             scriptIdentifier,
-        );
-    }
-
-    public async writeScript(identifier: string, content: string): Promise<void> {
-
-        return await fileSystemOriginWriteScript(
-            this._basePath,
-            identifier,
-            content,
+            this,
         );
     }
 
@@ -176,34 +165,6 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
             this._basePath,
             scriptIdentifier,
             scriptName,
-        );
-    }
-
-    public async executeScript(
-        scriptIdentifier: string,
-        config: SandboxExecuteConfig,
-    ): Promise<MarkedResult | null> {
-
-        const script: string | null = await this.readScript(scriptIdentifier);
-
-        if (!script) {
-            return null;
-        }
-
-        const features: SandboxFeature[] =
-            createFileSystemOriginExecuteFeature(this);
-
-        const environment: SandboxEnvironment = {
-            origin: {
-                type: this.metadata.type,
-            },
-        };
-
-        return await executeSandboxScript(
-            script,
-            features,
-            environment,
-            config,
         );
     }
 

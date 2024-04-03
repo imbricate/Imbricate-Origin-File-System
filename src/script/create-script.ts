@@ -9,6 +9,7 @@ import { writeTextFile } from "@sudoo/io";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
+import { FileSystemScriptMetadata } from "./definition";
 
 export const fileSystemOriginCreateScript = async (
     basePath: string,
@@ -18,7 +19,7 @@ export const fileSystemOriginCreateScript = async (
     await ensureScriptFolders(basePath);
 
     const uuid: string = UUIDVersion1.generateString();
-    const currentTime: number = new Date().getTime();
+    const currentTime: Date = new Date();
 
     const fileName: string = fixMetaScriptFileName(scriptName, uuid);
     const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
@@ -26,12 +27,19 @@ export const fileSystemOriginCreateScript = async (
         fileName,
     );
 
+    const metaData: FileSystemScriptMetadata = {
+
+        scriptName,
+        identifier: uuid,
+        createdAt: currentTime,
+        updatedAt: currentTime,
+    };
+
     await writeTextFile(scriptMetadataFilePath,
         JSON.stringify({
-            scriptName,
-            identifier: uuid,
-            createdAt: currentTime,
-            updatedAt: currentTime,
+            ...metaData,
+            createdAt: metaData.createdAt.getTime(),
+            updatedAt: metaData.updatedAt.getTime(),
         }, null, 2),
     );
 
