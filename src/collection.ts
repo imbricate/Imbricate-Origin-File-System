@@ -4,14 +4,18 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
-import { attemptMarkDir, directoryFiles, isFolder, pathExists, readTextFile, removeFile, writeTextFile } from "@sudoo/io";
+import { IImbricateOriginCollection, IImbricatePage, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
+import { readTextFile, removeFile, writeTextFile } from "@sudoo/io";
 import { UUIDVersion1 } from "@sudoo/uuid";
+import { ensureCollectionFolder } from "./collection/ensure-collection-folder";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
-import { getCollectionFolderPath, joinCollectionFolderPath } from "./util/path-joiner";
-
-const metadataFolderName: string = ".metadata";
+import { fixPageMetadataFileName } from "./page/common";
+import { FileSystemPageMetadata, pageMetadataFolderName } from "./page/definition";
+import { fileSystemListPages } from "./page/list-page";
+import { FileSystemImbricatePage } from "./page/page";
+import { fileSystemReadPageMetadata } from "./page/read-metadata";
+import { joinCollectionFolderPath } from "./util/path-joiner";
 
 export class FileSystemImbricateCollection implements IImbricateOriginCollection {
 
@@ -65,32 +69,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     public async listPages(): Promise<ImbricatePageSnapshot[]> {
 
-        await this._ensureCollectionFolder();
-
-        const collectionFolderPath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-            metadataFolderName,
-        );
-
-        const files: string[] = await directoryFiles(collectionFolderPath);
-
-        return files
-            .filter((file: string) => file.endsWith(".meta.json"))
-            .filter((file: string) => !file.startsWith("."))
-            .map((file: string) => {
-                return file.slice(0, file.length - ".meta.json".length);
-            })
-            .map((file: string) => {
-
-                const uuid: string = file.split(".").pop() as string;
-                const title: string = file.slice(0, file.length - uuid.length - 1);
-
-                return {
-                    identifier: uuid,
-                    title,
-                };
-            });
+        return await fileSystemListPages(this._basePath, this._collectionName);
     }
 
     public async createPage(
@@ -109,7 +88,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         const currentTime: number = new Date().getTime();
 
         await this._putFileToCollectionMetaFolder(
-            this._fixMetaFileName(title, uuid),
+            fixPageMetadataFileName(title, uuid),
             JSON.stringify({
                 title,
                 identifier: uuid,
@@ -134,12 +113,12 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
             this._fixFileNameFromIdentifier(identifier),
         );
 
-        const metaFileName: string = this._fixMetaFileName(title, identifier);
+        const metaFileName: string = fixPageMetadataFileName(title, identifier);
 
         const metaFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionName,
-            metadataFolderName,
+            pageMetadataFolderName,
             metaFileName,
         );
 
@@ -147,30 +126,25 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         await removeFile(metaFilePath);
     }
 
-    public async readPage(identifier: string): Promise<string> {
+    public async getPage(identifier: string): Promise<IImbricatePage | null> {
 
         await this._ensureCollectionFolder();
 
-        const targetFilePath = joinCollectionFolderPath(
+        const metadata: FileSystemPageMetadata | null = await fileSystemReadPageMetadata(
             this._basePath,
             this._collectionName,
-            this._fixFileNameFromIdentifier(identifier),
+            identifier,
         );
 
-        return await readTextFile(targetFilePath);
-    }
+        if (!metadata) {
+            return null;
+        }
 
-    public async writePage(identifier: string, content: string): Promise<void> {
-
-        await this._ensureCollectionFolder();
-
-        const targetFilePath = joinCollectionFolderPath(
+        return FileSystemImbricatePage.create(
             this._basePath,
             this._collectionName,
-            this._fixFileNameFromIdentifier(identifier),
+            metadata,
         );
-
-        await writeTextFile(targetFilePath, content);
     }
 
     public async hasPage(title: string): Promise<boolean> {
@@ -249,43 +223,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     private async _ensureCollectionFolder(): Promise<void> {
 
-        const collectionPath: string = getCollectionFolderPath(this._basePath);
-
-        const collectionPathExistsResult: boolean = await pathExists(collectionPath);
-        if (!collectionPathExistsResult) {
-            await attemptMarkDir(collectionPath);
-        }
-
-        const collectionFolderPath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-        );
-
-        const pathExistsResult: boolean = await pathExists(collectionFolderPath);
-        if (!pathExistsResult) {
-            await attemptMarkDir(collectionFolderPath);
-        }
-
-        const metaFolderPath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-            metadataFolderName,
-        );
-
-        const metaPathExistsResult: boolean = await pathExists(metaFolderPath);
-        if (!metaPathExistsResult) {
-            await attemptMarkDir(metaFolderPath);
-        }
-
-        const isDirectory: boolean = await isFolder(collectionFolderPath);
-        if (!isDirectory) {
-            throw new Error("Collection folder is not a directory");
-        }
-
-        const isMetaDirectory: boolean = await isFolder(metaFolderPath);
-        if (!isMetaDirectory) {
-            throw new Error("Collection folder is not a directory");
-        }
+        await ensureCollectionFolder(this._basePath, this._collectionName);
     }
 
     private async _putFileToCollectionFolder(
@@ -310,24 +248,11 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         const targetFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionName,
-            metadataFolderName,
+            pageMetadataFolderName,
             fileName,
         );
 
         await writeTextFile(targetFilePath, content);
-    }
-
-    private _fixMetaFileName(fileName: string, uuid: string): string {
-
-        let fixedFileName: string = fileName.trim();
-
-        const metaJSONExtension: string = ".meta.json";
-
-        if (!fixedFileName.endsWith(metaJSONExtension)) {
-            fixedFileName = `${fixedFileName}.${uuid}${metaJSONExtension}`;
-        }
-
-        return fixedFileName;
     }
 
     private _fixFileNameFromIdentifier(identifier: string): string {
