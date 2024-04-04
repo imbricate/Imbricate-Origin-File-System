@@ -60,13 +60,6 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return this._description;
     }
 
-    public async findScripts(...onActivities: string[]): Promise<void> {
-
-        console.log(onActivities);
-
-        throw new Error("Method not implemented.");
-    }
-
     public async listPages(): Promise<ImbricatePageSnapshot[]> {
 
         return await fileSystemListPages(this._basePath, this._collectionName);
