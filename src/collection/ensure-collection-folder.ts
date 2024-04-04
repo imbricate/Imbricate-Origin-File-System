@@ -14,6 +14,8 @@ export const ensureCollectionFolder = async (
     collectionName: string,
 ): Promise<void> => {
 
+    await attemptMarkDir(basePath);
+
     const collectionPath: string = getCollectionFolderPath(basePath);
 
     const collectionPathExistsResult: boolean = await pathExists(collectionPath);

@@ -12,6 +12,8 @@ export const SCRIPT_FILE_EXTENSION: string = ".js";
 
 export const ensureScriptFolders = async (basePath: string): Promise<void> => {
 
+    await attemptMarkDir(basePath);
+
     const scriptPath: string = getScriptsFolderPath(basePath);
 
     await attemptMarkDir(scriptPath);
