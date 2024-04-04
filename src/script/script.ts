@@ -7,10 +7,10 @@
 import { IImbricateOrigin, IImbricateScript, SandboxEnvironment, SandboxExecuteConfig, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
-import { getScriptsFolderPath } from "../util/path-joiner";
-import { ensureScriptFolders, fixScriptFileName } from "./common";
-import { FileSystemScriptMetadata } from "./definition";
 import { createFileSystemOriginExecuteFeature } from "../execute/feature";
+import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
+import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
+import { FileSystemScriptMetadata } from "./definition";
 
 export class FileSystemImbricateScript implements IImbricateScript {
 
@@ -73,8 +73,26 @@ export class FileSystemImbricateScript implements IImbricateScript {
         await writeTextFile(scriptFolderPath, script);
     }
 
-    public async refreshUpdatedAt(_updatedAt: Date): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
+
+        await ensureScriptFolders(this._basePath);
+
+        const fileName: string = fixMetaScriptFileName(this.scriptName, this.identifier);
+        const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
+            this._basePath,
+            fileName,
+        );
+
+        const newMetadata: FileSystemScriptMetadata = {
+            ...this._metadata,
+            updatedAt,
+        };
+
+        await writeTextFile(scriptMetadataFilePath, JSON.stringify({
+            ...newMetadata,
+            createdAt: newMetadata.createdAt.getTime(),
+            updatedAt: newMetadata.updatedAt.getTime(),
+        }, null, 2));
     }
 
     public async execute(config: SandboxExecuteConfig): Promise<MarkedResult> {

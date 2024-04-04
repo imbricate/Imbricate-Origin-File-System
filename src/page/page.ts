@@ -8,7 +8,8 @@ import { IImbricatePage } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
-import { FileSystemPageMetadata } from "./definition";
+import { fixPageMetadataFileName } from "./common";
+import { FileSystemPageMetadata, pageMetadataFolderName } from "./definition";
 
 export class FileSystemImbricatePage implements IImbricatePage {
 
@@ -81,8 +82,31 @@ export class FileSystemImbricatePage implements IImbricatePage {
         await writeTextFile(targetFilePath, content);
     }
 
-    public async refreshUpdatedAt(_updatedAt: Date): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
+
+        await ensureCollectionFolder(
+            this._basePath,
+            this._collectionName,
+        );
+
+        const updatedMetadata: FileSystemPageMetadata = {
+            ...this._metadata,
+            updatedAt,
+        };
+
+        const fileName: string = fixPageMetadataFileName(this.title, this.identifier);
+        const metadataFilePath = joinCollectionFolderPath(
+            this._basePath,
+            this._collectionName,
+            pageMetadataFolderName,
+            fileName,
+        );
+
+        await writeTextFile(metadataFilePath, JSON.stringify({
+            ...updatedMetadata,
+            createdAt: updatedMetadata.createdAt.getTime(),
+            updatedAt: updatedMetadata.updatedAt.getTime(),
+        }, null, 2));
     }
 
     private _fixFileNameFromIdentifier(identifier: string): string {
