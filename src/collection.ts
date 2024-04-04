@@ -75,7 +75,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     public async createPage(
         title: string,
         initialContent: string = "",
-    ): Promise<ImbricatePageSnapshot> {
+    ): Promise<IImbricatePage> {
 
         await this._ensureCollectionFolder();
         const uuid: string = UUIDVersion1.generateString();
@@ -85,22 +85,29 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
             initialContent,
         );
 
-        const currentTime: number = new Date().getTime();
+        const currentTime: Date = new Date();
+
+        const metadata: FileSystemPageMetadata = {
+            title,
+            identifier: uuid,
+            createdAt: currentTime,
+            updatedAt: currentTime,
+        };
 
         await this._putFileToCollectionMetaFolder(
             fixPageMetadataFileName(title, uuid),
             JSON.stringify({
-                title,
-                identifier: uuid,
-                createdAt: currentTime,
-                updatedAt: currentTime,
+                ...metadata,
+                createdAt: metadata.createdAt.getTime(),
+                updatedAt: metadata.updatedAt.getTime(),
             }, null, 2),
         );
 
-        return {
-            title,
-            identifier: uuid,
-        };
+        return FileSystemImbricatePage.create(
+            this._basePath,
+            this._collectionName,
+            metadata,
+        );
     }
 
     public async deletePage(identifier: string, title: string): Promise<void> {

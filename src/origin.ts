@@ -124,10 +124,11 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         throw new Error("Method not implemented.");
     }
 
-    public async createScript(scriptName: string): Promise<ImbricateScriptSnapshot> {
+    public async createScript(scriptName: string): Promise<IImbricateScript> {
 
         return await fileSystemOriginCreateScript(
             this._basePath,
+            this,
             scriptName,
         );
     }

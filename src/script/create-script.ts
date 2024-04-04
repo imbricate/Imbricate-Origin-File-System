@@ -4,17 +4,19 @@
  * @description Create Script
  */
 
-import { ImbricateScriptSnapshot } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 import { FileSystemScriptMetadata } from "./definition";
+import { FileSystemImbricateScript } from "./script";
 
 export const fileSystemOriginCreateScript = async (
     basePath: string,
+    origin: IImbricateOrigin,
     scriptName: string,
-): Promise<ImbricateScriptSnapshot> => {
+): Promise<IImbricateScript> => {
 
     await ensureScriptFolders(basePath);
 
@@ -48,8 +50,9 @@ export const fileSystemOriginCreateScript = async (
 
     await writeTextFile(scriptFolderPath, "");
 
-    return {
-        scriptName,
-        identifier: uuid,
-    };
+    return FileSystemImbricateScript.create(
+        basePath,
+        origin,
+        metaData,
+    );
 };
