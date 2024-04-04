@@ -119,9 +119,23 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         });
     }
 
-    public async removeCollection(): Promise<void> {
+    public async deleteCollection(collectionName: string): Promise<void> {
 
-        throw new Error("Method not implemented.");
+        const collectionsMetaData: FileSystemCollectionMetadata =
+            await this._getCollectionsMetaData();
+
+        const newCollection: FileSystemCollectionMetadataCollection[] =
+            collectionsMetaData.collections.filter((
+                collection: FileSystemCollectionMetadataCollection,
+            ) => {
+                return collection.collectionName !== collectionName;
+            });
+
+        const newMetaData: FileSystemCollectionMetadata = {
+            collections: newCollection,
+        };
+
+        await this._putCollectionsMetaData(newMetaData);
     }
 
     public async createScript(scriptName: string): Promise<IImbricateScript> {

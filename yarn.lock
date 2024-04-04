@@ -1531,9 +1531,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@imbricate/core@npm:1.4.0"
+"@imbricate/core@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@imbricate/core@npm:1.4.1"
   dependencies:
     "@sudoo/marked": "npm:^3.21.4"
     "@sudoo/marked-mixin-date": "npm:^1.0.0"
@@ -1541,7 +1541,7 @@ __metadata:
     "@sudoo/marked-mixin-math": "npm:^1.4.0"
     "@sudoo/marked-mixin-object": "npm:^1.3.0"
     "@sudoo/marked-mixin-parse": "npm:^1.0.0"
-  checksum: 10c0/b1d4dfa36e905652ca19bda625a5a13cccfb6af17d4317528893613da249d4b08244b151e01e81565fe9c32406c27125c407ba9c3be979d1831d424950d27b46
+  checksum: 10c0/c9358458202a70bec2c47bb433db7fb0e9fe37f8f532e08c7f51a0425aa2b00caf88c53ac8cc5fc48f424e8d88918e651d1d430ea651eebe2c252a06b1cdd05d
   languageName: node
   linkType: hard
 
@@ -1552,7 +1552,7 @@ __metadata:
     "@babel/core": "npm:^7"
     "@babel/preset-env": "npm:^7"
     "@babel/preset-typescript": "npm:^7"
-    "@imbricate/core": "npm:^1.4.0"
+    "@imbricate/core": "npm:^1.4.1"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29"
