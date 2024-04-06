@@ -8,6 +8,7 @@ import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, Imbrica
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
+import { fileSystemOriginRenameCollection } from "./origin/rename-collection";
 import { fileSystemOriginCreateScript } from "./script/create-script";
 import { fileSystemOriginGetScript } from "./script/get-script";
 import { fileSystemOriginHasScript } from "./script/has-script";
@@ -57,6 +58,15 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         };
 
         await this._putCollectionsMetaData(newMetaData);
+    }
+
+    public async renameCollection(collectionName: string, newCollectionName: string): Promise<void> {
+
+        return await fileSystemOriginRenameCollection(
+            this._basePath,
+            collectionName,
+            newCollectionName,
+        );
     }
 
     public async hasCollection(collectionName: string): Promise<boolean> {
