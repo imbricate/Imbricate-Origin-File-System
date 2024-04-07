@@ -16,6 +16,7 @@ import { fileSystemOriginListScripts } from "./script/list-scripts";
 import { fileSystemOriginPutScript } from "./script/put-script";
 import { fileSystemOriginRemoveScript } from "./script/remove-script";
 import { fileSystemOriginRenameScript } from "./script/rename-script";
+import { fileSystemOriginSearchScripts } from "./script/search-scripts";
 import { createOrGetFile, putFile } from "./util/io";
 import { joinCollectionMetaFilePath } from "./util/path-joiner";
 
@@ -222,9 +223,12 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         );
     }
 
-    public async searchScripts(_keyword: string): Promise<ImbricateScriptSearchSnippet[]> {
+    public async searchScripts(keyword: string): Promise<ImbricateScriptSearchSnippet[]> {
 
-        return [];
+        return await fileSystemOriginSearchScripts(
+            this._basePath,
+            keyword,
+        );
     }
 
     private async _getCollectionsMetaData(): Promise<FileSystemCollectionMetadata> {

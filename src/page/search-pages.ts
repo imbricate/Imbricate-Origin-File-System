@@ -4,7 +4,7 @@
  * @description Search Pages
  */
 
-import { IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
+import { IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
 import { getPageContent } from "./common";
 import { fileSystemListPages } from "./list-page";
 
@@ -19,7 +19,7 @@ export const fileSystemSearchPages = async (
         collectionName,
     );
 
-    const snippets: Array<ImbricateSearchSnippet<IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE>> = [];
+    const snippets: Array<ImbricatePageSearchSnippet> = [];
 
     for (const page of pages) {
 
@@ -45,27 +45,28 @@ export const fileSystemSearchPages = async (
             page.identifier,
         );
 
-        const regexIndex: number = content.search(new RegExp(keyword, "i"));
+        const contentInLines: string[] = content.split("\n");
 
-        if (regexIndex === -1) {
-            continue;
+        lines: for (const line of contentInLines) {
+
+            const lineIndex: number = line.search(new RegExp(keyword, "i"));
+
+            if (lineIndex !== -1) {
+
+                snippets.push({
+                    type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
+
+                    scope: collectionName,
+                    identifier: page.identifier,
+                    headline: page.title,
+
+                    source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
+                    snippet: line,
+                });
+
+                break lines;
+            }
         }
-
-        const snippetAroundKeyword: string = content.slice(
-            Math.max(0, regexIndex - 10),
-            Math.min(content.length, regexIndex + keyword.length + 10),
-        );
-
-        snippets.push({
-            type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
-
-            scope: collectionName,
-            identifier: page.identifier,
-            headline: page.title,
-
-            source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
-            snippet: snippetAroundKeyword,
-        });
     }
 
     return snippets;
