@@ -7,8 +7,9 @@
 import { ImbricatePageSnapshot } from "@imbricate/core";
 import { moveFile, readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
+import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixPageMetadataFileName } from "./common";
-import { FileSystemPageMetadata } from "./definition";
+import { FileSystemPageMetadata, pageMetadataFolderName } from "./definition";
 import { fileSystemListPages } from "./list-page";
 
 export const fileSystemRetitlePage = async (
@@ -40,9 +41,23 @@ export const fileSystemRetitlePage = async (
             const oldMetaFile: string = fixPageMetadataFileName(page.title, identifier);
             const newMetaFile: string = fixPageMetadataFileName(newTitle, identifier);
 
-            await moveFile(oldMetaFile, newMetaFile);
+            const oldMetaFilePath: string = joinCollectionFolderPath(
+                basePath,
+                collectionName,
+                pageMetadataFolderName,
+                oldMetaFile,
+            );
 
-            const rawMetadata: string = await readTextFile(newMetaFile);
+            const newMetaFilePath: string = joinCollectionFolderPath(
+                basePath,
+                collectionName,
+                pageMetadataFolderName,
+                newMetaFile,
+            );
+
+            await moveFile(oldMetaFilePath, newMetaFilePath);
+
+            const rawMetadata: string = await readTextFile(newMetaFilePath);
             const parsedMetadata: FileSystemPageMetadata = JSON.parse(rawMetadata);
 
             const newMetadata: FileSystemPageMetadata = {
@@ -50,7 +65,8 @@ export const fileSystemRetitlePage = async (
                 title: newTitle,
             };
 
-            await writeTextFile(newMetaFile, JSON.stringify(newMetadata, null, 2));
+            await writeTextFile(newMetaFilePath, JSON.stringify(newMetadata, null, 2));
+            return;
         }
     }
 

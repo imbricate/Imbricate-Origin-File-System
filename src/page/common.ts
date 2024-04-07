@@ -43,7 +43,6 @@ export const putFileToCollectionFolder = async (
     content: string,
 ): Promise<void> => {
 
-
     const targetFilePath = joinCollectionFolderPath(
         basePath,
         collectionName,
