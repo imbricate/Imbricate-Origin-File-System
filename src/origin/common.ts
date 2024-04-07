@@ -4,6 +4,7 @@
  * @description Common
  */
 
+import { writeTextFile } from "@sudoo/io";
 import { FileSystemCollectionMetadata } from "../definition/collection";
 import { createOrGetFile } from "../util/io";
 import { joinCollectionMetaFilePath } from "../util/path-joiner";
@@ -33,7 +34,7 @@ export const putCollectionsMetadata = async (
 
     const collectionMetaFile = joinCollectionMetaFilePath(basePath);
 
-    await createOrGetFile(
+    await writeTextFile(
         collectionMetaFile,
         JSON.stringify(metadata, null, 2),
     );
