@@ -4,17 +4,19 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IImbricatePage, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
+import { IImbricateOriginCollection, IImbricatePage, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageMetadata, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
 import { readTextFile, removeFile, writeTextFile } from "@sudoo/io";
-import { UUIDVersion1 } from "@sudoo/uuid";
 import { ensureCollectionFolder } from "./collection/ensure-collection-folder";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fixPageMetadataFileName } from "./page/common";
+import { fileSystemCreatePage } from "./page/create-page";
 import { FileSystemPageMetadata, pageMetadataFolderName } from "./page/definition";
 import { fileSystemListPages } from "./page/list-page";
 import { FileSystemImbricatePage } from "./page/page";
+import { fileSystemPutPage } from "./page/put-page";
 import { fileSystemReadPageMetadata } from "./page/read-metadata";
+import { fileSystemRetitlePage } from "./page/retitle-page";
 import { joinCollectionFolderPath } from "./util/path-joiner";
 
 export class FileSystemImbricateCollection implements IImbricateOriginCollection {
@@ -70,40 +72,44 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         initialContent: string = "",
     ): Promise<IImbricatePage> {
 
-        await this._ensureCollectionFolder();
-        const uuid: string = UUIDVersion1.generateString();
-
-        await this._putFileToCollectionFolder(
-            this._fixFileNameFromIdentifier(uuid),
-            initialContent,
-        );
-
-        const currentTime: Date = new Date();
-
-        const metadata: FileSystemPageMetadata = {
-            title,
-            identifier: uuid,
-            createdAt: currentTime,
-            updatedAt: currentTime,
-        };
-
-        await this._putFileToCollectionMetaFolder(
-            fixPageMetadataFileName(title, uuid),
-            JSON.stringify({
-                ...metadata,
-                createdAt: metadata.createdAt.getTime(),
-                updatedAt: metadata.updatedAt.getTime(),
-            }, null, 2),
-        );
-
-        return FileSystemImbricatePage.create(
+        return await fileSystemCreatePage(
             this._basePath,
             this._collectionName,
-            metadata,
+            title,
+            initialContent,
         );
     }
 
-    public async deletePage(identifier: string, title: string): Promise<void> {
+    public async putPage(
+        pageMetadata: ImbricatePageMetadata,
+        content: string,
+    ): Promise<IImbricatePage> {
+
+        return await fileSystemPutPage(
+            this._basePath,
+            this._collectionName,
+            pageMetadata,
+            content,
+        );
+    }
+
+    public async retitlePage(
+        identifier: string,
+        newTitle: string,
+    ): Promise<void> {
+
+        return await fileSystemRetitlePage(
+            this._basePath,
+            this._collectionName,
+            identifier,
+            newTitle,
+        );
+    }
+
+    public async deletePage(
+        identifier: string,
+        title: string,
+    ): Promise<void> {
 
         await this._ensureCollectionFolder();
 

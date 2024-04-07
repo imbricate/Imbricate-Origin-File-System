@@ -46,11 +46,7 @@ export const fileSystemOriginRenameScript = async (
                 scriptName: newScriptName,
             };
 
-            await writeTextFile(newMetaFile, JSON.stringify({
-                ...newMetadata,
-                createdAt: newMetadata.createdAt,
-                updatedAt: newMetadata.updatedAt,
-            }, null, 2));
+            await writeTextFile(newMetaFile, JSON.stringify(newMetadata, null, 2));
         }
     }
 
