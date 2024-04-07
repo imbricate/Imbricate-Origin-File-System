@@ -4,8 +4,8 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IImbricatePage, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageMetadata, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchSnippet } from "@imbricate/core";
-import { readTextFile, removeFile, writeTextFile } from "@sudoo/io";
+import { IImbricateOriginCollection, IImbricatePage, ImbricatePageMetadata, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
+import { removeFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "./collection/ensure-collection-folder";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -17,6 +17,7 @@ import { FileSystemImbricatePage } from "./page/page";
 import { fileSystemPutPage } from "./page/put-page";
 import { fileSystemReadPageMetadata } from "./page/read-metadata";
 import { fileSystemRetitlePage } from "./page/retitle-page";
+import { fileSystemSearchPages } from "./page/search-pages";
 import { joinCollectionFolderPath } from "./util/path-joiner";
 
 export class FileSystemImbricateCollection implements IImbricateOriginCollection {
@@ -166,99 +167,16 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         keyword: string,
     ): Promise<ImbricatePageSearchSnippet[]> {
 
-        const pages: ImbricatePageSnapshot[] = await this.listPages();
-
-        const snippets: Array<ImbricateSearchSnippet<IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE>> = [];
-
-        for (const page of pages) {
-
-            const titleIndex: number = page.title.search(new RegExp(keyword, "i"));
-
-            if (titleIndex !== -1) {
-
-                snippets.push({
-                    type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
-
-                    scope: this._collectionName,
-                    identifier: page.identifier,
-                    headline: page.title,
-
-                    source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,
-                    snippet: page.title,
-                });
-            }
-
-            const content: string = await this._getPageContent(page.identifier);
-
-            const regexIndex: number = content.search(new RegExp(keyword, "i"));
-
-            if (regexIndex === -1) {
-                continue;
-            }
-
-            const snippetAroundKeyword: string = content.slice(
-                Math.max(0, regexIndex - 10),
-                Math.min(content.length, regexIndex + keyword.length + 10),
-            );
-
-            snippets.push({
-                type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
-
-                scope: this._collectionName,
-                identifier: page.identifier,
-                headline: page.title,
-
-                source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
-                snippet: snippetAroundKeyword,
-            });
-        }
-
-        return snippets;
-    }
-
-    private async _getPageContent(identifier: string): Promise<string> {
-
-        const targetFilePath = joinCollectionFolderPath(
+        return await fileSystemSearchPages(
             this._basePath,
             this._collectionName,
-            this._fixFileNameFromIdentifier(identifier),
+            keyword,
         );
-
-        return await readTextFile(targetFilePath);
     }
 
     private async _ensureCollectionFolder(): Promise<void> {
 
         await ensureCollectionFolder(this._basePath, this._collectionName);
-    }
-
-    private async _putFileToCollectionFolder(
-        identifier: string,
-        content: string,
-    ): Promise<void> {
-
-        const targetFilePath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-            identifier,
-        );
-
-        await writeTextFile(targetFilePath, content);
-    }
-
-    private async _putFileToCollectionMetaFolder(
-        fileName: string,
-        content: string,
-    ): Promise<void> {
-
-        const targetFilePath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-            pageMetadataFolderName,
-            fileName,
-        );
-
-        await writeTextFile(targetFilePath, content);
     }
 
     private _fixFileNameFromIdentifier(identifier: string): string {

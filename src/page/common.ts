@@ -4,7 +4,7 @@
  * @description Common
  */
 
-import { writeTextFile } from "@sudoo/io";
+import { readTextFile, writeTextFile } from "@sudoo/io";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { pageMetadataFolderName } from "./definition";
 
@@ -19,6 +19,21 @@ export const fixPageMetadataFileName = (fileName: string, identifier: string): s
     }
 
     return fixedFileName;
+};
+
+export const getPageContent = async (
+    basePath: string,
+    collectionName: string,
+    identifier: string,
+): Promise<string> => {
+
+    const targetFilePath = joinCollectionFolderPath(
+        basePath,
+        collectionName,
+        fixFileNameFromIdentifier(identifier),
+    );
+
+    return await readTextFile(targetFilePath);
 };
 
 export const putFileToCollectionFolder = async (
