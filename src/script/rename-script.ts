@@ -8,6 +8,7 @@ import { ImbricateScriptMetadata, ImbricateScriptSnapshot } from "@imbricate/cor
 import { moveFile, readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureScriptFolders, fixMetaScriptFileName } from "./common";
 import { fileSystemOriginListScripts } from "./list-scripts";
+import { getScriptsMetadataFolderPath } from "../util/path-joiner";
 
 export const fileSystemOriginRenameScript = async (
     basePath: string,
@@ -36,9 +37,19 @@ export const fileSystemOriginRenameScript = async (
             const oldMetaFile: string = fixMetaScriptFileName(script.scriptName, script.identifier);
             const newMetaFile: string = fixMetaScriptFileName(newScriptName, script.identifier);
 
-            await moveFile(oldMetaFile, newMetaFile);
+            const oldMetaFilePath: string = getScriptsMetadataFolderPath(
+                basePath,
+                oldMetaFile,
+            );
 
-            const rawMetadata: string = await readTextFile(newMetaFile);
+            const newMetaFilePath: string = getScriptsMetadataFolderPath(
+                basePath,
+                newMetaFile,
+            );
+
+            await moveFile(oldMetaFilePath, newMetaFilePath);
+
+            const rawMetadata: string = await readTextFile(newMetaFilePath);
             const parsedMetadata: ImbricateScriptMetadata = JSON.parse(rawMetadata);
 
             const newMetadata: ImbricateScriptMetadata = {
@@ -46,7 +57,8 @@ export const fileSystemOriginRenameScript = async (
                 scriptName: newScriptName,
             };
 
-            await writeTextFile(newMetaFile, JSON.stringify(newMetadata, null, 2));
+            await writeTextFile(newMetaFilePath, JSON.stringify(newMetadata, null, 2));
+            return;
         }
     }
 
