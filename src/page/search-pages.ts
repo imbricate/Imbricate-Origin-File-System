@@ -4,7 +4,7 @@
  * @description Search Pages
  */
 
-import { IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
+import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
 import { getPageContent } from "./common";
 import { fileSystemListPages } from "./list-page";
 
@@ -31,7 +31,7 @@ export const fileSystemSearchPages = async (
 
             const result: ImbricatePageSearchResult = {
 
-                type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
+                type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
 
                 scope: collectionName,
                 identifier: page.identifier,
@@ -43,6 +43,11 @@ export const fileSystemSearchPages = async (
             snippets.push({
                 source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,
                 snippet: page.title,
+
+                highlight: {
+                    start: titleIndex,
+                    length: keyword.length,
+                },
             });
 
             results.push(result);
@@ -60,7 +65,7 @@ export const fileSystemSearchPages = async (
 
         const contentResult: ImbricatePageSearchResult = {
 
-            type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
+            type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
 
             scope: collectionName,
             identifier: page.identifier,
@@ -82,6 +87,11 @@ export const fileSystemSearchPages = async (
                 contentSnippets.push({
                     source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
                     snippet: line,
+
+                    highlight: {
+                        start: lineIndex,
+                        length: keyword.length,
+                    },
                 });
             }
         }

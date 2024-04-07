@@ -4,7 +4,7 @@
  * @description Search Scripts
  */
 
-import { IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot } from "@imbricate/core";
+import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot } from "@imbricate/core";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginSearchScripts = async (
@@ -28,7 +28,7 @@ export const fileSystemOriginSearchScripts = async (
 
             const result: ImbricateScriptSearchResult = {
 
-                type: IMBRICATE_SEARCH_SNIPPET_TYPE.SCRIPT,
+                type: IMBRICATE_SEARCH_RESULT_TYPE.SCRIPT,
 
                 identifier: script.identifier,
                 headline: script.scriptName,
@@ -39,6 +39,11 @@ export const fileSystemOriginSearchScripts = async (
             snippets.push({
                 source: IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE.NAME,
                 snippet: script.scriptName,
+
+                highlight: {
+                    start: scriptNameIndex,
+                    length: keyword.length,
+                },
             });
 
             results.push(result);
