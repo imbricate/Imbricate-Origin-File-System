@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptSnapshot } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptMetadata, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot } from "@imbricate/core";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -13,7 +13,9 @@ import { fileSystemOriginCreateScript } from "./script/create-script";
 import { fileSystemOriginGetScript } from "./script/get-script";
 import { fileSystemOriginHasScript } from "./script/has-script";
 import { fileSystemOriginListScripts } from "./script/list-scripts";
+import { fileSystemOriginPutScript } from "./script/put-script";
 import { fileSystemOriginRemoveScript } from "./script/remove-script";
+import { fileSystemOriginRenameScript } from "./script/rename-script";
 import { createOrGetFile, putFile } from "./util/io";
 import { joinCollectionMetaFilePath } from "./util/path-joiner";
 
@@ -148,12 +150,39 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         await this._putCollectionsMetaData(newMetaData);
     }
 
-    public async createScript(scriptName: string): Promise<IImbricateScript> {
+    public async createScript(
+        scriptName: string,
+    ): Promise<IImbricateScript> {
 
         return await fileSystemOriginCreateScript(
             this._basePath,
             this,
             scriptName,
+        );
+    }
+
+    public async putScript(
+        scriptMetadata: ImbricateScriptMetadata,
+        script: string,
+    ): Promise<IImbricateScript> {
+
+        return await fileSystemOriginPutScript(
+            this._basePath,
+            this,
+            scriptMetadata,
+            script,
+        );
+    }
+
+    public async renameScript(
+        identifier: string,
+        newScriptName: string,
+    ): Promise<void> {
+
+        return await fileSystemOriginRenameScript(
+            this._basePath,
+            identifier,
+            newScriptName,
         );
     }
 
@@ -191,6 +220,11 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
             scriptIdentifier,
             scriptName,
         );
+    }
+
+    public async searchScripts(_keyword: string): Promise<ImbricateScriptSearchSnippet[]> {
+
+        return [];
     }
 
     private async _getCollectionsMetaData(): Promise<FileSystemCollectionMetadata> {

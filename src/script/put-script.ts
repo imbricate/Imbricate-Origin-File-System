@@ -1,28 +1,29 @@
 /**
  * @author WMXPY
  * @namespace FileSystem_Script
- * @description Create Script
+ * @description Put Script
  */
 
 import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
-import { UUIDVersion1 } from "@sudoo/uuid";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 import { FileSystemImbricateScript } from "./script";
 
-export const fileSystemOriginCreateScript = async (
+export const fileSystemOriginPutScript = async (
     basePath: string,
     origin: IImbricateOrigin,
-    scriptName: string,
+    scriptMetadata: ImbricateScriptMetadata,
+    script: string,
 ): Promise<IImbricateScript> => {
 
     await ensureScriptFolders(basePath);
 
-    const uuid: string = UUIDVersion1.generateString();
-    const currentTime: Date = new Date();
+    const fileName: string = fixMetaScriptFileName(
+        scriptMetadata.scriptName,
+        scriptMetadata.identifier,
+    );
 
-    const fileName: string = fixMetaScriptFileName(scriptName, uuid);
     const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
         basePath,
         fileName,
@@ -30,10 +31,10 @@ export const fileSystemOriginCreateScript = async (
 
     const metaData: ImbricateScriptMetadata = {
 
-        scriptName,
-        identifier: uuid,
-        createdAt: currentTime,
-        updatedAt: currentTime,
+        scriptName: scriptMetadata.scriptName,
+        identifier: scriptMetadata.identifier,
+        createdAt: scriptMetadata.createdAt,
+        updatedAt: scriptMetadata.updatedAt,
     };
 
     await writeTextFile(scriptMetadataFilePath,
@@ -44,10 +45,10 @@ export const fileSystemOriginCreateScript = async (
         }, null, 2),
     );
 
-    const scriptFileName: string = fixScriptFileName(uuid);
+    const scriptFileName: string = fixScriptFileName(scriptMetadata.identifier);
     const scriptFolderPath: string = getScriptsFolderPath(basePath, scriptFileName);
 
-    await writeTextFile(scriptFolderPath, "");
+    await writeTextFile(scriptFolderPath, script);
 
     return FileSystemImbricateScript.create(
         basePath,

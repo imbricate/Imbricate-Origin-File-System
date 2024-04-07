@@ -4,17 +4,16 @@
  * @description Read Metadata
  */
 
-import { ImbricateScriptSnapshot } from "@imbricate/core";
+import { ImbricateScriptMetadata, ImbricateScriptSnapshot } from "@imbricate/core";
 import { readTextFile } from "@sudoo/io";
 import { getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName } from "./common";
-import { FileSystemScriptMetadata } from "./definition";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginReadScriptMetadata = async (
     basePath: string,
     identifier: string,
-): Promise<FileSystemScriptMetadata | null> => {
+): Promise<ImbricateScriptMetadata | null> => {
 
     await ensureScriptFolders(basePath);
 
@@ -35,7 +34,7 @@ export const fileSystemOriginReadScriptMetadata = async (
     );
 
     const scriptMetadata = await readTextFile(scriptMetadataFilePath);
-    const parsedMetadata: FileSystemScriptMetadata = JSON.parse(scriptMetadata);
+    const parsedMetadata: ImbricateScriptMetadata = JSON.parse(scriptMetadata);
 
     return {
         ...parsedMetadata,

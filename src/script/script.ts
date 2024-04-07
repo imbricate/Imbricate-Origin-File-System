@@ -4,20 +4,19 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, SandboxEnvironment, SandboxExecuteConfig, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata, SandboxEnvironment, SandboxExecuteConfig, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { createFileSystemOriginExecuteFeature } from "../execute/feature";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
-import { FileSystemScriptMetadata } from "./definition";
 
 export class FileSystemImbricateScript implements IImbricateScript {
 
     public static create(
         basePath: string,
         origin: IImbricateOrigin,
-        metadata: FileSystemScriptMetadata,
+        metadata: ImbricateScriptMetadata,
     ): FileSystemImbricateScript {
 
         return new FileSystemImbricateScript(basePath, origin, metadata);
@@ -25,12 +24,12 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
     private readonly _basePath: string;
     private readonly _origin: IImbricateOrigin;
-    private readonly _metadata: FileSystemScriptMetadata;
+    private readonly _metadata: ImbricateScriptMetadata;
 
     private constructor(
         basePath: string,
         origin: IImbricateOrigin,
-        metadata: FileSystemScriptMetadata,
+        metadata: ImbricateScriptMetadata,
     ) {
 
         this._basePath = basePath;
@@ -83,7 +82,7 @@ export class FileSystemImbricateScript implements IImbricateScript {
             fileName,
         );
 
-        const newMetadata: FileSystemScriptMetadata = {
+        const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             updatedAt,
         };

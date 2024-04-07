@@ -4,9 +4,8 @@
  * @description Get Script
  */
 
-import { IImbricateOrigin, IImbricateScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata } from "@imbricate/core";
 import { ensureScriptFolders } from "./common";
-import { FileSystemScriptMetadata } from "./definition";
 import { fileSystemOriginReadScriptMetadata } from "./read-metadata";
 import { FileSystemImbricateScript } from "./script";
 
@@ -18,7 +17,8 @@ export const fileSystemOriginGetScript = async (
 
     await ensureScriptFolders(basePath);
 
-    const metadata: FileSystemScriptMetadata | null = await fileSystemOriginReadScriptMetadata(basePath, identifier);
+    const metadata: ImbricateScriptMetadata | null =
+        await fileSystemOriginReadScriptMetadata(basePath, identifier);
 
     if (!metadata) {
         return null;
