@@ -4,19 +4,19 @@
  * @description Search Scripts
  */
 
-import { IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot } from "@imbricate/core";
+import { IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot } from "@imbricate/core";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginSearchScripts = async (
     basePath: string,
     keyword: string,
-): Promise<ImbricateScriptSearchSnippet[]> => {
+): Promise<ImbricateScriptSearchResult[]> => {
 
     const scripts: ImbricateScriptSnapshot[] = await fileSystemOriginListScripts(
         basePath,
     );
 
-    const snippets: Array<ImbricateScriptSearchSnippet> = [];
+    const results: ImbricateScriptSearchResult[] = [];
 
     for (const script of scripts) {
 
@@ -24,18 +24,26 @@ export const fileSystemOriginSearchScripts = async (
 
         if (scriptNameIndex !== -1) {
 
-            snippets.push({
+            const snippets: ImbricateScriptSearchSnippet[] = [];
+
+            const result: ImbricateScriptSearchResult = {
+
                 type: IMBRICATE_SEARCH_SNIPPET_TYPE.SCRIPT,
 
-                scope: "ALL",
                 identifier: script.identifier,
                 headline: script.scriptName,
 
+                snippets,
+            };
+
+            snippets.push({
                 source: IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE.NAME,
                 snippet: script.scriptName,
             });
+
+            results.push(result);
         }
     }
 
-    return snippets;
+    return results;
 };

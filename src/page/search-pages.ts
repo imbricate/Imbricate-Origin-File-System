@@ -4,7 +4,7 @@
  * @description Search Pages
  */
 
-import { IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
+import { IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, IMBRICATE_SEARCH_SNIPPET_TYPE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
 import { getPageContent } from "./common";
 import { fileSystemListPages } from "./list-page";
 
@@ -12,14 +12,14 @@ export const fileSystemSearchPages = async (
     basePath: string,
     collectionName: string,
     keyword: string,
-): Promise<ImbricatePageSearchSnippet[]> => {
+): Promise<ImbricatePageSearchResult[]> => {
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
         basePath,
         collectionName,
     );
 
-    const snippets: Array<ImbricatePageSearchSnippet> = [];
+    const results: ImbricatePageSearchResult[] = [];
 
     for (const page of pages) {
 
@@ -27,16 +27,25 @@ export const fileSystemSearchPages = async (
 
         if (titleIndex !== -1) {
 
-            snippets.push({
+            const snippets: ImbricatePageSearchSnippet[] = [];
+
+            const result: ImbricatePageSearchResult = {
+
                 type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
 
                 scope: collectionName,
                 identifier: page.identifier,
                 headline: page.title,
 
+                snippets,
+            };
+
+            snippets.push({
                 source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,
                 snippet: page.title,
             });
+
+            results.push(result);
         }
 
         const content: string = await getPageContent(
@@ -47,27 +56,38 @@ export const fileSystemSearchPages = async (
 
         const contentInLines: string[] = content.split("\n");
 
+        const contentSnippets: ImbricatePageSearchSnippet[] = [];
+
+        const contentResult: ImbricatePageSearchResult = {
+
+            type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
+
+            scope: collectionName,
+            identifier: page.identifier,
+            headline: page.title,
+
+            snippets: contentSnippets,
+        };
+
         lines: for (const line of contentInLines) {
+
+            if (contentSnippets.length >= 3) {
+                break lines;
+            }
 
             const lineIndex: number = line.search(new RegExp(keyword, "i"));
 
             if (lineIndex !== -1) {
 
-                snippets.push({
-                    type: IMBRICATE_SEARCH_SNIPPET_TYPE.PAGE,
-
-                    scope: collectionName,
-                    identifier: page.identifier,
-                    headline: page.title,
-
+                contentSnippets.push({
                     source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
                     snippet: line,
                 });
-
-                break lines;
             }
         }
+
+        results.push(contentResult);
     }
 
-    return snippets;
+    return results;
 };
