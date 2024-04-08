@@ -23,22 +23,22 @@ export const fileSystemSearchPages = async (
 
     for (const page of pages) {
 
+        const snippets: ImbricatePageSearchSnippet[] = [];
+        const result: ImbricatePageSearchResult = {
+
+            type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
+
+            scope: collectionName,
+            identifier: page.identifier,
+            headline: page.title,
+
+            snippets,
+        };
+
         const titleIndex: number = page.title.search(new RegExp(keyword, "i"));
 
         if (titleIndex !== -1) {
 
-            const snippets: ImbricatePageSearchSnippet[] = [];
-
-            const result: ImbricatePageSearchResult = {
-
-                type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
-
-                scope: collectionName,
-                identifier: page.identifier,
-                headline: page.title,
-
-                snippets,
-            };
 
             snippets.push({
                 source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,
@@ -49,8 +49,6 @@ export const fileSystemSearchPages = async (
                     length: keyword.length,
                 },
             });
-
-            results.push(result);
         }
 
         const content: string = await getPageContent(
@@ -61,22 +59,9 @@ export const fileSystemSearchPages = async (
 
         const contentInLines: string[] = content.split("\n");
 
-        const contentSnippets: ImbricatePageSearchSnippet[] = [];
-
-        const contentResult: ImbricatePageSearchResult = {
-
-            type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
-
-            scope: collectionName,
-            identifier: page.identifier,
-            headline: page.title,
-
-            snippets: contentSnippets,
-        };
-
         lines: for (const line of contentInLines) {
 
-            if (contentSnippets.length >= 3) {
+            if (snippets.length >= 3) {
                 break lines;
             }
 
@@ -84,7 +69,7 @@ export const fileSystemSearchPages = async (
 
             if (lineIndex !== -1) {
 
-                contentSnippets.push({
+                snippets.push({
                     source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
                     snippet: line,
 
@@ -96,7 +81,9 @@ export const fileSystemSearchPages = async (
             }
         }
 
-        results.push(contentResult);
+        if (snippets.length > 0) {
+            results.push(result);
+        }
     }
 
     return results;
