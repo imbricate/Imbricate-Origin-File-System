@@ -1553,6 +1553,7 @@ __metadata:
     "@babel/preset-env": "npm:^7"
     "@babel/preset-typescript": "npm:^7"
     "@imbricate/core": "npm:^1.7.0"
+    "@sudoo/asynchronous": "npm:^2.3.1"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29"
@@ -1962,6 +1963,13 @@ __metadata:
   dependencies:
     "@sinonjs/commons": "npm:^3.0.0"
   checksum: 10c0/2e2fb6cc57f227912814085b7b01fede050cd4746ea8d49a1e44d5a0e56a804663b0340ae2f11af7559ea9bf4d087a11f2f646197a660ea3cb04e19efc04aa63
+  languageName: node
+  linkType: hard
+
+"@sudoo/asynchronous@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "@sudoo/asynchronous@npm:2.3.1"
+  checksum: 10c0/f38756214b846badc714e243335b38fddb60b2cbbd84494812d4289d34efe1f82af818735d95c0a88878d455213c3e945f990ad3a50198bf779c805fb28ac209
   languageName: node
   linkType: hard
 

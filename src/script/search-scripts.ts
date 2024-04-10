@@ -5,6 +5,7 @@
  */
 
 import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { ParallelPool, PromiseFunction } from "@sudoo/asynchronous";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginSearchScripts = async (
@@ -19,44 +20,52 @@ export const fileSystemOriginSearchScripts = async (
 
     const results: ImbricateScriptSearchResult[] = [];
 
-    for (const script of scripts) {
+    const pool = ParallelPool.create(5);
 
-        const snippets: ImbricateScriptSearchSnippet[] = [];
+    const searchScriptFunction: Array<PromiseFunction<void>> =
+        scripts.map((script: ImbricateScriptSnapshot) => {
 
-        const result: ImbricateScriptSearchResult = {
+            return async () => {
 
-            type: IMBRICATE_SEARCH_RESULT_TYPE.SCRIPT,
+                const snippets: ImbricateScriptSearchSnippet[] = [];
 
-            identifier: script.identifier,
-            headline: script.scriptName,
+                const result: ImbricateScriptSearchResult = {
 
-            snippets,
-        };
+                    type: IMBRICATE_SEARCH_RESULT_TYPE.SCRIPT,
 
-        let scriptNameIndex: number;
-        if (config.exact) {
-            scriptNameIndex = script.scriptName.indexOf(keyword);
-        } else {
-            scriptNameIndex = script.scriptName.search(new RegExp(keyword, "i"));
-        }
+                    identifier: script.identifier,
+                    headline: script.scriptName,
 
-        if (scriptNameIndex !== -1) {
+                    snippets,
+                };
 
-            snippets.push({
-                source: IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE.NAME,
-                snippet: script.scriptName,
+                let scriptNameIndex: number;
+                if (config.exact) {
+                    scriptNameIndex = script.scriptName.indexOf(keyword);
+                } else {
+                    scriptNameIndex = script.scriptName.search(new RegExp(keyword, "i"));
+                }
 
-                highlight: {
-                    start: scriptNameIndex,
-                    length: keyword.length,
-                },
-            });
-        }
+                if (scriptNameIndex !== -1) {
 
-        if (snippets.length > 0) {
-            results.push(result);
-        }
-    }
+                    snippets.push({
+                        source: IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE.NAME,
+                        snippet: script.scriptName,
+
+                        highlight: {
+                            start: scriptNameIndex,
+                            length: keyword.length,
+                        },
+                    });
+                }
+
+                if (snippets.length > 0) {
+                    results.push(result);
+                }
+            };
+        });
+
+    await pool.execute(searchScriptFunction);
 
     return results;
 };
