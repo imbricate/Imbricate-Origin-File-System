@@ -76,7 +76,12 @@ export const fileSystemSearchPages = async (
                         break lines;
                     }
 
-                    const lineIndex: number = line.search(new RegExp(keyword, "i"));
+                    let lineIndex: number;
+                    if (config.exact) {
+                        lineIndex = line.indexOf(keyword);
+                    } else {
+                        lineIndex = line.search(new RegExp(keyword, "i"));
+                    }
 
                     if (lineIndex !== -1) {
 
