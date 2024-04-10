@@ -22,7 +22,7 @@ export const fileSystemOriginSearchScripts = async (
 
     const pool = ParallelPool.create(5);
 
-    const searchScriptFunction: Array<PromiseFunction<void>> =
+    const searchScriptFunctions: Array<PromiseFunction<void>> =
         scripts.map((script: ImbricateScriptSnapshot) => {
 
             return async () => {
@@ -65,7 +65,7 @@ export const fileSystemOriginSearchScripts = async (
             };
         });
 
-    await pool.execute(searchScriptFunction);
+    await pool.execute(searchScriptFunctions);
 
     return results;
 };

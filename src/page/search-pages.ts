@@ -5,6 +5,7 @@
  */
 
 import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { ParallelPool, PromiseFunction } from "@sudoo/asynchronous";
 import { getPageContent } from "./common";
 import { fileSystemListPages } from "./list-page";
 
@@ -22,74 +23,82 @@ export const fileSystemSearchPages = async (
 
     const results: ImbricatePageSearchResult[] = [];
 
-    for (const page of pages) {
+    const pool = ParallelPool.create(5);
 
-        const snippets: ImbricatePageSearchSnippet[] = [];
-        const result: ImbricatePageSearchResult = {
+    const searchPageFunctions: Array<PromiseFunction<void>> =
+        pages.map((page: ImbricatePageSnapshot) => {
 
-            type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
+            return async () => {
 
-            scope: collectionName,
-            identifier: page.identifier,
-            headline: page.title,
+                const snippets: ImbricatePageSearchSnippet[] = [];
+                const result: ImbricatePageSearchResult = {
 
-            snippets,
-        };
+                    type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
 
-        let titleIndex: number;
-        if (config.exact) {
-            titleIndex = page.title.indexOf(keyword);
-        } else {
-            titleIndex = page.title.search(new RegExp(keyword, "i"));
-        }
+                    scope: collectionName,
+                    identifier: page.identifier,
+                    headline: page.title,
 
-        if (titleIndex !== -1) {
+                    snippets,
+                };
 
-            snippets.push({
-                source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,
-                snippet: page.title,
+                let titleIndex: number;
+                if (config.exact) {
+                    titleIndex = page.title.indexOf(keyword);
+                } else {
+                    titleIndex = page.title.search(new RegExp(keyword, "i"));
+                }
 
-                highlight: {
-                    start: titleIndex,
-                    length: keyword.length,
-                },
-            });
-        }
+                if (titleIndex !== -1) {
 
-        const content: string = await getPageContent(
-            basePath,
-            collectionName,
-            page.identifier,
-        );
+                    snippets.push({
+                        source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,
+                        snippet: page.title,
 
-        const contentInLines: string[] = content.split("\n");
+                        highlight: {
+                            start: titleIndex,
+                            length: keyword.length,
+                        },
+                    });
+                }
 
-        lines: for (const line of contentInLines) {
+                const content: string = await getPageContent(
+                    basePath,
+                    collectionName,
+                    page.identifier,
+                );
 
-            if (snippets.length >= 3) {
-                break lines;
-            }
+                const contentInLines: string[] = content.split("\n");
 
-            const lineIndex: number = line.search(new RegExp(keyword, "i"));
+                lines: for (const line of contentInLines) {
 
-            if (lineIndex !== -1) {
+                    if (snippets.length >= 3) {
+                        break lines;
+                    }
 
-                snippets.push({
-                    source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
-                    snippet: line,
+                    const lineIndex: number = line.search(new RegExp(keyword, "i"));
 
-                    highlight: {
-                        start: lineIndex,
-                        length: keyword.length,
-                    },
-                });
-            }
-        }
+                    if (lineIndex !== -1) {
 
-        if (snippets.length > 0) {
-            results.push(result);
-        }
-    }
+                        snippets.push({
+                            source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.CONTENT,
+                            snippet: line,
+
+                            highlight: {
+                                start: lineIndex,
+                                length: keyword.length,
+                            },
+                        });
+                    }
+                }
+
+                if (snippets.length > 0) {
+                    results.push(result);
+                }
+            };
+        });
+
+    await pool.execute(searchPageFunctions);
 
     return results;
 };
