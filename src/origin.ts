@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptMetadata, ImbricateScriptSearchResult, ImbricateScriptSnapshot } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptMetadata, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -223,11 +223,15 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         );
     }
 
-    public async searchScripts(keyword: string): Promise<ImbricateScriptSearchResult[]> {
+    public async searchScripts(
+        keyword: string,
+        config: ImbricateSearchScriptConfig,
+    ): Promise<ImbricateScriptSearchResult[]> {
 
         return await fileSystemOriginSearchScripts(
             this._basePath,
             keyword,
+            config,
         );
     }
 

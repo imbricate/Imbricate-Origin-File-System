@@ -4,12 +4,13 @@
  * @description Search Scripts
  */
 
-import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot } from "@imbricate/core";
+import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginSearchScripts = async (
     basePath: string,
     keyword: string,
+    config: ImbricateSearchScriptConfig,
 ): Promise<ImbricateScriptSearchResult[]> => {
 
     const scripts: ImbricateScriptSnapshot[] = await fileSystemOriginListScripts(
@@ -32,7 +33,12 @@ export const fileSystemOriginSearchScripts = async (
             snippets,
         };
 
-        const scriptNameIndex: number = script.scriptName.search(new RegExp(keyword, "i"));
+        let scriptNameIndex: number;
+        if (config.exact) {
+            scriptNameIndex = script.scriptName.indexOf(keyword);
+        } else {
+            scriptNameIndex = script.scriptName.search(new RegExp(keyword, "i"));
+        }
 
         if (scriptNameIndex !== -1) {
 
