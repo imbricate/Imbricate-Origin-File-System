@@ -1553,7 +1553,7 @@ __metadata:
     "@babel/preset-env": "npm:^7"
     "@babel/preset-typescript": "npm:^7"
     "@imbricate/core": "npm:^1.7.0"
-    "@sudoo/asynchronous": "npm:^2.3.1"
+    "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29"
@@ -1966,10 +1966,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sudoo/asynchronous@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "@sudoo/asynchronous@npm:2.3.1"
-  checksum: 10c0/f38756214b846badc714e243335b38fddb60b2cbbd84494812d4289d34efe1f82af818735d95c0a88878d455213c3e945f990ad3a50198bf779c805fb28ac209
+"@sudoo/asynchronous@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@sudoo/asynchronous@npm:2.4.0"
+  checksum: 10c0/ca43becb8aa0675d79a43a30f269364bafff520013e550d9842e7fb0f7e5dd9195e2fd7ce9727cf842f0c5a100750bf9e0d5466b1731781f2f5ae4c595558ad0
   languageName: node
   linkType: hard
 
