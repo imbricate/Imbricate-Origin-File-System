@@ -4,7 +4,7 @@
  * @description Search Pages
  */
 
-import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot } from "@imbricate/core";
+import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { getPageContent } from "./common";
 import { fileSystemListPages } from "./list-page";
 
@@ -12,6 +12,7 @@ export const fileSystemSearchPages = async (
     basePath: string,
     collectionName: string,
     keyword: string,
+    config: ImbricateSearchScriptConfig,
 ): Promise<ImbricatePageSearchResult[]> => {
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
@@ -35,10 +36,14 @@ export const fileSystemSearchPages = async (
             snippets,
         };
 
-        const titleIndex: number = page.title.search(new RegExp(keyword, "i"));
+        let titleIndex: number;
+        if (config.exact) {
+            titleIndex = page.title.indexOf(keyword);
+        } else {
+            titleIndex = page.title.search(new RegExp(keyword, "i"));
+        }
 
         if (titleIndex !== -1) {
-
 
             snippets.push({
                 source: IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE.TITLE,

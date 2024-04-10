@@ -4,7 +4,7 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IImbricatePage, ImbricatePageMetadata, ImbricatePageSearchResult, ImbricatePageSnapshot } from "@imbricate/core";
+import { IImbricateOriginCollection, IImbricatePage, ImbricatePageMetadata, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig } from "@imbricate/core";
 import { removeFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "./collection/ensure-collection-folder";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
@@ -165,12 +165,14 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     public async searchPages(
         keyword: string,
+        config: ImbricateSearchPageConfig,
     ): Promise<ImbricatePageSearchResult[]> {
 
         return await fileSystemSearchPages(
             this._basePath,
             this._collectionName,
             keyword,
+            config,
         );
     }
 
