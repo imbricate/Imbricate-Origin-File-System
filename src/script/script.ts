@@ -96,7 +96,6 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
     public async execute(config: SandboxExecuteConfig): Promise<MarkedResult> {
 
-
         const script: string = await this.readScript();
 
         const features: SandboxFeature[] =
