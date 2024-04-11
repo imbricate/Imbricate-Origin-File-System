@@ -8,6 +8,7 @@ import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata, SandboxEnv
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { createCreatePageFeature } from "../features/create-page";
+import { createSearchPageFeature } from "../features/search-page";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 
@@ -103,6 +104,7 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
         const features: SandboxFeature[] = [
             createCreatePageFeature(this._origin),
+            createSearchPageFeature(this._origin),
         ];
 
         const environment: SandboxEnvironment = {
