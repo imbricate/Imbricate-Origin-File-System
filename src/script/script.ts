@@ -96,13 +96,14 @@ export class FileSystemImbricateScript implements IImbricateScript {
     }
 
     public async execute(
+        features: SandboxFeature[],
         configuration: SandboxExecuteConfig,
         parameters: SandboxExecuteParameter,
     ): Promise<MarkedResult> {
 
         const script: string = await this.readScript();
 
-        const features: SandboxFeature[] = [
+        const originFeatures: SandboxFeature[] = [
             createCreatePageFeature(this._origin),
             createSearchPageFeature(this._origin),
         ];
@@ -115,7 +116,10 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
         return await executeSandboxScript(
             script,
-            features,
+            [
+                ...originFeatures,
+                ...features,
+            ],
             environment,
             configuration,
             parameters,
