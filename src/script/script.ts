@@ -4,10 +4,10 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata, SandboxEnvironment, SandboxExecuteConfig, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
-import { createFileSystemOriginExecuteFeature } from "../execute/feature";
+import { createCreatePageFeature } from "../features/create-page";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 
@@ -94,12 +94,16 @@ export class FileSystemImbricateScript implements IImbricateScript {
         }, null, 2));
     }
 
-    public async execute(config: SandboxExecuteConfig): Promise<MarkedResult> {
+    public async execute(
+        configuration: SandboxExecuteConfig,
+        parameters: SandboxExecuteParameter,
+    ): Promise<MarkedResult> {
 
         const script: string = await this.readScript();
 
-        const features: SandboxFeature[] =
-            createFileSystemOriginExecuteFeature(this._origin);
+        const features: SandboxFeature[] = [
+            createCreatePageFeature(this._origin),
+        ];
 
         const environment: SandboxEnvironment = {
             origin: {
@@ -111,7 +115,8 @@ export class FileSystemImbricateScript implements IImbricateScript {
             script,
             features,
             environment,
-            config,
+            configuration,
+            parameters,
         );
     }
 }

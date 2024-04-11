@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace FileSystem_Execute_Features
+ * @namespace Features
  * @description Create Page
  */
 
@@ -64,7 +64,7 @@ export const createCreatePageFeature = (
     origin: IImbricateOrigin,
 ): SandboxFeature => {
 
-    return SandboxFeatureBuilder.fromScratch()
+    return SandboxFeatureBuilder.providedByOrigin()
         .withPackageName("page")
         .withMethodName("createPage")
         .withImplementation(createImplementation(origin))
