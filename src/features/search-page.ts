@@ -1,7 +1,7 @@
 /**
  * @author WMXPY
  * @namespace Features
- * @description Create Page
+ * @description Search Page
  */
 
 import { IImbricateOrigin, IImbricateOriginCollection, ImbricatePageSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
