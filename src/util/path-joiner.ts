@@ -10,14 +10,16 @@ export const joinCollectionMetaFilePath = (
     basePath: string,
 ): string => {
 
-    return Path.join(basePath, "collection.meta.json");
+    const resolved: string = Path.resolve(basePath);
+    return Path.join(resolved, "collection.meta.json");
 };
 
 export const getCollectionFolderPath = (
     basePath: string,
 ): string => {
 
-    return Path.join(basePath, "collections");
+    const resolved: string = Path.resolve(basePath);
+    return Path.join(resolved, "collections");
 };
 
 export const getScriptsFolderPath = (
@@ -25,7 +27,8 @@ export const getScriptsFolderPath = (
     ...paths: string[]
 ): string => {
 
-    return Path.join(basePath, "scripts", ...paths);
+    const resolved: string = Path.resolve(basePath);
+    return Path.join(resolved, "scripts", ...paths);
 };
 
 export const getScriptsMetadataFolderPath = (
@@ -33,7 +36,8 @@ export const getScriptsMetadataFolderPath = (
     ...paths: string[]
 ): string => {
 
-    return Path.join(basePath, "scripts", ".metadata", ...paths);
+    const resolved: string = Path.resolve(basePath);
+    return Path.join(resolved, "scripts", ".metadata", ...paths);
 };
 
 export const joinCollectionFolderPath = (
