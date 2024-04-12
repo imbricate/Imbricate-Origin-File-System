@@ -18,7 +18,9 @@
     "url": "git+https://github.com/Imbricate/Imbricate-Origin-File-System.git"
   },
   "keywords": [
-    "API"
+    "imbricate",
+    "note",
+    "file-system"
   ],
   "author": "WMXPY",
   "license": "MIT",
