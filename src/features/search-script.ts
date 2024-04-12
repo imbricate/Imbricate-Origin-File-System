@@ -41,7 +41,7 @@ const createImplementation = (
     };
 };
 
-export const createSearchPageFeature = (
+export const createSearchScriptFeature = (
     origin: IImbricateOrigin,
 ): SandboxFeature => {
 
