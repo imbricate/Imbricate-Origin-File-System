@@ -4,7 +4,7 @@
  * @description Page
  */
 
-import { IImbricatePage } from "@imbricate/core";
+import { IImbricatePage, ImbricatePageAttributes } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -80,6 +80,41 @@ export class FileSystemImbricatePage implements IImbricatePage {
         );
 
         await writeTextFile(targetFilePath, content);
+    }
+
+    public async readAttributes(): Promise<ImbricatePageAttributes> {
+
+        return this._metadata.attributes;
+    }
+
+    public async writeAttribute(key: string, value: string): Promise<void> {
+
+        await ensureCollectionFolder(
+            this._basePath,
+            this._collectionName,
+        );
+
+        const updatedMetadata: FileSystemPageMetadata = {
+            ...this._metadata,
+            attributes: {
+                ...this._metadata.attributes,
+                [key]: value,
+            },
+        };
+
+        const fileName: string = fixPageMetadataFileName(this.title, this.identifier);
+        const metadataFilePath = joinCollectionFolderPath(
+            this._basePath,
+            this._collectionName,
+            pageMetadataFolderName,
+            fileName,
+        );
+
+        await writeTextFile(metadataFilePath, JSON.stringify({
+            ...updatedMetadata,
+            createdAt: updatedMetadata.createdAt.getTime(),
+            updatedAt: updatedMetadata.updatedAt.getTime(),
+        }, null, 2));
     }
 
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
