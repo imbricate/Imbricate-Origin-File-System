@@ -4,19 +4,20 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptMetadata, PromiseOr, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { prepareFileSystemFeatures } from "../features/prepare";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
+import { FileSystemScriptMetadata } from "./definition";
 
 export class FileSystemImbricateScript implements IImbricateScript {
 
     public static create(
         basePath: string,
         origin: IImbricateOrigin,
-        metadata: ImbricateScriptMetadata,
+        metadata: FileSystemScriptMetadata,
     ): FileSystemImbricateScript {
 
         return new FileSystemImbricateScript(basePath, origin, metadata);
@@ -24,12 +25,12 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
     private readonly _basePath: string;
     private readonly _origin: IImbricateOrigin;
-    private readonly _metadata: ImbricateScriptMetadata;
+    private readonly _metadata: FileSystemScriptMetadata;
 
     private constructor(
         basePath: string,
         origin: IImbricateOrigin,
-        metadata: ImbricateScriptMetadata,
+        metadata: FileSystemScriptMetadata,
     ) {
 
         this._basePath = basePath;
@@ -79,6 +80,27 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
     public async writeAttribute(key: string, value: string): Promise<void> {
 
+        await ensureScriptFolders(this._basePath);
+
+        const fileName: string = fixMetaScriptFileName(this.scriptName, this.identifier);
+        const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
+            this._basePath,
+            fileName,
+        );
+
+        const newMetadata: FileSystemScriptMetadata = {
+            ...this._metadata,
+            attributes: {
+                ...this._metadata.attributes,
+                [key]: value,
+            },
+        };
+
+        await writeTextFile(scriptMetadataFilePath, JSON.stringify({
+            ...newMetadata,
+            createdAt: newMetadata.createdAt.getTime(),
+            updatedAt: newMetadata.updatedAt.getTime(),
+        }, null, 2));
     }
 
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
@@ -91,7 +113,7 @@ export class FileSystemImbricateScript implements IImbricateScript {
             fileName,
         );
 
-        const newMetadata: ImbricateScriptMetadata = {
+        const newMetadata: FileSystemScriptMetadata = {
             ...this._metadata,
             updatedAt,
         };
