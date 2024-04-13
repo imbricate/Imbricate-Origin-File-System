@@ -31,6 +31,8 @@ export const fileSystemPutPage = async (
         identifier: pageMetadata.identifier,
         createdAt: pageMetadata.createdAt,
         updatedAt: pageMetadata.updatedAt,
+
+        attributes: {},
     };
 
     await putFileToCollectionMetaFolder(

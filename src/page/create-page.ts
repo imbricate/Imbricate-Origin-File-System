@@ -35,6 +35,8 @@ export const fileSystemCreatePage = async (
         identifier: uuid,
         createdAt: currentTime,
         updatedAt: currentTime,
+
+        attributes: {},
     };
 
     await putFileToCollectionMetaFolder(

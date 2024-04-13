@@ -4,16 +4,11 @@
  * @description Definition
  */
 
-import { ImbricatePageAttributes } from "@imbricate/core";
+import { ImbricatePageAttributes, ImbricatePageMetadata } from "@imbricate/core";
 
 export type FileSystemPageMetadata = {
 
-    readonly title: string;
-    readonly identifier: string;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
-
     readonly attributes: ImbricatePageAttributes;
-};
+} & ImbricatePageMetadata;
 
 export const pageMetadataFolderName: string = ".metadata";
