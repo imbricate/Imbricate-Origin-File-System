@@ -4,12 +4,13 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptMetadata, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fileSystemOriginRenameCollection } from "./origin/rename-collection";
 import { fileSystemOriginCreateScript } from "./script/create-script";
+import { FileSystemScriptMetadata } from "./script/definition";
 import { fileSystemOriginGetScript } from "./script/get-script";
 import { fileSystemOriginHasScript } from "./script/has-script";
 import { fileSystemOriginListScripts } from "./script/list-scripts";
@@ -163,7 +164,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     }
 
     public async putScript(
-        scriptMetadata: ImbricateScriptMetadata,
+        scriptMetadata: FileSystemScriptMetadata,
         script: string,
     ): Promise<IImbricateScript> {
 

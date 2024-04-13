@@ -4,16 +4,17 @@
  * @description Put Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
+import { FileSystemScriptMetadata } from "./definition";
 import { FileSystemImbricateScript } from "./script";
 
 export const fileSystemOriginPutScript = async (
     basePath: string,
     origin: IImbricateOrigin,
-    scriptMetadata: ImbricateScriptMetadata,
+    scriptMetadata: FileSystemScriptMetadata,
     script: string,
 ): Promise<IImbricateScript> => {
 
@@ -29,12 +30,14 @@ export const fileSystemOriginPutScript = async (
         fileName,
     );
 
-    const metaData: ImbricateScriptMetadata = {
+    const metaData: FileSystemScriptMetadata = {
 
         scriptName: scriptMetadata.scriptName,
         identifier: scriptMetadata.identifier,
         createdAt: scriptMetadata.createdAt,
         updatedAt: scriptMetadata.updatedAt,
+
+        attributes: scriptMetadata.attributes,
     };
 
     await writeTextFile(scriptMetadataFilePath,
