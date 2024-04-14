@@ -1,19 +1,19 @@
 /**
  * @author WMXPY
  * @namespace Features
- * @description Search Script
+ * @description Search Scripts
  */
 
 import { IImbricateOrigin, ImbricateScriptSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 
-type SearchScriptInput = {
+type SearchScriptsInput = {
 
     readonly keyword: string;
 
     readonly exact?: boolean;
 };
 
-type SearchScriptOutput = {
+type SearchScriptsOutput = {
 
     readonly results: ImbricateScriptSearchResult[];
 };
@@ -23,8 +23,8 @@ const createImplementation = (
 ) => {
 
     return async (
-        input: SearchScriptInput,
-    ): Promise<SearchScriptOutput> => {
+        input: SearchScriptsInput,
+    ): Promise<SearchScriptsOutput> => {
 
         if (typeof input.keyword !== "string") {
             throw new Error("Keyword is required");
@@ -41,13 +41,13 @@ const createImplementation = (
     };
 };
 
-export const createSearchScriptFeature = (
+export const createSearchScriptsFeature = (
     origin: IImbricateOrigin,
 ): SandboxFeature => {
 
     return SandboxFeatureBuilder.providedByOrigin()
         .withPackageName("script")
-        .withMethodName("searchScript")
+        .withMethodName("searchScripts")
         .withImplementation(createImplementation(origin))
         .build();
 };

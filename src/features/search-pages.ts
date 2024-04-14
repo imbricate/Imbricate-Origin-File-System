@@ -6,7 +6,7 @@
 
 import { IImbricateOrigin, IImbricateOriginCollection, ImbricatePageSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 
-type SearchPageInput = {
+type SearchPagesInput = {
 
     readonly collection: string;
     readonly keyword: string;
@@ -14,7 +14,7 @@ type SearchPageInput = {
     readonly exact?: boolean;
 };
 
-type SearchPageOutput = {
+type SearchPagesOutput = {
 
     readonly results: ImbricatePageSearchResult[];
 };
@@ -24,8 +24,8 @@ const createImplementation = (
 ) => {
 
     return async (
-        input: SearchPageInput,
-    ): Promise<SearchPageOutput> => {
+        input: SearchPagesInput,
+    ): Promise<SearchPagesOutput> => {
 
         if (typeof input.collection !== "string") {
             throw new Error("Collection is required");
@@ -53,13 +53,13 @@ const createImplementation = (
     };
 };
 
-export const createSearchPageFeature = (
+export const createSearchPagesFeature = (
     origin: IImbricateOrigin,
 ): SandboxFeature => {
 
     return SandboxFeatureBuilder.providedByOrigin()
         .withPackageName("page")
-        .withMethodName("searchPage")
+        .withMethodName("searchPages")
         .withImplementation(createImplementation(origin))
         .build();
 };

@@ -6,8 +6,9 @@
 
 import { IImbricateOrigin, SandboxFeature } from "@imbricate/core";
 import { createCreatePageFeature } from "./create-page";
-import { createSearchPageFeature } from "./search-page";
-import { createSearchScriptFeature } from "./search-script";
+import { createQueryPagesFeature } from "./query-pages";
+import { createSearchPagesFeature } from "./search-pages";
+import { createSearchScriptsFeature } from "./search-scripts";
 
 export const prepareFileSystemFeatures = (
     origin: IImbricateOrigin,
@@ -15,8 +16,9 @@ export const prepareFileSystemFeatures = (
 
     const originFeatures: SandboxFeature[] = [
         createCreatePageFeature(origin),
-        createSearchPageFeature(origin),
-        createSearchScriptFeature(origin),
+        createQueryPagesFeature(origin),
+        createSearchPagesFeature(origin),
+        createSearchScriptsFeature(origin),
     ];
 
     return originFeatures;
