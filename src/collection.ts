@@ -15,6 +15,7 @@ import { FileSystemPageMetadata, pageMetadataFolderName } from "./page/definitio
 import { fileSystemListPages } from "./page/list-page";
 import { FileSystemImbricatePage } from "./page/page";
 import { fileSystemPutPage } from "./page/put-page";
+import { fileSystemQueryPages } from "./page/query-pages";
 import { fileSystemReadPageMetadata } from "./page/read-metadata";
 import { fileSystemRetitlePage } from "./page/retitle-page";
 import { fileSystemSearchPages } from "./page/search-pages";
@@ -177,10 +178,14 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     }
 
     public async queryPages(
-        query: ImbricatePageQuery
+        query: ImbricatePageQuery,
     ): Promise<IImbricatePage[]> {
 
-        return [];
+        return await fileSystemQueryPages(
+            this._basePath,
+            this._collectionName,
+            query,
+        );
     }
 
     private async _ensureCollectionFolder(): Promise<void> {
