@@ -11,12 +11,11 @@ import { FileSystemCollectionMetadataCollection } from "./definition/collection"
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fixPageMetadataFileName } from "./page/common";
 import { fileSystemCreatePage } from "./page/create-page";
-import { FileSystemPageMetadata, pageMetadataFolderName } from "./page/definition";
-import { fileSystemListPages } from "./page/list-page";
-import { FileSystemImbricatePage } from "./page/page";
+import { pageMetadataFolderName } from "./page/definition";
+import { fileSystemGetPage } from "./page/get-page";
+import { fileSystemListPages } from "./page/list-pages";
 import { fileSystemPutPage } from "./page/put-page";
 import { fileSystemQueryPages } from "./page/query-pages";
-import { fileSystemReadPageMetadata } from "./page/read-metadata";
 import { fileSystemRetitlePage } from "./page/retitle-page";
 import { fileSystemSearchPages } from "./page/search-pages";
 import { joinCollectionFolderPath } from "./util/path-joiner";
@@ -136,22 +135,10 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     public async getPage(identifier: string): Promise<IImbricatePage | null> {
 
-        await this._ensureCollectionFolder();
-
-        const metadata: FileSystemPageMetadata | null = await fileSystemReadPageMetadata(
+        return await fileSystemGetPage(
             this._basePath,
             this._collectionName,
             identifier,
-        );
-
-        if (!metadata) {
-            return null;
-        }
-
-        return FileSystemImbricatePage.create(
-            this._basePath,
-            this._collectionName,
-            metadata,
         );
     }
 

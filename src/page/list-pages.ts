@@ -1,7 +1,7 @@
 /**
  * @author WMXPY
  * @namespace Page
- * @description List Page
+ * @description List Pages
  */
 
 import { ImbricatePageSnapshot } from "@imbricate/core";

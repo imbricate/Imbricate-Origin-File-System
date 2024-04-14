@@ -10,7 +10,7 @@ import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixPageMetadataFileName } from "./common";
 import { FileSystemPageMetadata, pageMetadataFolderName } from "./definition";
-import { fileSystemListPages } from "./list-page";
+import { fileSystemListPages } from "./list-pages";
 
 export const fileSystemReadPageMetadata = async (
     basePath: string,

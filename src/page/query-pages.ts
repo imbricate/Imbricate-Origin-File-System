@@ -6,7 +6,7 @@
 
 import { IImbricatePage, ImbricatePageQuery, ImbricatePageSnapshot } from "@imbricate/core";
 import { FileSystemPageMetadata } from "./definition";
-import { fileSystemListPages } from "./list-page";
+import { fileSystemListPages } from "./list-pages";
 import { FileSystemImbricatePage } from "./page";
 import { fileSystemReadPageMetadata } from "./read-metadata";
 

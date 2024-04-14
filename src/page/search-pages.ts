@@ -7,7 +7,7 @@
 import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { ParallelPool, PromiseFunction } from "@sudoo/asynchronous";
 import { getPageContent } from "./common";
-import { fileSystemListPages } from "./list-page";
+import { fileSystemListPages } from "./list-pages";
 
 export const fileSystemSearchPages = async (
     basePath: string,
