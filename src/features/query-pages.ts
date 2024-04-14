@@ -52,6 +52,9 @@ const createImplementation = (
 
                 title: page.title,
                 identifier: page.identifier,
+
+                description: page.description,
+
                 createdAt: page.createdAt,
                 updatedAt: page.updatedAt,
 

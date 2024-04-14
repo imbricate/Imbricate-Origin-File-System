@@ -43,6 +43,9 @@ export class FileSystemImbricatePage implements IImbricatePage {
     public get identifier(): string {
         return this._metadata.identifier;
     }
+    public get description(): string | undefined {
+        return this._metadata.description;
+    }
     public get createdAt(): Date {
         return new Date(this._metadata.createdAt);
     }
