@@ -39,6 +39,7 @@ const createImplementation = (
         }
 
         const pages: IImbricatePage[] = await collection.queryPages({
+        }, {
             limit: input.limit,
         });
 

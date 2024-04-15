@@ -28,6 +28,7 @@ const createImplementation = (
     ): Promise<QueryScriptsOutput> => {
 
         const scripts: IImbricateScript[] = await origin.queryScripts({
+        }, {
             limit: input.limit,
         });
 
