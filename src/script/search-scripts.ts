@@ -6,12 +6,14 @@
 
 import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_SCRIPT_SNIPPET_SOURCE, ImbricateScriptSearchResult, ImbricateScriptSearchSnippet, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { ParallelPool, PromiseFunction } from "@sudoo/asynchronous";
+import { FileSystemOriginPayload } from "../definition/origin";
 import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginSearchScripts = async (
     basePath: string,
     keyword: string,
     config: ImbricateSearchScriptConfig,
+    payload: FileSystemOriginPayload,
 ): Promise<ImbricateScriptSearchResult[]> => {
 
     const scripts: ImbricateScriptSnapshot[] = await fileSystemOriginListScripts(
@@ -20,7 +22,15 @@ export const fileSystemOriginSearchScripts = async (
 
     const results: ImbricateScriptSearchResult[] = [];
 
-    const pool = ParallelPool.create(5);
+    if (typeof payload.asynchronousPoolLimit !== "number") {
+        throw new Error("Asynchronous Pool Limit is not a number");
+    }
+
+    if (payload.asynchronousPoolLimit < 1) {
+        throw new Error("Asynchronous Pool Limit is lower than 1");
+    }
+
+    const pool = ParallelPool.create(payload.asynchronousPoolLimit);
 
     const searchScriptFunctions: Array<PromiseFunction<void>> =
         scripts.map((script: ImbricateScriptSnapshot) => {

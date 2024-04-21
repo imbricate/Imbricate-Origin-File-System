@@ -6,6 +6,7 @@
 
 import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOURCE, ImbricatePageSearchResult, ImbricatePageSearchSnippet, ImbricatePageSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { ParallelPool, PromiseFunction } from "@sudoo/asynchronous";
+import { FileSystemOriginPayload } from "../definition/origin";
 import { getPageContent } from "./common";
 import { fileSystemListPages } from "./list-pages";
 
@@ -14,6 +15,7 @@ export const fileSystemSearchPages = async (
     collectionName: string,
     keyword: string,
     config: ImbricateSearchScriptConfig,
+    payload: FileSystemOriginPayload,
 ): Promise<ImbricatePageSearchResult[]> => {
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
@@ -23,7 +25,15 @@ export const fileSystemSearchPages = async (
 
     const results: ImbricatePageSearchResult[] = [];
 
-    const pool = ParallelPool.create(5);
+    if (typeof payload.asynchronousPoolLimit !== "number") {
+        throw new Error("Asynchronous Pool Limit is not a number");
+    }
+
+    if (payload.asynchronousPoolLimit < 1) {
+        throw new Error("Asynchronous Pool Limit is lower than 1");
+    }
+
+    const pool = ParallelPool.create(payload.asynchronousPoolLimit);
 
     const searchPageFunctions: Array<PromiseFunction<void>> =
         pages.map((page: ImbricatePageSnapshot) => {

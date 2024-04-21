@@ -142,6 +142,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
             this._collectionName,
             keyword,
             config,
+            this._payloads,
         );
     }
 

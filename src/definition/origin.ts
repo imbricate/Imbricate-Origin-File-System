@@ -7,4 +7,5 @@
 export type FileSystemOriginPayload = {
 
     readonly basePath: string;
+    readonly asynchronousPoolLimit: number;
 };

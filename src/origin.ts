@@ -232,6 +232,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
             this._basePath,
             keyword,
             config,
+            this.payloads,
         );
     }
 
