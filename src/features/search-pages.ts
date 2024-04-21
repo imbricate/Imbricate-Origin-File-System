@@ -12,6 +12,7 @@ type SearchPagesInput = {
     readonly keyword: string;
 
     readonly exact?: boolean;
+    readonly limit?: number;
 };
 
 type SearchPagesOutput = {
@@ -45,6 +46,7 @@ const createImplementation = (
         const searchResults: ImbricatePageSearchResult[] =
             await collection.searchPages(input.keyword, {
                 exact: Boolean(input.exact),
+                limit: input.limit,
             });
 
         return {

@@ -11,6 +11,7 @@ type SearchScriptsInput = {
     readonly keyword: string;
 
     readonly exact?: boolean;
+    readonly limit?: number;
 };
 
 type SearchScriptsOutput = {
@@ -33,6 +34,7 @@ const createImplementation = (
         const searchResults: ImbricateScriptSearchResult[] =
             await origin.searchScripts(input.keyword, {
                 exact: Boolean(input.exact),
+                limit: input.limit,
             });
 
         return {
