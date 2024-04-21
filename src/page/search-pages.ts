@@ -18,6 +18,10 @@ export const fileSystemSearchPages = async (
     payload: FileSystemOriginPayload,
 ): Promise<ImbricatePageSearchResult[]> => {
 
+    const searchLimit: number = typeof config.limit === "number"
+        ? config.limit
+        : 3;
+
     const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
         basePath,
         collectionName,
@@ -82,7 +86,7 @@ export const fileSystemSearchPages = async (
 
                 lines: for (const line of contentInLines) {
 
-                    if (snippets.length >= 3) {
+                    if (snippets.length >= searchLimit) {
                         break lines;
                     }
 
