@@ -4,19 +4,35 @@
  * @description Remove Script
  */
 
+import { ImbricateScriptSnapshot } from "@imbricate/core";
 import { removeFile } from "@sudoo/io";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
+import { fileSystemOriginListScripts } from "./list-scripts";
 
 export const fileSystemOriginRemoveScript = async (
     basePath: string,
     identifier: string,
-    scriptName: string,
 ): Promise<void> => {
 
     await ensureScriptFolders(basePath);
 
-    const fileName: string = fixMetaScriptFileName(scriptName, identifier);
+    const scripts: ImbricateScriptSnapshot[] = await fileSystemOriginListScripts(
+        basePath,
+    );
+
+    const script: ImbricateScriptSnapshot | undefined = scripts.find((
+        each: ImbricateScriptSnapshot,
+    ) => {
+        return each.identifier === identifier;
+    });
+
+    if (!script) {
+
+        throw new Error(`Script ${identifier} not found`);
+    }
+
+    const fileName: string = fixMetaScriptFileName(script.scriptName, identifier);
     const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
         basePath,
         fileName,

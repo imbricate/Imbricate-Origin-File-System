@@ -215,13 +215,11 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
     public async deleteScript(
         scriptIdentifier: string,
-        scriptName: string,
     ): Promise<void> {
 
         return await fileSystemOriginRemoveScript(
             this._basePath,
             scriptIdentifier,
-            scriptName,
         );
     }
 
