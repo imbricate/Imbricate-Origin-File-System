@@ -29,15 +29,21 @@ export const fileSystemSearchPages = async (
 
     const results: ImbricatePageSearchResult[] = [];
 
-    if (typeof payload.asynchronousPoolLimit !== "number") {
+    const fixedLimit: number = Number(payload.asynchronousPoolLimit);
+
+    if (typeof fixedLimit !== "number") {
         throw new Error("Asynchronous Pool Limit is not a number");
     }
 
-    if (payload.asynchronousPoolLimit < 1) {
+    if (isNaN(fixedLimit)) {
+        throw new Error("Asynchronous Pool Limit is not a number");
+    }
+
+    if (fixedLimit < 1) {
         throw new Error("Asynchronous Pool Limit is lower than 1");
     }
 
-    const pool = ParallelPool.create(payload.asynchronousPoolLimit);
+    const pool = ParallelPool.create(fixedLimit);
 
     const searchPageFunctions: Array<PromiseFunction<void>> =
         pages.map((page: ImbricatePageSnapshot) => {
