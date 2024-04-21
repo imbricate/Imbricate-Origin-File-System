@@ -5,20 +5,17 @@
  */
 
 import { IImbricateOriginCollection, IImbricatePage, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig } from "@imbricate/core";
-import { removeFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "./collection/ensure-collection-folder";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
-import { fixPageMetadataFileName } from "./page/common";
 import { fileSystemCreatePage } from "./page/create-page";
-import { pageMetadataFolderName } from "./page/definition";
+import { fileSystemDeletePage } from "./page/delete-page";
 import { fileSystemGetPage } from "./page/get-page";
 import { fileSystemListPages } from "./page/list-pages";
 import { fileSystemPutPage } from "./page/put-page";
 import { fileSystemQueryPages } from "./page/query-pages";
 import { fileSystemRetitlePage } from "./page/retitle-page";
 import { fileSystemSearchPages } from "./page/search-pages";
-import { joinCollectionFolderPath } from "./util/path-joiner";
 
 export class FileSystemImbricateCollection implements IImbricateOriginCollection {
 
@@ -109,28 +106,13 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     public async deletePage(
         identifier: string,
-        title: string,
     ): Promise<void> {
 
-        await this._ensureCollectionFolder();
-
-        const targetFilePath = joinCollectionFolderPath(
+        return await fileSystemDeletePage(
             this._basePath,
             this._collectionName,
-            this._fixFileNameFromIdentifier(identifier),
+            identifier,
         );
-
-        const metaFileName: string = fixPageMetadataFileName(title, identifier);
-
-        const metaFilePath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionName,
-            pageMetadataFolderName,
-            metaFileName,
-        );
-
-        await removeFile(targetFilePath);
-        await removeFile(metaFilePath);
     }
 
     public async getPage(identifier: string): Promise<IImbricatePage | null> {
