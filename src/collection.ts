@@ -5,7 +5,6 @@
  */
 
 import { IImbricateOriginCollection, IImbricatePage, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig } from "@imbricate/core";
-import { ensureCollectionFolder } from "./collection/ensure-collection-folder";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fileSystemCreatePage } from "./page/create-page";
@@ -155,17 +154,5 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
             this._collectionName,
             query,
         );
-    }
-
-    private async _ensureCollectionFolder(): Promise<void> {
-
-        await ensureCollectionFolder(this._basePath, this._collectionName);
-    }
-
-    private _fixFileNameFromIdentifier(identifier: string): string {
-
-        const markDownExtension: string = ".md";
-
-        return `${identifier}${markDownExtension}`;
     }
 }
