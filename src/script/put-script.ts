@@ -4,7 +4,7 @@
  * @description Put Script
  */
 
-import { IImbricateOrigin, IImbricateScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptHistoryRecord } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
@@ -34,15 +34,29 @@ export const fileSystemOriginPutScript = async (
 
         scriptName: scriptMetadata.scriptName,
         identifier: scriptMetadata.identifier,
+
+        digest: scriptMetadata.digest,
+        historyRecords: scriptMetadata.historyRecords,
+
+        description: scriptMetadata.description,
+
         createdAt: scriptMetadata.createdAt,
         updatedAt: scriptMetadata.updatedAt,
 
         attributes: scriptMetadata.attributes,
     };
 
+    const dateFormattedRecords = metaData.historyRecords.map((record: ImbricateScriptHistoryRecord) => {
+        return {
+            ...record,
+            updatedAt: record.updatedAt.getTime(),
+        };
+    });
+
     await writeTextFile(scriptMetadataFilePath,
         JSON.stringify({
             ...metaData,
+            historyRecords: dateFormattedRecords,
             createdAt: metaData.createdAt.getTime(),
             updatedAt: metaData.updatedAt.getTime(),
         }, null, 2),

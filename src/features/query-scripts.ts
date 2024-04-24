@@ -43,6 +43,9 @@ const createImplementation = (
                 scriptName: script.scriptName,
                 identifier: script.identifier,
 
+                digest: script.digest,
+                historyRecords: script.historyRecords,
+
                 description: script.description,
 
                 createdAt: script.createdAt,

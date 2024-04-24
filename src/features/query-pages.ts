@@ -56,6 +56,9 @@ const createImplementation = (
 
                 description: page.description,
 
+                digest: page.digest,
+                historyRecords: page.historyRecords,
+
                 createdAt: page.createdAt,
                 updatedAt: page.updatedAt,
 

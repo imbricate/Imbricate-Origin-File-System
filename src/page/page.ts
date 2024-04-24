@@ -4,7 +4,7 @@
  * @description Page
  */
 
-import { IImbricatePage, ImbricatePageAttributes } from "@imbricate/core";
+import { IImbricatePage, ImbricatePageAttributes, ImbricatePageHistoryRecord } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -42,6 +42,12 @@ export class FileSystemImbricatePage implements IImbricatePage {
     }
     public get identifier(): string {
         return this._metadata.identifier;
+    }
+    public get digest(): string {
+        return this._metadata.digest;
+    }
+    public get historyRecords(): ImbricatePageHistoryRecord[] {
+        return this._metadata.historyRecords;
     }
     public get description(): string | undefined {
         return this._metadata.description;

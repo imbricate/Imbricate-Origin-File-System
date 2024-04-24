@@ -29,11 +29,24 @@ export const fileSystemPutPage = async (
     const metadata: FileSystemPageMetadata = {
         title: pageMetadata.title,
         identifier: pageMetadata.identifier,
+
+        digest: pageMetadata.digest,
+        historyRecords: pageMetadata.historyRecords,
+
+        description: pageMetadata.description,
+
         createdAt: pageMetadata.createdAt,
         updatedAt: pageMetadata.updatedAt,
 
         attributes: {},
     };
+
+    const dateFormattedRecords = metadata.historyRecords.map((record) => {
+        return {
+            ...record,
+            updatedAt: record.updatedAt.getTime(),
+        };
+    });
 
     await putFileToCollectionMetaFolder(
         basePath,
@@ -41,6 +54,7 @@ export const fileSystemPutPage = async (
         fixPageMetadataFileName(pageMetadata.title, pageMetadata.identifier),
         JSON.stringify({
             ...metadata,
+            historyRecords: dateFormattedRecords,
             createdAt: metadata.createdAt.getTime(),
             updatedAt: metadata.updatedAt.getTime(),
         }, null, 2),

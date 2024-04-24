@@ -7,6 +7,7 @@
 import { IImbricatePage } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
+import { digestString } from "../util/digest";
 import { fixFileNameFromIdentifier, fixPageMetadataFileName, putFileToCollectionFolder, putFileToCollectionMetaFolder } from "./common";
 import { FileSystemPageMetadata } from "./definition";
 import { FileSystemImbricatePage } from "./page";
@@ -30,9 +31,17 @@ export const fileSystemCreatePage = async (
 
     const currentTime: Date = new Date();
 
+    const digested: string = digestString(initialContent);
     const metadata: FileSystemPageMetadata = {
         title,
         identifier: uuid,
+
+        digest: digested,
+        historyRecords: [{
+            updatedAt: currentTime,
+            digest: digested,
+        }],
+
         createdAt: currentTime,
         updatedAt: currentTime,
 

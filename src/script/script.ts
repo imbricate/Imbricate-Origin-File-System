@@ -4,7 +4,7 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptHistoryRecord, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { prepareFileSystemFeatures } from "../features/prepare";
@@ -43,6 +43,12 @@ export class FileSystemImbricateScript implements IImbricateScript {
     }
     public get identifier(): string {
         return this._metadata.identifier;
+    }
+    public get digest(): string {
+        return this._metadata.digest;
+    }
+    public get historyRecords(): ImbricateScriptHistoryRecord[] {
+        return this._metadata.historyRecords;
     }
     public get description(): string | undefined {
         return this._metadata.description;
