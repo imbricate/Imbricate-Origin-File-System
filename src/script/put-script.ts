@@ -6,6 +6,7 @@
 
 import { IImbricateOrigin, IImbricateScript, ImbricateScriptHistoryRecord } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
+import { digestString } from "../util/digest";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 import { FileSystemScriptMetadata } from "./definition";
@@ -30,13 +31,22 @@ export const fileSystemOriginPutScript = async (
         fileName,
     );
 
+    const currentTime: Date = new Date();
+
+    const updatedDigest: string = digestString(script);
     const metaData: FileSystemScriptMetadata = {
 
         scriptName: scriptMetadata.scriptName,
         identifier: scriptMetadata.identifier,
 
-        digest: scriptMetadata.digest,
-        historyRecords: scriptMetadata.historyRecords,
+        digest: updatedDigest,
+        historyRecords: [
+            {
+                updatedAt: currentTime,
+                digest: updatedDigest,
+            },
+            ...scriptMetadata.historyRecords,
+        ],
 
         description: scriptMetadata.description,
 

@@ -6,6 +6,7 @@
 
 import { IImbricatePage, ImbricatePageMetadata } from "@imbricate/core";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
+import { digestString } from "../util/digest";
 import { fixFileNameFromIdentifier, fixPageMetadataFileName, putFileToCollectionFolder, putFileToCollectionMetaFolder } from "./common";
 import { FileSystemPageMetadata } from "./definition";
 import { FileSystemImbricatePage } from "./page";
@@ -26,12 +27,21 @@ export const fileSystemPutPage = async (
         content,
     );
 
+    const currentTime: Date = new Date();
+
+    const updatedDigest: string = digestString(content);
     const metadata: FileSystemPageMetadata = {
         title: pageMetadata.title,
         identifier: pageMetadata.identifier,
 
-        digest: pageMetadata.digest,
-        historyRecords: pageMetadata.historyRecords,
+        digest: updatedDigest,
+        historyRecords: [
+            {
+                updatedAt: currentTime,
+                digest: updatedDigest,
+            },
+            ...pageMetadata.historyRecords,
+        ],
 
         description: pageMetadata.description,
 
