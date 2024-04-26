@@ -53,10 +53,10 @@ export class FileSystemImbricatePage implements IImbricatePage {
         return this._metadata.description;
     }
     public get createdAt(): Date {
-        return new Date(this._metadata.createdAt);
+        return this._metadata.createdAt;
     }
     public get updatedAt(): Date {
-        return new Date(this._metadata.updatedAt);
+        return this._metadata.updatedAt;
     }
 
     public async readContent(): Promise<string> {

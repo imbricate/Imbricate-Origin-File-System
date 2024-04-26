@@ -4,7 +4,7 @@
  * @description Read Metadata
  */
 
-import { ImbricateScriptSnapshot } from "@imbricate/core";
+import { ImbricatePageHistoryRecord, ImbricateScriptSnapshot } from "@imbricate/core";
 import { readTextFile } from "@sudoo/io";
 import { getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName } from "./common";
@@ -37,8 +37,17 @@ export const fileSystemOriginReadScriptMetadata = async (
     const scriptMetadata = await readTextFile(scriptMetadataFilePath);
     const parsedMetadata: FileSystemScriptMetadata = JSON.parse(scriptMetadata);
 
+    const fixedHistoryRecords = parsedMetadata.historyRecords ?? [];
+    const parsedHistoryRecords = fixedHistoryRecords.map((record: ImbricatePageHistoryRecord) => {
+        return {
+            ...record,
+            updatedAt: new Date(record.updatedAt),
+        };
+    });
+
     return {
         ...parsedMetadata,
+        historyRecords: parsedHistoryRecords,
         createdAt: new Date(parsedMetadata.createdAt),
         updatedAt: new Date(parsedMetadata.updatedAt),
     };

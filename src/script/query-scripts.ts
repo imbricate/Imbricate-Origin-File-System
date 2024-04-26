@@ -32,11 +32,13 @@ export const fileSystemOriginQueryScripts = async (
             continue;
         }
 
-        results.push(FileSystemImbricateScript.create(
-            basePath,
-            origin,
-            metadata,
-        ));
+        results.push(
+            FileSystemImbricateScript.create(
+                basePath,
+                origin,
+                metadata,
+            ),
+        );
     }
 
     return results;

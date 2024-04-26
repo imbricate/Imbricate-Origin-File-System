@@ -4,7 +4,7 @@
  * @description Read Metadata
  */
 
-import { ImbricatePageSnapshot } from "@imbricate/core";
+import { ImbricatePageSnapshot, ImbricateScriptHistoryRecord } from "@imbricate/core";
 import { readTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -42,8 +42,17 @@ export const fileSystemReadPageMetadata = async (
     const metadataContent: string = await readTextFile(metadataFilePath);
     const metadata: FileSystemPageMetadata = JSON.parse(metadataContent);
 
+    const fixedHistoryRecords = metadata.historyRecords ?? [];
+    const historyRecords = fixedHistoryRecords.map((record: ImbricateScriptHistoryRecord) => {
+        return {
+            ...record,
+            updatedAt: new Date(record.updatedAt),
+        };
+    });
+
     return {
         ...metadata,
+        historyRecords,
         createdAt: new Date(metadata.createdAt),
         updatedAt: new Date(metadata.updatedAt),
     };
