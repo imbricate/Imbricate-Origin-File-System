@@ -9,7 +9,7 @@ import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixPageMetadataFileName } from "./common";
-import { FileSystemPageMetadata, pageMetadataFolderName } from "./definition";
+import { FileSystemPageMetadata, pageMetadataFolderName, stringifyFileSystemPageMetadata } from "./definition";
 
 export class FileSystemImbricatePage implements IImbricatePage {
 
@@ -128,15 +128,43 @@ export class FileSystemImbricatePage implements IImbricatePage {
 
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
 
-        await ensureCollectionFolder(
-            this._basePath,
-            this._collectionName,
-        );
-
         const updatedMetadata: FileSystemPageMetadata = {
             ...this._metadata,
             updatedAt,
         };
+
+        await this._updateMetadata(updatedMetadata);
+    }
+
+    public async refreshDigest(digest: string): Promise<void> {
+
+        const updatedMetadata: FileSystemPageMetadata = {
+            ...this._metadata,
+            digest,
+        };
+
+        await this._updateMetadata(updatedMetadata);
+    }
+
+    public async addHistoryRecord(record: ImbricatePageHistoryRecord): Promise<void> {
+
+        const updatedMetadata: FileSystemPageMetadata = {
+            ...this._metadata,
+            historyRecords: [
+                ...this._metadata.historyRecords,
+                record,
+            ],
+        };
+
+        await this._updateMetadata(updatedMetadata);
+    }
+
+    private async _updateMetadata(updatedMetadata: FileSystemPageMetadata): Promise<void> {
+
+        await ensureCollectionFolder(
+            this._basePath,
+            this._collectionName,
+        );
 
         const fileName: string = fixPageMetadataFileName(this.title, this.identifier);
         const metadataFilePath = joinCollectionFolderPath(
@@ -146,11 +174,10 @@ export class FileSystemImbricatePage implements IImbricatePage {
             fileName,
         );
 
-        await writeTextFile(metadataFilePath, JSON.stringify({
-            ...updatedMetadata,
-            createdAt: updatedMetadata.createdAt.getTime(),
-            updatedAt: updatedMetadata.updatedAt.getTime(),
-        }, null, 2));
+        await writeTextFile(
+            metadataFilePath,
+            stringifyFileSystemPageMetadata(updatedMetadata),
+        );
     }
 
     private _fixFileNameFromIdentifier(identifier: string): string {

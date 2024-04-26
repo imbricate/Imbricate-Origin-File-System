@@ -9,7 +9,7 @@ import { UUIDVersion1 } from "@sudoo/uuid";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { digestString } from "../util/digest";
 import { fixFileNameFromIdentifier, fixPageMetadataFileName, putFileToCollectionFolder, putFileToCollectionMetaFolder } from "./common";
-import { FileSystemPageMetadata } from "./definition";
+import { FileSystemPageMetadata, stringifyFileSystemPageMetadata } from "./definition";
 import { FileSystemImbricatePage } from "./page";
 
 export const fileSystemCreatePage = async (
@@ -52,11 +52,7 @@ export const fileSystemCreatePage = async (
         basePath,
         collectionName,
         fixPageMetadataFileName(title, uuid),
-        JSON.stringify({
-            ...metadata,
-            createdAt: metadata.createdAt.getTime(),
-            updatedAt: metadata.updatedAt.getTime(),
-        }, null, 2),
+        stringifyFileSystemPageMetadata(metadata),
     );
 
     return FileSystemImbricatePage.create(

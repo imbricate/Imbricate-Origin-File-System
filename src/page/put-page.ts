@@ -8,7 +8,7 @@ import { IImbricatePage, ImbricatePageMetadata } from "@imbricate/core";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { digestString } from "../util/digest";
 import { fixFileNameFromIdentifier, fixPageMetadataFileName, putFileToCollectionFolder, putFileToCollectionMetaFolder } from "./common";
-import { FileSystemPageMetadata } from "./definition";
+import { FileSystemPageMetadata, stringifyFileSystemPageMetadata } from "./definition";
 import { FileSystemImbricatePage } from "./page";
 
 export const fileSystemPutPage = async (
@@ -27,21 +27,13 @@ export const fileSystemPutPage = async (
         content,
     );
 
-    const currentTime: Date = new Date();
-
     const updatedDigest: string = digestString(content);
     const metadata: FileSystemPageMetadata = {
         title: pageMetadata.title,
         identifier: pageMetadata.identifier,
 
         digest: updatedDigest,
-        historyRecords: [
-            {
-                updatedAt: currentTime,
-                digest: updatedDigest,
-            },
-            ...pageMetadata.historyRecords,
-        ],
+        historyRecords: pageMetadata.historyRecords,
 
         description: pageMetadata.description,
 
@@ -51,23 +43,11 @@ export const fileSystemPutPage = async (
         attributes: {},
     };
 
-    const dateFormattedRecords = metadata.historyRecords.map((record) => {
-        return {
-            ...record,
-            updatedAt: record.updatedAt.getTime(),
-        };
-    });
-
     await putFileToCollectionMetaFolder(
         basePath,
         collectionName,
         fixPageMetadataFileName(pageMetadata.title, pageMetadata.identifier),
-        JSON.stringify({
-            ...metadata,
-            historyRecords: dateFormattedRecords,
-            createdAt: metadata.createdAt.getTime(),
-            updatedAt: metadata.updatedAt.getTime(),
-        }, null, 2),
+        stringifyFileSystemPageMetadata(metadata),
     );
 
     return FileSystemImbricatePage.create(

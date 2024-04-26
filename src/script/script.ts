@@ -10,7 +10,7 @@ import { MarkedResult } from "@sudoo/marked";
 import { prepareFileSystemFeatures } from "../features/prepare";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
-import { FileSystemScriptMetadata } from "./definition";
+import { FileSystemScriptMetadata, stringifyFileSystemScriptMetadata } from "./definition";
 
 export class FileSystemImbricateScript implements IImbricateScript {
 
@@ -105,14 +105,46 @@ export class FileSystemImbricateScript implements IImbricateScript {
             },
         };
 
-        await writeTextFile(scriptMetadataFilePath, JSON.stringify({
-            ...newMetadata,
-            createdAt: newMetadata.createdAt.getTime(),
-            updatedAt: newMetadata.updatedAt.getTime(),
-        }, null, 2));
+        await writeTextFile(
+            scriptMetadataFilePath,
+            stringifyFileSystemScriptMetadata(newMetadata),
+        );
     }
 
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
+
+        const newMetadata: FileSystemScriptMetadata = {
+            ...this._metadata,
+            updatedAt,
+        };
+
+        return await this._updateMetadata(newMetadata);
+    }
+
+    public async refreshDigest(digest: string): Promise<void> {
+
+        const newMetadata: FileSystemScriptMetadata = {
+            ...this._metadata,
+            digest,
+        };
+
+        return await this._updateMetadata(newMetadata);
+    }
+
+    public async addHistoryRecord(record: ImbricateScriptHistoryRecord): Promise<void> {
+
+        const newMetadata: FileSystemScriptMetadata = {
+            ...this._metadata,
+            historyRecords: [
+                ...this._metadata.historyRecords,
+                record,
+            ],
+        };
+
+        return await this._updateMetadata(newMetadata);
+    }
+
+    private async _updateMetadata(newMetadata: FileSystemScriptMetadata): Promise<void> {
 
         await ensureScriptFolders(this._basePath);
 
@@ -122,16 +154,10 @@ export class FileSystemImbricateScript implements IImbricateScript {
             fileName,
         );
 
-        const newMetadata: FileSystemScriptMetadata = {
-            ...this._metadata,
-            updatedAt,
-        };
-
-        await writeTextFile(scriptMetadataFilePath, JSON.stringify({
-            ...newMetadata,
-            createdAt: newMetadata.createdAt.getTime(),
-            updatedAt: newMetadata.updatedAt.getTime(),
-        }, null, 2));
+        await writeTextFile(
+            scriptMetadataFilePath,
+            stringifyFileSystemScriptMetadata(newMetadata),
+        );
     }
 
     public async execute(

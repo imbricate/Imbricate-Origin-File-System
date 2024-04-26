@@ -4,12 +4,12 @@
  * @description Put Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptHistoryRecord } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
 import { digestString } from "../util/digest";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
-import { FileSystemScriptMetadata } from "./definition";
+import { FileSystemScriptMetadata, stringifyFileSystemScriptMetadata } from "./definition";
 import { FileSystemImbricateScript } from "./script";
 
 export const fileSystemOriginPutScript = async (
@@ -31,8 +31,6 @@ export const fileSystemOriginPutScript = async (
         fileName,
     );
 
-    const currentTime: Date = new Date();
-
     const updatedDigest: string = digestString(script);
     const metaData: FileSystemScriptMetadata = {
 
@@ -40,13 +38,7 @@ export const fileSystemOriginPutScript = async (
         identifier: scriptMetadata.identifier,
 
         digest: updatedDigest,
-        historyRecords: [
-            {
-                updatedAt: currentTime,
-                digest: updatedDigest,
-            },
-            ...scriptMetadata.historyRecords,
-        ],
+        historyRecords: scriptMetadata.historyRecords,
 
         description: scriptMetadata.description,
 
@@ -56,20 +48,9 @@ export const fileSystemOriginPutScript = async (
         attributes: scriptMetadata.attributes,
     };
 
-    const dateFormattedRecords = metaData.historyRecords.map((record: ImbricateScriptHistoryRecord) => {
-        return {
-            ...record,
-            updatedAt: record.updatedAt.getTime(),
-        };
-    });
-
-    await writeTextFile(scriptMetadataFilePath,
-        JSON.stringify({
-            ...metaData,
-            historyRecords: dateFormattedRecords,
-            createdAt: metaData.createdAt.getTime(),
-            updatedAt: metaData.updatedAt.getTime(),
-        }, null, 2),
+    await writeTextFile(
+        scriptMetadataFilePath,
+        stringifyFileSystemScriptMetadata(metaData),
     );
 
     const scriptFileName: string = fixScriptFileName(scriptMetadata.identifier);
