@@ -126,6 +126,26 @@ export class FileSystemImbricatePage implements IImbricatePage {
         }, null, 2));
     }
 
+    public async refreshUpdateMetadata(updatedAt: Date, digest: string): Promise<void> {
+
+        const newHistoryRecord: ImbricatePageHistoryRecord = {
+            updatedAt,
+            digest,
+        };
+
+        const updatedMetadata: FileSystemPageMetadata = {
+            ...this._metadata,
+            updatedAt,
+            digest,
+            historyRecords: [
+                ...this._metadata.historyRecords,
+                newHistoryRecord,
+            ],
+        };
+
+        await this._updateMetadata(updatedMetadata);
+    }
+
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
 
         const updatedMetadata: FileSystemPageMetadata = {

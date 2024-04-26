@@ -111,6 +111,26 @@ export class FileSystemImbricateScript implements IImbricateScript {
         );
     }
 
+    public async refreshUpdateMetadata(updatedAt: Date, digest: string): Promise<void> {
+
+        const newHistoryRecord: ImbricateScriptHistoryRecord = {
+            updatedAt: new Date(),
+            digest,
+        };
+
+        const newMetadata: FileSystemScriptMetadata = {
+            ...this._metadata,
+            updatedAt,
+            digest,
+            historyRecords: [
+                ...this._metadata.historyRecords,
+                newHistoryRecord,
+            ],
+        };
+
+        return await this._updateMetadata(newMetadata);
+    }
+
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
 
         const newMetadata: FileSystemScriptMetadata = {
