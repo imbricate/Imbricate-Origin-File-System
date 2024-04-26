@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -35,6 +35,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
     public readonly metadata: ImbricateOriginMetadata = {
         type: "file-system",
+        digestAlgorithm: IMBRICATE_DIGEST_ALGORITHM.SHA1,
     };
     public readonly payloads: FileSystemOriginPayload;
 
