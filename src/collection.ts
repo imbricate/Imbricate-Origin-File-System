@@ -62,12 +62,14 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     public async listPages(
         directories: string[],
+        recursive: boolean,
     ): Promise<ImbricatePageSnapshot[]> {
 
         return await fileSystemListDirectoriesPages(
             this._basePath,
             this._collectionName,
             directories,
+            recursive,
         );
     }
 
@@ -85,7 +87,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     public async createPage(
         directories: string[],
         title: string,
-        initialContent: string = "",
+        initialContent: string,
     ): Promise<IImbricatePage> {
 
         return await fileSystemCreatePage(
@@ -145,7 +147,10 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
     public async hasPage(directories: string[], title: string): Promise<boolean> {
 
-        const pages: ImbricatePageSnapshot[] = await this.listPages(directories);
+        const pages: ImbricatePageSnapshot[] = await this.listPages(
+            directories,
+            false,
+        );
 
         return pages.some((page: ImbricatePageSnapshot) => {
             return page.title === title;

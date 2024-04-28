@@ -15,13 +15,14 @@ export const fileSystemListDirectoriesPages = async (
     basePath: string,
     collectionName: string,
     directories: string[],
+    recursive: boolean,
 ): Promise<ImbricatePageSnapshot[]> => {
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(basePath, collectionName);
 
     return pages.filter((page: ImbricatePageSnapshot) => {
 
-        if (page.directories.length !== directories.length) {
+        if (page.directories.length !== directories.length && !recursive) {
             return false;
         }
 

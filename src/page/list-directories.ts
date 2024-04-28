@@ -26,7 +26,7 @@ export const fileSystemListDirectories = async (
 
     const files: string[] = await directoryFiles(collectionFolderPath);
 
-    return files
+    const foundDirectories: string[] = files
         .filter((file: string) => file.endsWith(".meta.json"))
         .filter((file: string) => !file.startsWith("."))
         .map((file: string) => {
@@ -60,4 +60,6 @@ export const fileSystemListDirectories = async (
         .filter((element: string | null): element is string => {
             return typeof element === "string";
         });
+
+    return Array.from(new Set(foundDirectories));
 };
