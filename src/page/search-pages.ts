@@ -8,7 +8,7 @@ import { IMBRICATE_SEARCH_RESULT_TYPE, IMBRICATE_SEARCH_SNIPPET_PAGE_SNIPPET_SOU
 import { ParallelPool, PromiseFunction } from "@sudoo/asynchronous";
 import { FileSystemOriginPayload } from "../definition/origin";
 import { getPageContent } from "./common";
-import { fileSystemListPages } from "./list-pages";
+import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemSearchPages = async (
     basePath: string,
@@ -22,7 +22,7 @@ export const fileSystemSearchPages = async (
         ? config.limit
         : 3;
 
-    const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
+    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
     );

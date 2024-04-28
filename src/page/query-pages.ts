@@ -6,7 +6,7 @@
 
 import { IImbricatePage, ImbricatePageQuery, ImbricatePageSnapshot } from "@imbricate/core";
 import { FileSystemPageMetadata } from "./definition";
-import { fileSystemListPages } from "./list-pages";
+import { fileSystemListAllPages } from "./list-pages";
 import { FileSystemImbricatePage } from "./page";
 import { fileSystemReadPageMetadata } from "./read-metadata";
 
@@ -16,7 +16,7 @@ export const fileSystemQueryPages = async (
     _query: ImbricatePageQuery,
 ): Promise<IImbricatePage[]> => {
 
-    const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
+    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
     );

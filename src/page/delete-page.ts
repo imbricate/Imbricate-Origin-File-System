@@ -10,7 +10,7 @@ import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixFileNameFromIdentifier, fixPageMetadataFileName } from "./common";
 import { pageMetadataFolderName } from "./definition";
-import { fileSystemListPages } from "./list-pages";
+import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemDeletePage = async (
     basePath: string,
@@ -20,7 +20,7 @@ export const fileSystemDeletePage = async (
 
     await ensureCollectionFolder(basePath, collectionName);
 
-    const pages: ImbricatePageSnapshot[] = await fileSystemListPages(
+    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
     );

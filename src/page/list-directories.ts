@@ -1,44 +1,20 @@
 /**
  * @author WMXPY
  * @namespace Page
- * @description List Pages
+ * @description List Directories
  */
 
-import { ImbricatePageSnapshot } from "@imbricate/core";
 import { directoryFiles } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { decodeFileSystemComponent } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { pageMetadataFolderName } from "./definition";
 
-export const fileSystemListDirectoriesPages = async (
+export const fileSystemListDirectories = async (
     basePath: string,
     collectionName: string,
     directories: string[],
-): Promise<ImbricatePageSnapshot[]> => {
-
-    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(basePath, collectionName);
-
-    return pages.filter((page: ImbricatePageSnapshot) => {
-
-        if (page.directories.length !== directories.length) {
-            return false;
-        }
-
-        for (let i: number = 0; i < directories.length; i++) {
-            if (directories[i] !== page.directories[i]) {
-                return false;
-            }
-        }
-
-        return true;
-    });
-};
-
-export const fileSystemListAllPages = async (
-    basePath: string,
-    collectionName: string,
-): Promise<ImbricatePageSnapshot[]> => {
+): Promise<string[]> => {
 
     await ensureCollectionFolder(basePath, collectionName);
 
@@ -65,12 +41,23 @@ export const fileSystemListAllPages = async (
                 decodeFileSystemComponent(encoded)
                     .split("/");
 
-            const title: string = decoded.pop() as string;
+            return decoded;
+        })
+        .map((decoded: string[]) => {
 
-            return {
-                identifier: uuid,
-                directories: decoded,
-                title,
-            };
+            const currentDirectories: string[] = [...decoded];
+            currentDirectories.pop();
+
+            for (let i = 0; i < directories.length; i++) {
+                if (directories[i] !== currentDirectories[i]) {
+                    return null;
+                }
+            }
+
+            const nextDirectory: string | null = currentDirectories[directories.length];
+            return nextDirectory;
+        })
+        .filter((element: string | null): element is string => {
+            return typeof element === "string";
         });
 };

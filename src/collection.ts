@@ -10,7 +10,8 @@ import { FileSystemOriginPayload } from "./definition/origin";
 import { fileSystemCreatePage } from "./page/create-page";
 import { fileSystemDeletePage } from "./page/delete-page";
 import { fileSystemGetPage } from "./page/get-page";
-import { fileSystemListPages } from "./page/list-pages";
+import { fileSystemListDirectories } from "./page/list-directories";
+import { fileSystemListDirectoriesPages } from "./page/list-pages";
 import { fileSystemPutPage } from "./page/put-page";
 import { fileSystemQueryPages } from "./page/query-pages";
 import { fileSystemRetitlePage } from "./page/retitle-page";
@@ -60,17 +61,25 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     }
 
     public async listPages(
-        _directories: string[],
+        directories: string[],
     ): Promise<ImbricatePageSnapshot[]> {
 
-        return await fileSystemListPages(this._basePath, this._collectionName);
+        return await fileSystemListDirectoriesPages(
+            this._basePath,
+            this._collectionName,
+            directories,
+        );
     }
 
     public async listDirectories(
-        _directories: string[],
+        directories: string[],
     ): Promise<string[]> {
 
-        return [];
+        return await fileSystemListDirectories(
+            this._basePath,
+            this._collectionName,
+            directories,
+        );
     }
 
     public async createPage(

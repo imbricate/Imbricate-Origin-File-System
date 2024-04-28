@@ -10,7 +10,7 @@ import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixPageMetadataFileName } from "./common";
 import { FileSystemPageMetadata, pageMetadataFolderName } from "./definition";
-import { fileSystemListPages } from "./list-pages";
+import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemReadPageMetadata = async (
     basePath: string,
@@ -20,7 +20,10 @@ export const fileSystemReadPageMetadata = async (
 
     await ensureCollectionFolder(basePath, collectionName);
 
-    const pages: ImbricatePageSnapshot[] = await fileSystemListPages(basePath, collectionName);
+    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
+        basePath,
+        collectionName,
+    );
 
     const targetPage: ImbricatePageSnapshot | undefined = pages.find(
         (page: ImbricatePageSnapshot) => {
