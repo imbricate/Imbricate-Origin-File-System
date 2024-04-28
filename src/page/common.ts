@@ -19,7 +19,11 @@ export const fixPageMetadataFileName = (
 
     const metaJSONExtension: string = ".meta.json";
 
-    const directoriesIncludedFileName: string = `${directories.join("/")}/${fixedFileName}`;
+    const directoriesIncludedFileName: string = [
+        ...directories,
+        fixedFileName,
+    ].join("/");
+
     const encodedFilename: string = encodeFileSystemComponent(directoriesIncludedFileName);
 
     if (!fixedFileName.endsWith(metaJSONExtension)) {
