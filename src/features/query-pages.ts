@@ -52,6 +52,7 @@ const createImplementation = (
             results.push({
 
                 title: page.title,
+                directories: page.directories,
                 identifier: page.identifier,
 
                 description: page.description,

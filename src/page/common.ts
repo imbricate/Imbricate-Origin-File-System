@@ -4,7 +4,7 @@
  * @description Common
  */
 
-import { readTextFile, writeTextFile } from "@sudoo/io";
+import { attemptMarkDir, readTextFile, writeTextFile } from "@sudoo/io";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { pageMetadataFolderName } from "./definition";
 
@@ -55,18 +55,34 @@ export const putFileToCollectionFolder = async (
 export const putFileToCollectionMetaFolder = async (
     basePath: string,
     collectionName: string,
+    directories: string[],
     fileName: string,
-    content: string,
+    _content: string,
 ): Promise<void> => {
+
+    for (let i = 0; i < directories.length; i++) {
+
+        const targetFolderPath = joinCollectionFolderPath(
+            basePath,
+            collectionName,
+            pageMetadataFolderName,
+            ...directories.slice(0, i + 1),
+        );
+
+        await attemptMarkDir(targetFolderPath);
+    }
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
         collectionName,
         pageMetadataFolderName,
+        ...directories,
         fileName,
     );
 
-    await writeTextFile(targetFilePath, content);
+    console.log(targetFilePath);
+
+    // await writeTextFile(targetFilePath, content);
 };
 
 export const fixFileNameFromIdentifier = (identifier: string): string => {

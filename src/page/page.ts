@@ -40,6 +40,9 @@ export class FileSystemImbricatePage implements IImbricatePage {
     public get title(): string {
         return this._metadata.title;
     }
+    public get directories(): string[] {
+        return this._metadata.directories;
+    }
     public get identifier(): string {
         return this._metadata.identifier;
     }

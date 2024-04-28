@@ -29,7 +29,10 @@ export const fileSystemPutPage = async (
 
     const updatedDigest: string = digestString(content);
     const metadata: FileSystemPageMetadata = {
+
         title: pageMetadata.title,
+        directories: pageMetadata.directories,
+
         identifier: pageMetadata.identifier,
 
         digest: updatedDigest,
@@ -46,6 +49,7 @@ export const fileSystemPutPage = async (
     await putFileToCollectionMetaFolder(
         basePath,
         collectionName,
+        pageMetadata.directories,
         fixPageMetadataFileName(pageMetadata.title, pageMetadata.identifier),
         stringifyFileSystemPageMetadata(metadata),
     );

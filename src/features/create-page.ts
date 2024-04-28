@@ -10,6 +10,7 @@ type CreatePageInput = {
 
     readonly collection: string;
     readonly title: string;
+    readonly directories: string[];
 
     readonly content?: string;
 };
@@ -43,7 +44,10 @@ const createImplementation = (
             throw new Error(`Collection [${input.collection}] not found`);
         }
 
-        const pageExist: boolean = await collection.hasPage(input.title);
+        const pageExist: boolean = await collection.hasPage(
+            input.directories,
+            input.title,
+        );
 
         if (pageExist) {
             throw new Error(`Page [${input.title}] already exist`);
@@ -51,7 +55,11 @@ const createImplementation = (
 
         const fixedContent: string = input.content ?? "";
 
-        const response = await collection.createPage(input.title, fixedContent);
+        const response = await collection.createPage(
+            input.directories,
+            input.title,
+            fixedContent,
+        );
 
         return {
             title: response.title,

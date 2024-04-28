@@ -38,6 +38,7 @@ export const fileSystemListPages = async (
 
             return {
                 identifier: uuid,
+                directories: [], // TODO
                 title,
             };
         });

@@ -74,7 +74,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     }
 
     public async createPage(
-        paths: string[],
+        directories: string[],
         title: string,
         initialContent: string = "",
     ): Promise<IImbricatePage> {
@@ -82,6 +82,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemCreatePage(
             this._basePath,
             this._collectionName,
+            directories,
             title,
             initialContent,
         );
