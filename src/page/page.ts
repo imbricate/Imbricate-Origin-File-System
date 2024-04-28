@@ -114,7 +114,7 @@ export class FileSystemImbricatePage implements IImbricatePage {
             },
         };
 
-        const fileName: string = fixPageMetadataFileName(this.title, this.identifier);
+        const fileName: string = fixPageMetadataFileName(this.directories, this.title, this.identifier);
         const metadataFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionName,
@@ -189,7 +189,7 @@ export class FileSystemImbricatePage implements IImbricatePage {
             this._collectionName,
         );
 
-        const fileName: string = fixPageMetadataFileName(this.title, this.identifier);
+        const fileName: string = fixPageMetadataFileName(this.directories, this.title, this.identifier);
         const metadataFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionName,

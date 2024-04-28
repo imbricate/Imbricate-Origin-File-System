@@ -36,7 +36,7 @@ export const fileSystemReadPageMetadata = async (
         basePath,
         collectionName,
         pageMetadataFolderName,
-        fixPageMetadataFileName(targetPage.title, identifier),
+        fixPageMetadataFileName(targetPage.directories, targetPage.title, identifier),
     );
 
     const metadataContent: string = await readTextFile(metadataFilePath);

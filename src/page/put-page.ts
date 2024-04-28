@@ -49,8 +49,7 @@ export const fileSystemPutPage = async (
     await putFileToCollectionMetaFolder(
         basePath,
         collectionName,
-        pageMetadata.directories,
-        fixPageMetadataFileName(pageMetadata.title, pageMetadata.identifier),
+        fixPageMetadataFileName(pageMetadata.directories, pageMetadata.title, pageMetadata.identifier),
         stringifyFileSystemPageMetadata(metadata),
     );
 

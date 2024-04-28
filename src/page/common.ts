@@ -4,18 +4,26 @@
  * @description Common
  */
 
-import { attemptMarkDir, readTextFile, writeTextFile } from "@sudoo/io";
+import { readTextFile, writeTextFile } from "@sudoo/io";
+import { encodeFileSystemComponent } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { pageMetadataFolderName } from "./definition";
 
-export const fixPageMetadataFileName = (fileName: string, identifier: string): string => {
+export const fixPageMetadataFileName = (
+    directories: string[],
+    fileName: string,
+    identifier: string,
+): string => {
 
     let fixedFileName: string = fileName.trim();
 
     const metaJSONExtension: string = ".meta.json";
 
+    const directoriesIncludedFileName: string = `${directories.join("/")}/${fixedFileName}`;
+    const encodedFilename: string = encodeFileSystemComponent(directoriesIncludedFileName);
+
     if (!fixedFileName.endsWith(metaJSONExtension)) {
-        fixedFileName = `${fixedFileName}.${identifier}${metaJSONExtension}`;
+        fixedFileName = `${encodedFilename}.${identifier}${metaJSONExtension}`;
     }
 
     return fixedFileName;
@@ -55,34 +63,18 @@ export const putFileToCollectionFolder = async (
 export const putFileToCollectionMetaFolder = async (
     basePath: string,
     collectionName: string,
-    directories: string[],
     fileName: string,
-    _content: string,
+    content: string,
 ): Promise<void> => {
-
-    for (let i = 0; i < directories.length; i++) {
-
-        const targetFolderPath = joinCollectionFolderPath(
-            basePath,
-            collectionName,
-            pageMetadataFolderName,
-            ...directories.slice(0, i + 1),
-        );
-
-        await attemptMarkDir(targetFolderPath);
-    }
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
         collectionName,
         pageMetadataFolderName,
-        ...directories,
         fileName,
     );
 
-    console.log(targetFilePath);
-
-    // await writeTextFile(targetFilePath, content);
+    await writeTextFile(targetFilePath, content);
 };
 
 export const fixFileNameFromIdentifier = (identifier: string): string => {
