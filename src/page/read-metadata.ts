@@ -53,8 +53,11 @@ export const fileSystemReadPageMetadata = async (
         };
     });
 
+    const fixedDirectories = targetPage.directories ?? [];
+
     return {
         ...metadata,
+        directories: fixedDirectories,
         historyRecords,
         createdAt: new Date(metadata.createdAt),
         updatedAt: new Date(metadata.updatedAt),
