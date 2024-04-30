@@ -4,10 +4,11 @@
  * @description Origin
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
+import { FileSystemFunctionManager } from "./function/function-manager";
 import { fileSystemOriginRenameCollection } from "./origin/rename-collection";
 import { fileSystemOriginCreateScript } from "./script/create-script";
 import { FileSystemScriptMetadata } from "./script/definition";
@@ -47,6 +48,11 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
         this._basePath = payload.basePath;
         this.payloads = payload;
+    }
+
+    public getFunctionManger(): IImbricateFunctionManager {
+
+        return FileSystemFunctionManager.create();
     }
 
     public async createCollection(collectionName: string): Promise<void> {
