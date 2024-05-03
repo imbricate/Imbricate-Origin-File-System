@@ -17,6 +17,8 @@ export const fileSystemOriginCreateScript = async (
     basePath: string,
     origin: IImbricateOrigin,
     scriptName: string,
+    initialScript: string,
+    description?: string,
 ): Promise<IImbricateScript> => {
 
     await ensureScriptFolders(basePath);
@@ -30,11 +32,13 @@ export const fileSystemOriginCreateScript = async (
         fileName,
     );
 
-    const digested: string = digestString("");
+    const digested: string = digestString(initialScript);
     const metaData: FileSystemScriptMetadata = {
 
         scriptName,
         identifier: uuid,
+
+        description,
 
         digest: digested,
         historyRecords: [{
@@ -56,7 +60,7 @@ export const fileSystemOriginCreateScript = async (
     const scriptFileName: string = fixScriptFileName(uuid);
     const scriptFolderPath: string = getScriptsFolderPath(basePath, scriptFileName);
 
-    await writeTextFile(scriptFolderPath, "");
+    await writeTextFile(scriptFolderPath, initialScript);
 
     return FileSystemImbricateScript.create(
         basePath,
