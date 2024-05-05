@@ -40,7 +40,7 @@
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-typescript": "^7.24.1",
-    "@imbricate/core": "^1.17.0",
+    "@imbricate/core": "^1.17.1",
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
