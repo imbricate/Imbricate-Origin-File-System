@@ -4,7 +4,8 @@
  * @description Origin
  */
 
-import { IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { createImbricateOriginCapability } from "./capability/origin";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -48,6 +49,10 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
         this._basePath = payload.basePath;
         this.payloads = payload;
+    }
+
+    public get capabilities(): ImbricateOriginCapability {
+        return createImbricateOriginCapability();
     }
 
     public getFunctionManger(): IImbricateFunctionManager {
