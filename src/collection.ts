@@ -38,8 +38,6 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     private readonly _collectionName: string;
     private readonly _description?: string;
 
-    private readonly _includeInSearch: boolean;
-
     private constructor(
         basePath: string,
         payload: FileSystemOriginPayload,
@@ -51,8 +49,6 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
 
         this._collectionName = collection.collectionName;
         this._description = collection.description;
-
-        this._includeInSearch = collection.includeInSearch;
     }
 
     public get collectionName(): string {
@@ -60,9 +56,6 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     }
     public get description(): string | undefined {
         return this._description;
-    }
-    public get includeInSearch(): boolean {
-        return this._includeInSearch;
     }
 
     public get capabilities(): ImbricateCollectionCapability {

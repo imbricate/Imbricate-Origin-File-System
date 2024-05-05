@@ -73,7 +73,6 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
                 {
                     collectionName,
                     description,
-                    includeInSearch: true,
                 },
             ],
         };
@@ -160,60 +159,6 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
                 collection: FileSystemCollectionMetadataCollection,
             ) => {
                 return collection.collectionName !== collectionName;
-            });
-
-        const newMetaData: FileSystemCollectionMetadata = {
-            collections: newCollection,
-        };
-
-        await this._putCollectionsMetaData(newMetaData);
-    }
-
-    public async includeCollectionInSearch(collectionName: string): Promise<void> {
-
-        const collectionsMetaData: FileSystemCollectionMetadata =
-            await this._getCollectionsMetaData();
-
-        const newCollection: FileSystemCollectionMetadataCollection[] =
-            collectionsMetaData.collections.map((
-                collection: FileSystemCollectionMetadataCollection,
-            ) => {
-
-                if (collection.collectionName === collectionName) {
-                    return {
-                        ...collection,
-                        includeInSearch: true,
-                    };
-                }
-
-                return collection;
-            });
-
-        const newMetaData: FileSystemCollectionMetadata = {
-            collections: newCollection,
-        };
-
-        await this._putCollectionsMetaData(newMetaData);
-    }
-
-    public async excludeCollectionInSearch(collectionName: string): Promise<void> {
-
-        const collectionsMetaData: FileSystemCollectionMetadata =
-            await this._getCollectionsMetaData();
-
-        const newCollection: FileSystemCollectionMetadataCollection[] =
-            collectionsMetaData.collections.map((
-                collection: FileSystemCollectionMetadataCollection,
-            ) => {
-
-                if (collection.collectionName === collectionName) {
-                    return {
-                        ...collection,
-                        includeInSearch: false,
-                    };
-                }
-
-                return collection;
             });
 
         const newMetaData: FileSystemCollectionMetadata = {
