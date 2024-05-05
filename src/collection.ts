@@ -4,7 +4,7 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IImbricatePage, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig } from "@imbricate/core";
+import { IImbricateOriginCollection, IImbricatePage, ImbricateCollectionCapability, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig, createAllAllowImbricateCollectionCapability } from "@imbricate/core";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fileSystemCreatePage } from "./page/create-page";
@@ -63,6 +63,10 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     }
     public get includeInSearch(): boolean {
         return this._includeInSearch;
+    }
+
+    public get capabilities(): ImbricateCollectionCapability {
+        return createAllAllowImbricateCollectionCapability();
     }
 
     public async listPages(

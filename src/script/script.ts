@@ -4,7 +4,7 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptHistoryRecord, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptCapability, ImbricateScriptHistoryRecord, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, createAllAllowImbricateScriptCapability, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { prepareFileSystemFeatures } from "../features/prepare";
@@ -58,6 +58,10 @@ export class FileSystemImbricateScript implements IImbricateScript {
     }
     public get updatedAt(): Date {
         return this._metadata.updatedAt;
+    }
+
+    public get capabilities(): ImbricateScriptCapability {
+        return createAllAllowImbricateScriptCapability();
     }
 
     public async readScript(): Promise<string> {

@@ -4,7 +4,7 @@
  * @description Page
  */
 
-import { IImbricatePage, ImbricatePageAttributes, ImbricatePageHistoryRecord } from "@imbricate/core";
+import { IImbricatePage, ImbricatePageAttributes, ImbricatePageCapability, ImbricatePageHistoryRecord, createAllAllowImbricatePageCapability } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -60,6 +60,10 @@ export class FileSystemImbricatePage implements IImbricatePage {
     }
     public get updatedAt(): Date {
         return this._metadata.updatedAt;
+    }
+
+    public get capabilities(): ImbricatePageCapability {
+        return createAllAllowImbricatePageCapability();
     }
 
     public async readContent(): Promise<string> {
