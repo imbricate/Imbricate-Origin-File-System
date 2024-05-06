@@ -14,7 +14,6 @@ import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemReadPageMetadata = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
     identifier: string,
 ): Promise<FileSystemPageMetadata | null> => {
@@ -23,7 +22,6 @@ export const fileSystemReadPageMetadata = async (
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
-        collectionName,
         collectionUniqueIdentifier,
     );
 

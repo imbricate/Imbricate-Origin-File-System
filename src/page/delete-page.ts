@@ -14,7 +14,6 @@ import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemDeletePage = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
     identifier: string,
 ): Promise<void> => {
@@ -23,7 +22,6 @@ export const fileSystemDeletePage = async (
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
-        collectionName,
         collectionUniqueIdentifier,
     );
 

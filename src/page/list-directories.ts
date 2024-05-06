@@ -12,7 +12,6 @@ import { pageMetadataFolderName } from "./definition";
 
 export const fileSystemListDirectories = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
     directories: string[],
 ): Promise<string[]> => {

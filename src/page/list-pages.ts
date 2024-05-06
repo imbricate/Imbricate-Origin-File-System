@@ -13,7 +13,6 @@ import { pageMetadataFolderName } from "./definition";
 
 export const fileSystemListDirectoriesPages = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
     directories: string[],
     recursive: boolean,
@@ -21,7 +20,6 @@ export const fileSystemListDirectoriesPages = async (
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
-        collectionName,
         collectionUniqueIdentifier,
     );
 
@@ -43,7 +41,6 @@ export const fileSystemListDirectoriesPages = async (
 
 export const fileSystemListAllPages = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
 ): Promise<ImbricatePageSnapshot[]> => {
 

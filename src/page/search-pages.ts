@@ -12,7 +12,6 @@ import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemSearchPages = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
     keyword: string,
     config: ImbricateSearchScriptConfig,
@@ -25,7 +24,6 @@ export const fileSystemSearchPages = async (
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
-        collectionName,
         collectionUniqueIdentifier,
     );
 
@@ -86,7 +84,6 @@ export const fileSystemSearchPages = async (
 
                 const content: string = await getPageContent(
                     basePath,
-                    collectionName,
                     collectionUniqueIdentifier,
                     page.identifier,
                 );

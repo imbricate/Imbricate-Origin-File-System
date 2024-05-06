@@ -14,7 +14,6 @@ import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemRetitlePage = async (
     basePath: string,
-    collectionName: string,
     collectionUniqueIdentifier: string,
     identifier: string,
     newTitle: string,
@@ -24,7 +23,6 @@ export const fileSystemRetitlePage = async (
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
-        collectionName,
         collectionUniqueIdentifier,
     );
 

@@ -48,11 +48,3 @@ export const joinCollectionFolderPath = (
 
     return Path.join(basePath, "collections", uniqueIdentifier, ...paths);
 };
-
-export const joinCollectionFolderListFilePath = (
-    basePath: string,
-    collectionName: string,
-): string => {
-
-    return Path.join(basePath, "collections", collectionName, "list.meta.json");
-};

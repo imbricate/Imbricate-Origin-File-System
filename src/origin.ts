@@ -102,7 +102,9 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         );
     }
 
-    public async hasCollection(collectionName: string): Promise<boolean> {
+    public async hasCollection(
+        collectionName: string,
+    ): Promise<boolean> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
