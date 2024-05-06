@@ -10,7 +10,8 @@ import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixPageMetadataFileName } from "./common";
 import { FileSystemPageMetadata, pageMetadataFolderName } from "./definition";
-import { fileSystemListAllPages } from "./list-pages";
+import { fileSystemGetPage } from "./get-page";
+import { fileSystemListDirectoriesPages } from "./list-pages";
 
 export const fileSystemRetitlePage = async (
     basePath: string,
@@ -21,9 +22,22 @@ export const fileSystemRetitlePage = async (
 
     await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
-    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
+    const targetPage = await fileSystemGetPage(
         basePath,
         collectionUniqueIdentifier,
+        identifier,
+    );
+
+    if (!targetPage) {
+
+        throw new Error(`Page with identifier: ${identifier} not found`);
+    }
+
+    const pages: ImbricatePageSnapshot[] = await fileSystemListDirectoriesPages(
+        basePath,
+        collectionUniqueIdentifier,
+        targetPage.directories,
+        false,
     );
 
     for (const page of pages) {
