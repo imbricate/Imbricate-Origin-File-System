@@ -198,7 +198,7 @@ export class FileSystemImbricateScript implements IImbricateScript {
 
         const environment: SandboxEnvironment = {
             origin: {
-                type: this._origin.metadata.type,
+                type: this._origin.originType,
             },
         };
 

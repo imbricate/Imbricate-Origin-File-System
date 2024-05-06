@@ -36,6 +36,8 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     private readonly _payloads: FileSystemOriginPayload;
 
     private readonly _collectionName: string;
+    private readonly _uniqueIdentifier: string;
+
     private readonly _description?: string;
 
     private constructor(
@@ -48,12 +50,18 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         this._payloads = payload;
 
         this._collectionName = collection.collectionName;
+        this._uniqueIdentifier = collection.uniqueIdentifier;
+
         this._description = collection.description;
     }
 
     public get collectionName(): string {
         return this._collectionName;
     }
+    public get uniqueIdentifier(): string {
+        return this._uniqueIdentifier;
+    }
+
     public get description(): string | undefined {
         return this._description;
     }

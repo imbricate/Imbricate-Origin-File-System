@@ -7,6 +7,8 @@
 export type FileSystemCollectionMetadataCollection = {
 
     readonly collectionName: string;
+    readonly uniqueIdentifier: string;
+
     readonly description?: string;
 };
 

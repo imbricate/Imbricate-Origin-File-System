@@ -5,6 +5,7 @@
  */
 
 import { IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, createAllAllowImbricateOriginCapability } from "@imbricate/core";
+import { UUIDVersion1 } from "@sudoo/uuid";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -35,7 +36,6 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     }
 
     public readonly metadata: ImbricateOriginMetadata = {
-        type: "file-system",
         digestAlgorithm: IMBRICATE_DIGEST_ALGORITHM.SHA1,
     };
     public readonly payloads: FileSystemOriginPayload;
@@ -48,6 +48,13 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
         this._basePath = payload.basePath;
         this.payloads = payload;
+    }
+
+    public get originType(): string {
+        return "file-system";
+    }
+    public get uniqueIdentifier(): string {
+        return this._basePath;
     }
 
     public get capabilities(): ImbricateOriginCapability {
@@ -67,11 +74,14 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
 
+        const uniqueIdentifier: string = UUIDVersion1.generateString();
+
         const newMetaData: FileSystemCollectionMetadata = {
             collections: [
                 ...collectionsMetaData.collections,
                 {
                     collectionName,
+                    uniqueIdentifier,
                     description,
                 },
             ],
