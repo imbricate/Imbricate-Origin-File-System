@@ -4,14 +4,12 @@
  * @description Rename Collection
  */
 
-import { moveFile } from "@sudoo/io";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "../definition/collection";
-import { joinCollectionFolderPath } from "../util/path-joiner";
 import { getCollectionsMetaData, putCollectionsMetadata } from "./common";
 
 export const fileSystemOriginRenameCollection = async (
     basePath: string,
-    collectionName: string,
+    collectionUniqueIdentifier: string,
     newCollectionName: string,
 ): Promise<void> => {
 
@@ -22,7 +20,7 @@ export const fileSystemOriginRenameCollection = async (
         collectionsMetaData.collections.map((
             collection: FileSystemCollectionMetadataCollection,
         ) => {
-            if (collection.collectionName === collectionName) {
+            if (collection.uniqueIdentifier === collectionUniqueIdentifier) {
                 return {
                     ...collection,
                     collectionName: newCollectionName,
@@ -36,10 +34,4 @@ export const fileSystemOriginRenameCollection = async (
     };
 
     await putCollectionsMetadata(basePath, newMetaData);
-
-    const oldCollectionPath: string = joinCollectionFolderPath(basePath, collectionName);
-
-    const newCollectionPath: string = joinCollectionFolderPath(basePath, newCollectionName);
-
-    await moveFile(oldCollectionPath, newCollectionPath);
 };

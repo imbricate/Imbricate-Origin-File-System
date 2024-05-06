@@ -90,11 +90,14 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         await this._putCollectionsMetaData(newMetaData);
     }
 
-    public async renameCollection(collectionName: string, newCollectionName: string): Promise<void> {
+    public async renameCollection(
+        collectionUniqueIdentifier: string,
+        newCollectionName: string,
+    ): Promise<void> {
 
         return await fileSystemOriginRenameCollection(
             this._basePath,
-            collectionName,
+            collectionUniqueIdentifier,
             newCollectionName,
         );
     }
@@ -113,7 +116,9 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         return found;
     }
 
-    public async getCollection(collectionName: string): Promise<IImbricateOriginCollection | null> {
+    public async findCollection(
+        collectionName: string,
+    ): Promise<IImbricateOriginCollection | null> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
@@ -123,6 +128,34 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
                 collection: FileSystemCollectionMetadataCollection,
             ) => {
                 return collection.collectionName === collectionName;
+            });
+
+        if (!found) {
+            return null;
+        }
+
+        const instance: FileSystemImbricateCollection =
+            FileSystemImbricateCollection.withConfig(
+                this._basePath,
+                this.payloads,
+                found,
+            );
+
+        return instance;
+    }
+
+    public async getCollection(
+        collectionUniqueIdentifier: string,
+    ): Promise<IImbricateOriginCollection | null> {
+
+        const collectionsMetaData: FileSystemCollectionMetadata =
+            await this._getCollectionsMetaData();
+
+        const found: FileSystemCollectionMetadataCollection | undefined =
+            collectionsMetaData.collections.find((
+                collection: FileSystemCollectionMetadataCollection,
+            ) => {
+                return collection.uniqueIdentifier === collectionUniqueIdentifier;
             });
 
         if (!found) {
@@ -159,7 +192,9 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         });
     }
 
-    public async deleteCollection(collectionName: string): Promise<void> {
+    public async deleteCollection(
+        collectionUniqueIdentifier: string,
+    ): Promise<void> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
@@ -168,7 +203,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
             collectionsMetaData.collections.filter((
                 collection: FileSystemCollectionMetadataCollection,
             ) => {
-                return collection.collectionName !== collectionName;
+                return collection.uniqueIdentifier !== collectionUniqueIdentifier;
             });
 
         const newMetaData: FileSystemCollectionMetadata = {
