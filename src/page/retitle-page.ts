@@ -15,15 +15,17 @@ import { fileSystemListAllPages } from "./list-pages";
 export const fileSystemRetitlePage = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     identifier: string,
     newTitle: string,
 ): Promise<void> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
     );
 
     for (const page of pages) {
@@ -43,14 +45,14 @@ export const fileSystemRetitlePage = async (
 
             const oldMetaFilePath: string = joinCollectionFolderPath(
                 basePath,
-                collectionName,
+                collectionUniqueIdentifier,
                 pageMetadataFolderName,
                 oldMetaFile,
             );
 
             const newMetaFilePath: string = joinCollectionFolderPath(
                 basePath,
-                collectionName,
+                collectionUniqueIdentifier,
                 pageMetadataFolderName,
                 newMetaFile,
             );

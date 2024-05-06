@@ -42,17 +42,11 @@ export const getScriptsMetadataFolderPath = (
 
 export const joinCollectionFolderPath = (
     basePath: string,
-    collectionName: string,
+    uniqueIdentifier: string,
     ...paths: string[]
 ): string => {
 
-    const fixedCollectionName: string = collectionName
-        .replace(/\//g, "-")
-        .replace(/\\/g, "-")
-        .replace(/:/g, "-")
-        .replace(/ /g, "-");
-
-    return Path.join(basePath, "collections", fixedCollectionName, ...paths);
+    return Path.join(basePath, "collections", uniqueIdentifier, ...paths);
 };
 
 export const joinCollectionFolderListFilePath = (

@@ -15,14 +15,16 @@ import { fileSystemListAllPages } from "./list-pages";
 export const fileSystemReadPageMetadata = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     identifier: string,
 ): Promise<FileSystemPageMetadata | null> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
     );
 
     const targetPage: ImbricatePageSnapshot | undefined = pages.find(
@@ -37,7 +39,7 @@ export const fileSystemReadPageMetadata = async (
 
     const metadataFilePath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         pageMetadataFolderName,
         fixPageMetadataFileName(targetPage.directories, targetPage.title, identifier),
     );

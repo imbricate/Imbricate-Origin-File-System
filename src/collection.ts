@@ -78,6 +78,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemListDirectoriesPages(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             directories,
             recursive,
         );
@@ -90,6 +91,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemListDirectories(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             directories,
         );
     }
@@ -103,6 +105,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemCreatePage(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             directories,
             title,
             initialContent,
@@ -117,6 +120,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemPutPage(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             pageMetadata,
             content,
         );
@@ -130,6 +134,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemRetitlePage(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             identifier,
             newTitle,
         );
@@ -142,6 +147,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemDeletePage(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             identifier,
         );
     }
@@ -151,6 +157,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemGetPage(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             identifier,
         );
     }
@@ -175,6 +182,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemSearchPages(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             keyword,
             config,
             this._payloads,
@@ -188,6 +196,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         return await fileSystemQueryPages(
             this._basePath,
             this._collectionName,
+            this._uniqueIdentifier,
             query,
         );
     }

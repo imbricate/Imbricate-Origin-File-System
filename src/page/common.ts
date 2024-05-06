@@ -36,12 +36,13 @@ export const fixPageMetadataFileName = (
 export const getPageContent = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     identifier: string,
 ): Promise<string> => {
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         fixFileNameFromIdentifier(identifier),
     );
 
@@ -51,13 +52,14 @@ export const getPageContent = async (
 export const putFileToCollectionFolder = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     identifier: string,
     content: string,
 ): Promise<void> => {
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         identifier,
     );
 
@@ -67,13 +69,14 @@ export const putFileToCollectionFolder = async (
 export const putFileToCollectionMetaFolder = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     fileName: string,
     content: string,
 ): Promise<void> => {
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         pageMetadataFolderName,
         fileName,
     );

@@ -14,11 +14,16 @@ import { pageMetadataFolderName } from "./definition";
 export const fileSystemListDirectoriesPages = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     directories: string[],
     recursive: boolean,
 ): Promise<ImbricatePageSnapshot[]> => {
 
-    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(basePath, collectionName);
+    const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
+        basePath,
+        collectionName,
+        collectionUniqueIdentifier,
+    );
 
     return pages.filter((page: ImbricatePageSnapshot) => {
 
@@ -39,13 +44,14 @@ export const fileSystemListDirectoriesPages = async (
 export const fileSystemListAllPages = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
 ): Promise<ImbricatePageSnapshot[]> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
     const collectionFolderPath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         pageMetadataFolderName,
     );
 

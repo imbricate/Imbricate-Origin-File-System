@@ -13,12 +13,14 @@ import { fileSystemReadPageMetadata } from "./read-metadata";
 export const fileSystemQueryPages = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     _query: ImbricatePageQuery,
 ): Promise<IImbricatePage[]> => {
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
     );
 
     const results: IImbricatePage[] = [];
@@ -29,6 +31,7 @@ export const fileSystemQueryPages = async (
         const metadata: FileSystemPageMetadata | null = await fileSystemReadPageMetadata(
             basePath,
             collectionName,
+            collectionUniqueIdentifier,
             page.identifier,
         );
 
@@ -39,6 +42,7 @@ export const fileSystemQueryPages = async (
         results.push(FileSystemImbricatePage.create(
             basePath,
             collectionName,
+            collectionUniqueIdentifier,
             metadata,
         ));
     }

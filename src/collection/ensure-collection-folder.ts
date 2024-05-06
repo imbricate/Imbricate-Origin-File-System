@@ -11,7 +11,7 @@ const metadataFolderName: string = ".metadata";
 
 export const ensureCollectionFolder = async (
     basePath: string,
-    collectionName: string,
+    uniqueIdentifier: string,
 ): Promise<void> => {
 
     await attemptMarkDir(basePath);
@@ -25,7 +25,7 @@ export const ensureCollectionFolder = async (
 
     const collectionFolderPath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        uniqueIdentifier,
     );
 
     const pathExistsResult: boolean = await pathExists(collectionFolderPath);
@@ -35,7 +35,7 @@ export const ensureCollectionFolder = async (
 
     const metaFolderPath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        uniqueIdentifier,
         metadataFolderName,
     );
 

@@ -13,14 +13,16 @@ import { fileSystemReadPageMetadata } from "./read-metadata";
 export const fileSystemGetPage = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     identifier: string,
 ): Promise<IImbricatePage | null> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
     const metadata: FileSystemPageMetadata | null = await fileSystemReadPageMetadata(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
         identifier,
     );
 
@@ -31,6 +33,7 @@ export const fileSystemGetPage = async (
     return FileSystemImbricatePage.create(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
         metadata,
     );
 };

@@ -15,14 +15,16 @@ import { fileSystemListAllPages } from "./list-pages";
 export const fileSystemDeletePage = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     identifier: string,
 ): Promise<void> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
     );
 
     const page: ImbricatePageSnapshot | undefined = pages.find((
@@ -38,7 +40,7 @@ export const fileSystemDeletePage = async (
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         fixFileNameFromIdentifier(identifier),
     );
 
@@ -46,7 +48,7 @@ export const fileSystemDeletePage = async (
 
     const metaFilePath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         pageMetadataFolderName,
         metaFileName,
     );

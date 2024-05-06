@@ -16,24 +16,35 @@ export class FileSystemImbricatePage implements IImbricatePage {
     public static create(
         basePath: string,
         collectionName: string,
+        collectionUniqueIdentifier: string,
         metadata: FileSystemPageMetadata,
     ): FileSystemImbricatePage {
 
-        return new FileSystemImbricatePage(basePath, collectionName, metadata);
+        return new FileSystemImbricatePage(
+            basePath,
+            collectionName,
+            collectionUniqueIdentifier,
+            metadata,
+        );
     }
 
     private readonly _basePath: string;
     private readonly _collectionName: string;
+    private readonly _collectionUniqueIdentifier: string;
+
     private readonly _metadata: FileSystemPageMetadata;
 
     private constructor(
         basePath: string,
         collectionName: string,
+        collectionUniqueIdentifier: string,
         metadata: FileSystemPageMetadata,
     ) {
 
         this._basePath = basePath;
         this._collectionName = collectionName;
+        this._collectionUniqueIdentifier = collectionUniqueIdentifier;
+
         this._metadata = metadata;
     }
 
@@ -70,12 +81,12 @@ export class FileSystemImbricatePage implements IImbricatePage {
 
         await ensureCollectionFolder(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
         );
 
         const targetFilePath = joinCollectionFolderPath(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
             this._fixFileNameFromIdentifier(this.identifier),
         );
 
@@ -86,12 +97,12 @@ export class FileSystemImbricatePage implements IImbricatePage {
 
         await ensureCollectionFolder(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
         );
 
         const targetFilePath = joinCollectionFolderPath(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
             this._fixFileNameFromIdentifier(this.identifier),
         );
 
@@ -107,7 +118,7 @@ export class FileSystemImbricatePage implements IImbricatePage {
 
         await ensureCollectionFolder(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
         );
 
         const updatedMetadata: FileSystemPageMetadata = {
@@ -121,7 +132,7 @@ export class FileSystemImbricatePage implements IImbricatePage {
         const fileName: string = fixPageMetadataFileName(this.directories, this.title, this.identifier);
         const metadataFilePath = joinCollectionFolderPath(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
             pageMetadataFolderName,
             fileName,
         );
@@ -190,13 +201,13 @@ export class FileSystemImbricatePage implements IImbricatePage {
 
         await ensureCollectionFolder(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
         );
 
         const fileName: string = fixPageMetadataFileName(this.directories, this.title, this.identifier);
         const metadataFilePath = joinCollectionFolderPath(
             this._basePath,
-            this._collectionName,
+            this._collectionUniqueIdentifier,
             pageMetadataFolderName,
             fileName,
         );

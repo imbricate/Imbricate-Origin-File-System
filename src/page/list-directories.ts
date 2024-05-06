@@ -13,14 +13,15 @@ import { pageMetadataFolderName } from "./definition";
 export const fileSystemListDirectories = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     directories: string[],
 ): Promise<string[]> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
 
     const collectionFolderPath = joinCollectionFolderPath(
         basePath,
-        collectionName,
+        collectionUniqueIdentifier,
         pageMetadataFolderName,
     );
 

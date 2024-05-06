@@ -15,17 +15,19 @@ import { FileSystemImbricatePage } from "./page";
 export const fileSystemCreatePage = async (
     basePath: string,
     collectionName: string,
+    collectionUniqueIdentifier: string,
     directories: string[],
     title: string,
     initialContent: string,
 ): Promise<IImbricatePage> => {
 
-    await ensureCollectionFolder(basePath, collectionName);
+    await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
     const uuid: string = UUIDVersion1.generateString();
 
     await putFileToCollectionFolder(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
         fixFileNameFromIdentifier(uuid),
         initialContent,
     );
@@ -54,6 +56,7 @@ export const fileSystemCreatePage = async (
     await putFileToCollectionMetaFolder(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
         fixPageMetadataFileName(directories, title, uuid),
         stringifyFileSystemPageMetadata(metadata),
     );
@@ -61,6 +64,7 @@ export const fileSystemCreatePage = async (
     return FileSystemImbricatePage.create(
         basePath,
         collectionName,
+        collectionUniqueIdentifier,
         metadata,
     );
 };
