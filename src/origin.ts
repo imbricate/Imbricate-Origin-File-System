@@ -21,6 +21,7 @@ import { fileSystemOriginQueryScripts } from "./script/query-scripts";
 import { fileSystemOriginRemoveScript } from "./script/remove-script";
 import { fileSystemOriginRenameScript } from "./script/rename-script";
 import { fileSystemOriginSearchScripts } from "./script/search-scripts";
+import { digestString } from "./util/digest";
 import { createOrGetFile, putFile } from "./util/io";
 import { joinCollectionMetaFilePath } from "./util/path-joiner";
 
@@ -54,7 +55,8 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         return "file-system";
     }
     public get uniqueIdentifier(): string {
-        return this._basePath;
+        const hashedPath = digestString(this._basePath);
+        return hashedPath;
     }
 
     public get capabilities(): ImbricateOriginCapability {
