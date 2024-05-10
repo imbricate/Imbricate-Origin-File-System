@@ -4,8 +4,9 @@
  * @description Origin
  */
 
-import { IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, createAllAllowImbricateOriginCapability } from "@imbricate/core";
+import { IImbricateBinaryStorage, IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, createAllAllowImbricateOriginCapability } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
+import { FileSystemBinaryStorage } from "./binary-storage/binary-storage";
 import { FileSystemImbricateCollection } from "./collection";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
@@ -64,8 +65,11 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     }
 
     public getFunctionManger(): IImbricateFunctionManager {
-
         return FileSystemFunctionManager.create();
+    }
+
+    public getBinaryStorage(): IImbricateBinaryStorage {
+        return FileSystemBinaryStorage.create();
     }
 
     public async createCollection(
