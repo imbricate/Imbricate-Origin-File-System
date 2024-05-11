@@ -14,6 +14,15 @@ export const joinCollectionMetaFilePath = (
     return Path.join(resolved, "collection.meta.json");
 };
 
+export const getBinaryStorageFolderPath = (
+    basePath: string,
+    ...paths: string[]
+): string => {
+
+    const resolved: string = Path.resolve(basePath);
+    return Path.join(resolved, "binary-storage", ...paths);
+};
+
 export const getCollectionFolderPath = (
     basePath: string,
 ): string => {
@@ -47,4 +56,17 @@ export const joinCollectionFolderPath = (
 ): string => {
 
     return Path.join(basePath, "collections", uniqueIdentifier, ...paths);
+};
+
+export const buildUrlWithScheme = (url: string): string => {
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
+    }
+
+    if (url.startsWith("file://")) {
+        return url;
+    }
+
+    return `file://${url}`;
 };

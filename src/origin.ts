@@ -69,7 +69,9 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     }
 
     public getBinaryStorage(): IImbricateBinaryStorage {
-        return FileSystemBinaryStorage.create();
+        return FileSystemBinaryStorage.create(
+            this._basePath,
+        );
     }
 
     public async createCollection(
