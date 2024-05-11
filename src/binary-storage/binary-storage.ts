@@ -5,20 +5,37 @@
  */
 
 import { IImbricateBinaryStorage } from "@imbricate/core";
+import { putBinaryStorageFile } from "./put-file";
 
 export class FileSystemBinaryStorage implements IImbricateBinaryStorage {
 
-    public static create(): FileSystemBinaryStorage {
-        return new FileSystemBinaryStorage();
+    public static create(
+        basePath: string,
+    ): FileSystemBinaryStorage {
+        return new FileSystemBinaryStorage(basePath);
     }
 
-    private constructor() {
+    private readonly _basePath: string;
 
+    private constructor(
+        basePath: string,
+    ) {
+
+        this._basePath = basePath;
     }
 
-    public async uploadBase64(binary: string): Promise<string> {
+    public async putBinaryBase64(
+        binary: string,
+        fileName: string,
+    ): Promise<string> {
 
-        console.log(binary);
-        return "";
+        const buffer: Buffer = Buffer.from(binary, "base64");
+        const filePath: string = await putBinaryStorageFile(
+            this._basePath,
+            fileName,
+            buffer,
+        );
+
+        return filePath;
     }
 }
