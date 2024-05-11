@@ -10,3 +10,8 @@ export const digestString = (input: string): string => {
 
     return createHash("sha1").update(input).digest("hex");
 };
+
+export const digestBuffer = (input: Buffer): string => {
+
+    return createHash("sha1").update(input).digest("hex");
+};
