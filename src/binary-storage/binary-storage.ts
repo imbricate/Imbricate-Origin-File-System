@@ -38,4 +38,14 @@ export class FileSystemBinaryStorage implements IImbricateBinaryStorage {
 
         return filePath;
     }
+
+    public async validateBinaryBase64(binary: string): Promise<boolean> {
+
+        try {
+            Buffer.from(binary, "base64");
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 }

@@ -77,7 +77,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     public async createCollection(
         collectionName: string,
         description?: string,
-    ): Promise<void> {
+    ): Promise<IImbricateOriginCollection> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
@@ -94,8 +94,18 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
                 },
             ],
         };
-
         await this._putCollectionsMetaData(newMetaData);
+
+        const collection: FileSystemImbricateCollection = FileSystemImbricateCollection.withConfig(
+            this._basePath,
+            this.payloads,
+            {
+                collectionName,
+                uniqueIdentifier,
+                description,
+            },
+        );
+        return collection;
     }
 
     public async renameCollection(
