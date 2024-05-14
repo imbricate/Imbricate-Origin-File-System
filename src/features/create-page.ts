@@ -4,7 +4,7 @@
  * @description Create Page
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateCollection, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 
 type CreatePageInput = {
 
@@ -37,7 +37,7 @@ const createImplementation = (
             throw new Error("Title is required");
         }
 
-        const collection: IImbricateOriginCollection | null =
+        const collection: IImbricateCollection | null =
             await origin.getCollection(input.collection);
 
         if (!collection) {

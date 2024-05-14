@@ -4,16 +4,21 @@
  * @description Function Manager
  */
 
-import { IImbricateFunctionManager, IImbricateOrigin, ImbricateFunction } from "@imbricate/core";
+import { IImbricateFunctionManager, IImbricateOrigin, ImbricateFunction, ImbricateFunctionCapability, ImbricateFunctionManagerBase } from "@imbricate/core";
 
-export class FileSystemFunctionManager implements IImbricateFunctionManager {
+export class FileSystemFunctionManager extends ImbricateFunctionManagerBase implements IImbricateFunctionManager {
 
     public static create(): FileSystemFunctionManager {
 
         return new FileSystemFunctionManager();
     }
 
+    public readonly capabilities: ImbricateFunctionCapability =
+        ImbricateFunctionManagerBase.allAllowCapability();
+
     private constructor() {
+
+        super();
     }
 
     public findSynchronousOriginFunctions():

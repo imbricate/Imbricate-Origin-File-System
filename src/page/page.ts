@@ -4,14 +4,14 @@
  * @description Page
  */
 
-import { IImbricatePage, ImbricatePageAttributes, ImbricatePageCapability, ImbricatePageHistoryRecord, createAllAllowImbricatePageCapability } from "@imbricate/core";
+import { IImbricatePage, ImbricatePageAttributes, ImbricatePageBase, ImbricatePageCapability, ImbricatePageHistoryRecord } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { fixPageMetadataFileName } from "./common";
 import { FileSystemPageMetadata, pageMetadataFolderName, stringifyFileSystemPageMetadata } from "./definition";
 
-export class FileSystemImbricatePage implements IImbricatePage {
+export class FileSystemImbricatePage extends ImbricatePageBase implements IImbricatePage {
 
     public static create(
         basePath: string,
@@ -36,6 +36,8 @@ export class FileSystemImbricatePage implements IImbricatePage {
         collectionUniqueIdentifier: string,
         metadata: FileSystemPageMetadata,
     ) {
+
+        super();
 
         this._basePath = basePath;
         this._collectionUniqueIdentifier = collectionUniqueIdentifier;
@@ -69,7 +71,7 @@ export class FileSystemImbricatePage implements IImbricatePage {
     }
 
     public get capabilities(): ImbricatePageCapability {
-        return createAllAllowImbricatePageCapability();
+        return ImbricatePageBase.allAllowCapability();
     }
 
     public async readContent(): Promise<string> {

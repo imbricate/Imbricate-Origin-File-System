@@ -4,7 +4,7 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptCapability, ImbricateScriptHistoryRecord, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, createAllAllowImbricateScriptCapability, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { prepareFileSystemFeatures } from "../features/prepare";
@@ -12,7 +12,7 @@ import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 import { FileSystemScriptMetadata, stringifyFileSystemScriptMetadata } from "./definition";
 
-export class FileSystemImbricateScript implements IImbricateScript {
+export class FileSystemImbricateScript extends ImbricateScriptBase implements IImbricateScript {
 
     public static create(
         basePath: string,
@@ -32,6 +32,8 @@ export class FileSystemImbricateScript implements IImbricateScript {
         origin: IImbricateOrigin,
         metadata: FileSystemScriptMetadata,
     ) {
+
+        super();
 
         this._basePath = basePath;
         this._origin = origin;
@@ -61,7 +63,7 @@ export class FileSystemImbricateScript implements IImbricateScript {
     }
 
     public get capabilities(): ImbricateScriptCapability {
-        return createAllAllowImbricateScriptCapability();
+        return ImbricateScriptBase.allAllowCapability();
     }
 
     public async readScript(): Promise<string> {

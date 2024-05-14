@@ -4,7 +4,7 @@
  * @description Collection
  */
 
-import { IImbricateOriginCollection, IImbricatePage, ImbricateCollectionCapability, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig, createAllAllowImbricateCollectionCapability } from "@imbricate/core";
+import { IImbricateCollection, IImbricatePage, ImbricateCollectionBase, ImbricateCollectionCapability, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig } from "@imbricate/core";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fileSystemCreatePage } from "./page/create-page";
@@ -17,7 +17,7 @@ import { fileSystemQueryPages } from "./page/query-pages";
 import { fileSystemRetitlePage } from "./page/retitle-page";
 import { fileSystemSearchPages } from "./page/search-pages";
 
-export class FileSystemImbricateCollection implements IImbricateOriginCollection {
+export class FileSystemImbricateCollection extends ImbricateCollectionBase implements IImbricateCollection {
 
     public static withConfig(
         basePath: string,
@@ -46,6 +46,8 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
         collection: FileSystemCollectionMetadataCollection,
     ) {
 
+        super();
+
         this._basePath = basePath;
         this._payloads = payload;
 
@@ -67,7 +69,7 @@ export class FileSystemImbricateCollection implements IImbricateOriginCollection
     }
 
     public get capabilities(): ImbricateCollectionCapability {
-        return createAllAllowImbricateCollectionCapability();
+        return ImbricateCollectionBase.allAllowCapability();
     }
 
     public async listPages(

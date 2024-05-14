@@ -4,7 +4,7 @@
  * @description Query Pages
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, IImbricatePage, ImbricatePageAttributes, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateCollection, IImbricatePage, ImbricatePageAttributes, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 import { FileSystemPageMetadata } from "../page/definition";
 
 type QueryPagesInput = {
@@ -31,7 +31,7 @@ const createImplementation = (
             throw new Error("Collection is required");
         }
 
-        const collection: IImbricateOriginCollection | null =
+        const collection: IImbricateCollection | null =
             await origin.getCollection(input.collection);
 
         if (!collection) {

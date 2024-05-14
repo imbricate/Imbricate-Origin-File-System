@@ -4,10 +4,10 @@
  * @description Binary Storage
  */
 
-import { IImbricateBinaryStorage } from "@imbricate/core";
+import { IImbricateBinaryStorage, ImbricateBaseBinaryStorage, ImbricateBinaryStorageCapability } from "@imbricate/core";
 import { putBinaryStorageFile } from "./put-file";
 
-export class FileSystemBinaryStorage implements IImbricateBinaryStorage {
+export class FileSystemBinaryStorage extends ImbricateBaseBinaryStorage implements IImbricateBinaryStorage {
 
     public static create(
         basePath: string,
@@ -17,9 +17,14 @@ export class FileSystemBinaryStorage implements IImbricateBinaryStorage {
 
     private readonly _basePath: string;
 
+    public readonly capabilities: ImbricateBinaryStorageCapability =
+        ImbricateBaseBinaryStorage.allAllowCapability();
+
     private constructor(
         basePath: string,
     ) {
+
+        super();
 
         this._basePath = basePath;
     }

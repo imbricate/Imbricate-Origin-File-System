@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateBinaryStorage, IImbricateFunctionManager, IImbricateOrigin, IImbricateOriginCollection, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, createAllAllowImbricateOriginCapability } from "@imbricate/core";
+import { IImbricateBinaryStorage, IImbricateCollection, IImbricateFunctionManager, IImbricateOrigin, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginBase, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { FileSystemBinaryStorage } from "./binary-storage/binary-storage";
 import { FileSystemImbricateCollection } from "./collection";
@@ -26,7 +26,7 @@ import { digestString } from "./util/digest";
 import { createOrGetFile, putFile } from "./util/io";
 import { joinCollectionMetaFilePath } from "./util/path-joiner";
 
-export class FileSystemImbricateOrigin implements IImbricateOrigin {
+export class FileSystemImbricateOrigin extends ImbricateOriginBase implements IImbricateOrigin {
 
     public static withPayloads(
         payload: FileSystemOriginPayload,
@@ -48,6 +48,8 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         payload: FileSystemOriginPayload,
     ) {
 
+        super();
+
         this._basePath = payload.basePath;
         this.payloads = payload;
     }
@@ -61,10 +63,10 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     }
 
     public get capabilities(): ImbricateOriginCapability {
-        return createAllAllowImbricateOriginCapability();
+        return ImbricateOriginBase.allAllowCapability();
     }
 
-    public getFunctionManger(): IImbricateFunctionManager {
+    public getFunctionManager(): IImbricateFunctionManager {
         return FileSystemFunctionManager.create();
     }
 
@@ -77,7 +79,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
     public async createCollection(
         collectionName: string,
         description?: string,
-    ): Promise<IImbricateOriginCollection> {
+    ): Promise<IImbricateCollection> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
@@ -138,7 +140,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
     public async findCollection(
         collectionName: string,
-    ): Promise<IImbricateOriginCollection | null> {
+    ): Promise<IImbricateCollection | null> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
@@ -166,7 +168,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
 
     public async getCollection(
         collectionUniqueIdentifier: string,
-    ): Promise<IImbricateOriginCollection | null> {
+    ): Promise<IImbricateCollection | null> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();
@@ -192,7 +194,7 @@ export class FileSystemImbricateOrigin implements IImbricateOrigin {
         return instance;
     }
 
-    public async listCollections(): Promise<IImbricateOriginCollection[]> {
+    public async listCollections(): Promise<IImbricateCollection[]> {
 
         const collectionsMetaData: FileSystemCollectionMetadata =
             await this._getCollectionsMetaData();

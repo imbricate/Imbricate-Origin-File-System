@@ -4,7 +4,7 @@
  * @description Search Page
  */
 
-import { IImbricateOrigin, IImbricateOriginCollection, ImbricatePageSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateCollection, ImbricatePageSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 
 type SearchPagesInput = {
 
@@ -36,7 +36,7 @@ const createImplementation = (
             throw new Error("Keyword is required");
         }
 
-        const collection: IImbricateOriginCollection | null =
+        const collection: IImbricateCollection | null =
             await origin.getCollection(input.collection);
 
         if (!collection) {
