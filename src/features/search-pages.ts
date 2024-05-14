@@ -4,7 +4,7 @@
  * @description Search Page
  */
 
-import { IImbricateOrigin, IImbricateCollection, ImbricatePageSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
+import { IImbricateCollection, IImbricateOrigin, ImbricatePageSearchResult, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 
 type SearchPagesInput = {
 

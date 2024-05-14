@@ -4,7 +4,7 @@
  * @description Query Pages
  */
 
-import { IImbricateOrigin, IImbricateCollection, IImbricatePage, ImbricatePageAttributes, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
+import { IImbricateCollection, IImbricateOrigin, IImbricatePage, ImbricatePageAttributes, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 import { FileSystemPageMetadata } from "../page/definition";
 
 type QueryPagesInput = {
