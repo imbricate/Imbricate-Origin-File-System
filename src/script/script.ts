@@ -4,20 +4,20 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { MarkedResult } from "@sudoo/marked";
 import { prepareFileSystemFeatures } from "../features/prepare";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
-import { FileSystemScriptMetadata, stringifyFileSystemScriptMetadata } from "./definition";
+import { stringifyFileSystemScriptMetadata } from "./definition";
 
 export class FileSystemImbricateScript extends ImbricateScriptBase implements IImbricateScript {
 
     public static create(
         basePath: string,
         origin: IImbricateOrigin,
-        metadata: FileSystemScriptMetadata,
+        metadata: ImbricateScriptMetadata,
     ): FileSystemImbricateScript {
 
         return new FileSystemImbricateScript(basePath, origin, metadata);
@@ -25,12 +25,12 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
     private readonly _basePath: string;
     private readonly _origin: IImbricateOrigin;
-    private readonly _metadata: FileSystemScriptMetadata;
+    private readonly _metadata: ImbricateScriptMetadata;
 
     private constructor(
         basePath: string,
         origin: IImbricateOrigin,
-        metadata: FileSystemScriptMetadata,
+        metadata: ImbricateScriptMetadata,
     ) {
 
         super();
@@ -103,7 +103,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
             fileName,
         );
 
-        const newMetadata: FileSystemScriptMetadata = {
+        const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             attributes: {
                 ...this._metadata.attributes,
@@ -124,7 +124,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
             digest,
         };
 
-        const newMetadata: FileSystemScriptMetadata = {
+        const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             updatedAt,
             digest,
@@ -139,7 +139,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
     public async refreshUpdatedAt(updatedAt: Date): Promise<void> {
 
-        const newMetadata: FileSystemScriptMetadata = {
+        const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             updatedAt,
         };
@@ -149,7 +149,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
     public async refreshDigest(digest: string): Promise<void> {
 
-        const newMetadata: FileSystemScriptMetadata = {
+        const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             digest,
         };
@@ -159,7 +159,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
     public async addHistoryRecord(record: ImbricateScriptHistoryRecord): Promise<void> {
 
-        const newMetadata: FileSystemScriptMetadata = {
+        const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             historyRecords: [
                 ...this._metadata.historyRecords,
@@ -170,7 +170,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
         return await this._updateMetadata(newMetadata);
     }
 
-    private async _updateMetadata(newMetadata: FileSystemScriptMetadata): Promise<void> {
+    private async _updateMetadata(newMetadata: ImbricateScriptMetadata): Promise<void> {
 
         await ensureScriptFolders(this._basePath);
 

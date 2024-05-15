@@ -4,8 +4,7 @@
  * @description Query Scripts
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptQuery, ImbricateScriptSnapshot } from "@imbricate/core";
-import { FileSystemScriptMetadata } from "./definition";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSnapshot } from "@imbricate/core";
 import { fileSystemOriginListScripts } from "./list-scripts";
 import { fileSystemOriginReadScriptMetadata } from "./read-metadata";
 import { FileSystemImbricateScript } from "./script";
@@ -25,7 +24,7 @@ export const fileSystemOriginQueryScripts = async (
     for (const script of scripts) {
 
 
-        const metadata: FileSystemScriptMetadata | null =
+        const metadata: ImbricateScriptMetadata | null =
             await fileSystemOriginReadScriptMetadata(basePath, script.identifier);
 
         if (!metadata) {

@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateBinaryStorage, IImbricateCollection, IImbricateFunctionManager, IImbricateOrigin, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginBase, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateBinaryStorage, IImbricateCollection, IImbricateFunctionManager, IImbricateOrigin, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginBase, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { FileSystemBinaryStorage } from "./binary-storage/binary-storage";
 import { FileSystemImbricateCollection } from "./collection";
@@ -13,7 +13,6 @@ import { FileSystemOriginPayload } from "./definition/origin";
 import { FileSystemFunctionManager } from "./function/function-manager";
 import { fileSystemOriginRenameCollection } from "./origin/rename-collection";
 import { fileSystemOriginCreateScript } from "./script/create-script";
-import { FileSystemScriptMetadata } from "./script/definition";
 import { fileSystemOriginGetScript } from "./script/get-script";
 import { fileSystemOriginHasScript } from "./script/has-script";
 import { fileSystemOriginListScripts } from "./script/list-scripts";
@@ -251,7 +250,7 @@ export class FileSystemImbricateOrigin extends ImbricateOriginBase implements II
     }
 
     public async putScript(
-        scriptMetadata: FileSystemScriptMetadata,
+        scriptMetadata: ImbricateScriptMetadata,
         script: string,
     ): Promise<IImbricateScript> {
 

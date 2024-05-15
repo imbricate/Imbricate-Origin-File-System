@@ -4,8 +4,7 @@
  * @description Query Scripts
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
-import { FileSystemScriptMetadata } from "../script/definition";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptMetadata, SandboxFeature, SandboxFeatureBuilder } from "@imbricate/core";
 
 type QueryScriptsInput = {
 
@@ -16,7 +15,7 @@ type QueryScriptsInput = {
 
 type QueryScriptsOutput = {
 
-    readonly scripts: FileSystemScriptMetadata[];
+    readonly scripts: ImbricateScriptMetadata[];
 };
 
 const createImplementation = (
@@ -32,7 +31,7 @@ const createImplementation = (
             limit: input.limit,
         });
 
-        const results: FileSystemScriptMetadata[] = [];
+        const results: ImbricateScriptMetadata[] = [];
 
         for (const script of scripts) {
 

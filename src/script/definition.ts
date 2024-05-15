@@ -4,16 +4,11 @@
  * @description Definition
  */
 
-import { ImbricateScriptAttributes, ImbricateScriptMetadata } from "@imbricate/core";
-
-export type FileSystemScriptMetadata = {
-
-    readonly attributes: ImbricateScriptAttributes;
-} & ImbricateScriptMetadata;
+import { ImbricateScriptMetadata } from "@imbricate/core";
 
 export const pageMetadataFolderName: string = ".metadata";
 
-export const stringifyFileSystemScriptMetadata = (metadata: FileSystemScriptMetadata): string => {
+export const stringifyFileSystemScriptMetadata = (metadata: ImbricateScriptMetadata): string => {
 
     const historyRecords = metadata.historyRecords.map((record) => {
         return {

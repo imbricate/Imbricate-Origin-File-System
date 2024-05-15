@@ -4,18 +4,18 @@
  * @description Put Script
  */
 
-import { IImbricateOrigin, IImbricateScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, ImbricateScriptMetadata } from "@imbricate/core";
 import { writeTextFile } from "@sudoo/io";
 import { digestString } from "../util/digest";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
-import { FileSystemScriptMetadata, stringifyFileSystemScriptMetadata } from "./definition";
+import { stringifyFileSystemScriptMetadata } from "./definition";
 import { FileSystemImbricateScript } from "./script";
 
 export const fileSystemOriginPutScript = async (
     basePath: string,
     origin: IImbricateOrigin,
-    scriptMetadata: FileSystemScriptMetadata,
+    scriptMetadata: ImbricateScriptMetadata,
     script: string,
 ): Promise<IImbricateScript> => {
 
@@ -32,7 +32,7 @@ export const fileSystemOriginPutScript = async (
     );
 
     const updatedDigest: string = digestString(script);
-    const metaData: FileSystemScriptMetadata = {
+    const metaData: ImbricateScriptMetadata = {
 
         scriptName: scriptMetadata.scriptName,
         identifier: scriptMetadata.identifier,
