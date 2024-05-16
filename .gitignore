@@ -15,6 +15,9 @@
 # Node
 node_modules
 
+# Test
+origin-test
+
 # Build
 app
 coverage
