@@ -16,6 +16,10 @@ export const fileSystemOriginSearchScripts = async (
     payload: FileSystemOriginPayload,
 ): Promise<ImbricateScriptSearchResult[]> => {
 
+    const itemLimit: number = typeof config.itemLimit === "number"
+        ? config.itemLimit
+        : 255;
+
     const scripts: ImbricateScriptSnapshot[] = await fileSystemOriginListScripts(
         basePath,
     );
@@ -42,6 +46,10 @@ export const fileSystemOriginSearchScripts = async (
         scripts.map((script: ImbricateScriptSnapshot) => {
 
             return async () => {
+
+                if (results.length >= itemLimit) {
+                    return;
+                }
 
                 const snippets: ImbricateScriptSearchSnippet[] = [];
 
@@ -73,6 +81,10 @@ export const fileSystemOriginSearchScripts = async (
                             length: keyword.length,
                         },
                     });
+                }
+
+                if (results.length >= itemLimit) {
+                    return;
                 }
 
                 if (snippets.length > 0) {

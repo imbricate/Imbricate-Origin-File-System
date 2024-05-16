@@ -18,9 +18,13 @@ export const fileSystemSearchPages = async (
     payload: FileSystemOriginPayload,
 ): Promise<ImbricatePageSearchResult[]> => {
 
-    const searchLimit: number = typeof config.limit === "number"
-        ? config.limit
+    const snippetLimit: number = typeof config.snippetLimit === "number"
+        ? config.snippetLimit
         : 3;
+
+    const itemLimit: number = typeof config.itemLimit === "number"
+        ? config.itemLimit
+        : 255;
 
     const pages: ImbricatePageSnapshot[] = await fileSystemListAllPages(
         basePath,
@@ -49,6 +53,10 @@ export const fileSystemSearchPages = async (
         pages.map((page: ImbricatePageSnapshot) => {
 
             return async () => {
+
+                if (results.length >= itemLimit) {
+                    return;
+                }
 
                 const snippets: ImbricatePageSearchSnippet[] = [];
                 const result: ImbricatePageSearchResult = {
@@ -92,7 +100,7 @@ export const fileSystemSearchPages = async (
 
                 lines: for (const line of contentInLines) {
 
-                    if (snippets.length >= searchLimit) {
+                    if (snippets.length >= snippetLimit) {
                         break lines;
                     }
 
@@ -115,6 +123,10 @@ export const fileSystemSearchPages = async (
                             },
                         });
                     }
+                }
+
+                if (results.length >= itemLimit) {
+                    return;
                 }
 
                 if (snippets.length > 0) {
