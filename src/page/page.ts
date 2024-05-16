@@ -29,7 +29,7 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
     private readonly _basePath: string;
     private readonly _collectionUniqueIdentifier: string;
 
-    private readonly _metadata: FileSystemPageMetadata;
+    private _metadata: FileSystemPageMetadata;
 
     private constructor(
         basePath: string,
@@ -113,11 +113,6 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
 
     public async writeAttribute(key: string, value: string): Promise<void> {
 
-        await ensureCollectionFolder(
-            this._basePath,
-            this._collectionUniqueIdentifier,
-        );
-
         const updatedMetadata: FileSystemPageMetadata = {
             ...this._metadata,
             attributes: {
@@ -126,19 +121,7 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
             },
         };
 
-        const fileName: string = fixPageMetadataFileName(this.directories, this.title, this.identifier);
-        const metadataFilePath = joinCollectionFolderPath(
-            this._basePath,
-            this._collectionUniqueIdentifier,
-            pageMetadataFolderName,
-            fileName,
-        );
-
-        await writeTextFile(metadataFilePath, JSON.stringify({
-            ...updatedMetadata,
-            createdAt: updatedMetadata.createdAt.getTime(),
-            updatedAt: updatedMetadata.updatedAt.getTime(),
-        }, null, 2));
+        await this._updateMetadata(updatedMetadata);
     }
 
     public async refreshUpdateMetadata(updatedAt: Date, digest: string): Promise<void> {
@@ -209,6 +192,7 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
             fileName,
         );
 
+        this._metadata = updatedMetadata;
         await writeTextFile(
             metadataFilePath,
             stringifyFileSystemPageMetadata(updatedMetadata),

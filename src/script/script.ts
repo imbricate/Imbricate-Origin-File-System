@@ -25,7 +25,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
     private readonly _basePath: string;
     private readonly _origin: IImbricateOrigin;
-    private readonly _metadata: ImbricateScriptMetadata;
+    private _metadata: ImbricateScriptMetadata;
 
     private constructor(
         basePath: string,
@@ -95,14 +95,6 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
     public async writeAttribute(key: string, value: string): Promise<void> {
 
-        await ensureScriptFolders(this._basePath);
-
-        const fileName: string = fixMetaScriptFileName(this.scriptName, this.identifier);
-        const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
-            this._basePath,
-            fileName,
-        );
-
         const newMetadata: ImbricateScriptMetadata = {
             ...this._metadata,
             attributes: {
@@ -111,10 +103,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
             },
         };
 
-        await writeTextFile(
-            scriptMetadataFilePath,
-            stringifyFileSystemScriptMetadata(newMetadata),
-        );
+        await this._updateMetadata(newMetadata);
     }
 
     public async refreshUpdateMetadata(updatedAt: Date, digest: string): Promise<void> {
@@ -180,6 +169,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
             fileName,
         );
 
+        this._metadata = newMetadata;
         await writeTextFile(
             scriptMetadataFilePath,
             stringifyFileSystemScriptMetadata(newMetadata),
