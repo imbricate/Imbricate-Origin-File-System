@@ -70,6 +70,8 @@ export class FileSystemImbricateOrigin extends ImbricateOriginBase implements II
     public getScriptManager(): IImbricateScriptManager {
         return FileSystemImbricateScriptManager.withBasePath(
             this._basePath,
+            this,
+            this.payloads,
         );
     }
 

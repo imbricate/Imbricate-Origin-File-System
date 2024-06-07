@@ -4,7 +4,7 @@
  * @description Script Manager
  */
 
-import { IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { fileSystemOriginCreateScript } from "../script/create-script";
 import { fileSystemOriginGetScript } from "../script/get-script";
 import { fileSystemOriginHasScript } from "../script/has-script";
@@ -14,23 +14,38 @@ import { fileSystemOriginQueryScripts } from "../script/query-scripts";
 import { fileSystemOriginRemoveScript } from "../script/remove-script";
 import { fileSystemOriginRenameScript } from "../script/rename-script";
 import { fileSystemOriginSearchScripts } from "../script/search-scripts";
+import { FileSystemOriginPayload } from "../definition/origin";
 
 export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase implements IImbricateScriptManager {
 
     public static withBasePath(
         basePath: string,
+        origin: IImbricateOrigin,
+        payload: FileSystemOriginPayload,
     ): FileSystemImbricateScriptManager {
 
-        return new FileSystemImbricateScriptManager(basePath);
+        return new FileSystemImbricateScriptManager(
+            basePath,
+            origin,
+            payload,
+        );
     }
 
     private readonly _basePath: string;
+    private readonly _origin: IImbricateOrigin;
+    private readonly _payload: FileSystemOriginPayload;
 
-    private constructor(basePath: string) {
+    private constructor(
+        basePath: string,
+        origin: IImbricateOrigin,
+        payload: FileSystemOriginPayload,
+    ) {
 
         super();
 
         this._basePath = basePath;
+        this._origin = origin;
+        this._payload = payload;
     }
 
     public get capabilities(): ImbricateScriptManagerCapability {
@@ -45,7 +60,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
 
         return await fileSystemOriginCreateScript(
             this._basePath,
-            this,
+            this._origin,
             scriptName,
             initialScript,
             description,
@@ -59,7 +74,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
 
         return await fileSystemOriginPutScript(
             this._basePath,
-            this,
+            this._origin,
             scriptMetadata,
             script,
         );
@@ -90,7 +105,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
         return await fileSystemOriginGetScript(
             this._basePath,
             scriptIdentifier,
-            this,
+            this._origin,
         );
     }
 
@@ -120,7 +135,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
             this._basePath,
             keyword,
             config,
-            this.payloads,
+            this._payload,
         );
     }
 
@@ -130,7 +145,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
 
         return await fileSystemOriginQueryScripts(
             this._basePath,
-            this,
+            this._origin,
             query,
         );
     }
