@@ -34,11 +34,13 @@ const createImplementation = (
         }
 
         const searchResults: ImbricateScriptSearchResult[] =
-            await origin.searchScripts(input.keyword, {
-                exact: Boolean(input.exact),
-                itemLimit: input.itemLimit,
-                snippetLimit: input.snippetLimit,
-            });
+            await origin
+                .getScriptManager()
+                .searchScripts(input.keyword, {
+                    exact: Boolean(input.exact),
+                    itemLimit: input.itemLimit,
+                    snippetLimit: input.snippetLimit,
+                });
 
         return {
             results: searchResults,

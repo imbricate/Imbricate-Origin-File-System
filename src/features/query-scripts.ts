@@ -26,10 +26,12 @@ const createImplementation = (
         input: QueryScriptsInput,
     ): Promise<QueryScriptsOutput> => {
 
-        const scripts: IImbricateScript[] = await origin.queryScripts({
-        }, {
-            limit: input.limit,
-        });
+        const scripts: IImbricateScript[] = await origin
+            .getScriptManager()
+            .queryScripts({
+            }, {
+                limit: input.limit,
+            });
 
         const results: ImbricateScriptMetadata[] = [];
 
