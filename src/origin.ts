@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateBinaryStorage, IImbricateCollection, IImbricateFunctionManager, IImbricateOrigin, IImbricateScript, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginBase, ImbricateOriginCapability, ImbricateOriginMetadata, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateBinaryStorage, IImbricateCollection, IImbricateFunctionManager, IImbricateOrigin, IImbricateScriptManager, IMBRICATE_DIGEST_ALGORITHM, ImbricateOriginBase, ImbricateOriginCapability, ImbricateOriginMetadata } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { FileSystemBinaryStorage } from "./binary-storage/binary-storage";
 import { FileSystemImbricateCollection } from "./collection";
@@ -12,15 +12,7 @@ import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } 
 import { FileSystemOriginPayload } from "./definition/origin";
 import { FileSystemFunctionManager } from "./function/function-manager";
 import { fileSystemOriginRenameCollection } from "./origin/rename-collection";
-import { fileSystemOriginCreateScript } from "./script/create-script";
-import { fileSystemOriginGetScript } from "./script/get-script";
-import { fileSystemOriginHasScript } from "./script/has-script";
-import { fileSystemOriginListScripts } from "./script/list-scripts";
-import { fileSystemOriginPutScript } from "./script/put-script";
-import { fileSystemOriginQueryScripts } from "./script/query-scripts";
-import { fileSystemOriginRemoveScript } from "./script/remove-script";
-import { fileSystemOriginRenameScript } from "./script/rename-script";
-import { fileSystemOriginSearchScripts } from "./script/search-scripts";
+import { FileSystemImbricateScriptManager } from "./script-manager/script-manager";
 import { digestString } from "./util/digest";
 import { createOrGetFile, putFile } from "./util/io";
 import { joinCollectionMetaFilePath } from "./util/path-joiner";
@@ -71,6 +63,12 @@ export class FileSystemImbricateOrigin extends ImbricateOriginBase implements II
 
     public getBinaryStorage(): IImbricateBinaryStorage {
         return FileSystemBinaryStorage.create(
+            this._basePath,
+        );
+    }
+
+    public getScriptManager(): IImbricateScriptManager {
+        return FileSystemImbricateScriptManager.withBasePath(
             this._basePath,
         );
     }
@@ -232,104 +230,6 @@ export class FileSystemImbricateOrigin extends ImbricateOriginBase implements II
         };
 
         await this._putCollectionsMetaData(newMetaData);
-    }
-
-    public async createScript(
-        scriptName: string,
-        initialScript: string,
-        description?: string,
-    ): Promise<IImbricateScript> {
-
-        return await fileSystemOriginCreateScript(
-            this._basePath,
-            this,
-            scriptName,
-            initialScript,
-            description,
-        );
-    }
-
-    public async putScript(
-        scriptMetadata: ImbricateScriptMetadata,
-        script: string,
-    ): Promise<IImbricateScript> {
-
-        return await fileSystemOriginPutScript(
-            this._basePath,
-            this,
-            scriptMetadata,
-            script,
-        );
-    }
-
-    public async renameScript(
-        identifier: string,
-        newScriptName: string,
-    ): Promise<void> {
-
-        return await fileSystemOriginRenameScript(
-            this._basePath,
-            identifier,
-            newScriptName,
-        );
-    }
-
-    public async hasScript(scriptName: string): Promise<boolean> {
-
-        return await fileSystemOriginHasScript(
-            this._basePath,
-            scriptName,
-        );
-    }
-
-    public async getScript(scriptIdentifier: string): Promise<IImbricateScript | null> {
-
-        return await fileSystemOriginGetScript(
-            this._basePath,
-            scriptIdentifier,
-            this,
-        );
-    }
-
-    public async listScripts(): Promise<ImbricateScriptSnapshot[]> {
-
-        return await fileSystemOriginListScripts(
-            this._basePath,
-        );
-    }
-
-    public async deleteScript(
-        scriptIdentifier: string,
-    ): Promise<void> {
-
-        return await fileSystemOriginRemoveScript(
-            this._basePath,
-            scriptIdentifier,
-        );
-    }
-
-    public async searchScripts(
-        keyword: string,
-        config: ImbricateSearchScriptConfig,
-    ): Promise<ImbricateScriptSearchResult[]> {
-
-        return await fileSystemOriginSearchScripts(
-            this._basePath,
-            keyword,
-            config,
-            this.payloads,
-        );
-    }
-
-    public async queryScripts(
-        query: ImbricateScriptQuery,
-    ): Promise<IImbricateScript[]> {
-
-        return await fileSystemOriginQueryScripts(
-            this._basePath,
-            this,
-            query,
-        );
     }
 
     private async _getCollectionsMetaData(): Promise<FileSystemCollectionMetadata> {

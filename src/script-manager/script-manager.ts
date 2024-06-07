@@ -1,0 +1,137 @@
+/**
+ * @author WMXPY
+ * @namespace FileSystem_ScriptManager
+ * @description Script Manager
+ */
+
+import { IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { fileSystemOriginCreateScript } from "../script/create-script";
+import { fileSystemOriginGetScript } from "../script/get-script";
+import { fileSystemOriginHasScript } from "../script/has-script";
+import { fileSystemOriginListScripts } from "../script/list-scripts";
+import { fileSystemOriginPutScript } from "../script/put-script";
+import { fileSystemOriginQueryScripts } from "../script/query-scripts";
+import { fileSystemOriginRemoveScript } from "../script/remove-script";
+import { fileSystemOriginRenameScript } from "../script/rename-script";
+import { fileSystemOriginSearchScripts } from "../script/search-scripts";
+
+export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase implements IImbricateScriptManager {
+
+    public static withBasePath(
+        basePath: string,
+    ): FileSystemImbricateScriptManager {
+
+        return new FileSystemImbricateScriptManager(basePath);
+    }
+
+    private readonly _basePath: string;
+
+    private constructor(basePath: string) {
+
+        super();
+
+        this._basePath = basePath;
+    }
+
+    public get capabilities(): ImbricateScriptManagerCapability {
+        return ImbricateScriptManagerBase.allAllowCapability();
+    }
+
+    public async createScript(
+        scriptName: string,
+        initialScript: string,
+        description?: string,
+    ): Promise<IImbricateScript> {
+
+        return await fileSystemOriginCreateScript(
+            this._basePath,
+            this,
+            scriptName,
+            initialScript,
+            description,
+        );
+    }
+
+    public async putScript(
+        scriptMetadata: ImbricateScriptMetadata,
+        script: string,
+    ): Promise<IImbricateScript> {
+
+        return await fileSystemOriginPutScript(
+            this._basePath,
+            this,
+            scriptMetadata,
+            script,
+        );
+    }
+
+    public async renameScript(
+        identifier: string,
+        newScriptName: string,
+    ): Promise<void> {
+
+        return await fileSystemOriginRenameScript(
+            this._basePath,
+            identifier,
+            newScriptName,
+        );
+    }
+
+    public async hasScript(scriptName: string): Promise<boolean> {
+
+        return await fileSystemOriginHasScript(
+            this._basePath,
+            scriptName,
+        );
+    }
+
+    public async getScript(scriptIdentifier: string): Promise<IImbricateScript | null> {
+
+        return await fileSystemOriginGetScript(
+            this._basePath,
+            scriptIdentifier,
+            this,
+        );
+    }
+
+    public async listScripts(): Promise<ImbricateScriptSnapshot[]> {
+
+        return await fileSystemOriginListScripts(
+            this._basePath,
+        );
+    }
+
+    public async deleteScript(
+        scriptIdentifier: string,
+    ): Promise<void> {
+
+        return await fileSystemOriginRemoveScript(
+            this._basePath,
+            scriptIdentifier,
+        );
+    }
+
+    public async searchScripts(
+        keyword: string,
+        config: ImbricateSearchScriptConfig,
+    ): Promise<ImbricateScriptSearchResult[]> {
+
+        return await fileSystemOriginSearchScripts(
+            this._basePath,
+            keyword,
+            config,
+            this.payloads,
+        );
+    }
+
+    public async queryScripts(
+        query: ImbricateScriptQuery,
+    ): Promise<IImbricateScript[]> {
+
+        return await fileSystemOriginQueryScripts(
+            this._basePath,
+            this,
+            query,
+        );
+    }
+}
