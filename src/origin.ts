@@ -74,7 +74,7 @@ export class FileSystemImbricateOrigin extends ImbricateOriginBase implements II
         );
     }
 
-    getCollectionManager(): IImbricateCollectionManager {
+    public getCollectionManager(): IImbricateCollectionManager {
 
         return FileSystemImbricateCollectionManager.withBasePath(
             this._basePath,
