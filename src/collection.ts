@@ -176,6 +176,7 @@ export class FileSystemImbricateCollection extends ImbricateCollectionBase imple
 
         return await fileSystemSearchPages(
             this._basePath,
+            this._collectionName,
             this._uniqueIdentifier,
             keyword,
             config,

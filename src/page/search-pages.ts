@@ -12,6 +12,7 @@ import { fileSystemListAllPages } from "./list-pages";
 
 export const fileSystemSearchPages = async (
     basePath: string,
+    collectionName: string,
     collectionUniqueIdentifier: string,
     keyword: string,
     config: ImbricateSearchScriptConfig,
@@ -63,7 +64,8 @@ export const fileSystemSearchPages = async (
 
                     type: IMBRICATE_SEARCH_RESULT_TYPE.PAGE,
 
-                    scope: collectionUniqueIdentifier,
+                    collectionName,
+                    collectionUniqueIdentifier: collectionUniqueIdentifier,
                     identifier: page.identifier,
                     headline: page.title,
 
