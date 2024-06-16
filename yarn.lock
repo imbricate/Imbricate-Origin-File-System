@@ -1807,17 +1807,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^1.29.0":
-  version: 1.29.0
-  resolution: "@imbricate/core@npm:1.29.0"
+"@imbricate/core@npm:^1.30.0":
+  version: 1.30.0
+  resolution: "@imbricate/core@npm:1.30.0"
   dependencies:
-    "@sudoo/marked": "npm:^3.21.4"
-    "@sudoo/marked-mixin-date": "npm:^1.0.0"
-    "@sudoo/marked-mixin-json": "npm:^1.0.0"
-    "@sudoo/marked-mixin-math": "npm:^1.4.0"
-    "@sudoo/marked-mixin-object": "npm:^1.3.0"
-    "@sudoo/marked-mixin-parse": "npm:^1.0.0"
-  checksum: 10c0/b85a9c5b4a6015ff67cf15c895d146759428a04c7df2e357abf3056dc5a1396cd5803679ded45f45f0d4e2ea8756269a54a1008d0bc5b789733feda33e6cbc6b
+    "@sudoo/marked-mixin-date": "npm:1.0.0"
+    "@sudoo/marked-mixin-json": "npm:1.0.0"
+    "@sudoo/marked-mixin-math": "npm:1.4.0"
+    "@sudoo/marked-mixin-object": "npm:1.3.0"
+    "@sudoo/marked-mixin-parse": "npm:1.0.0"
+  peerDependencies:
+    "@sudoo/marked": "*"
+  checksum: 10c0/a3136b3b80b37612191c3abd8956ad807007a87d9ecc1418b5559ad598df1d6baf7457cc135cf6ec577667e1fd122ce1f64a9b31813167c2bb7cd5b0c5099baa
   languageName: node
   linkType: hard
 
@@ -1828,10 +1829,11 @@ __metadata:
     "@babel/core": "npm:^7.24.7"
     "@babel/preset-env": "npm:^7.24.7"
     "@babel/preset-typescript": "npm:^7.24.7"
-    "@imbricate/core": "npm:^1.29.0"
+    "@imbricate/core": "npm:^1.30.0"
     "@imbricate/test-origin-jest": "npm:^1.4.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
+    "@sudoo/marked": "npm:^3.21.4"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29.5.12"
     "@typescript-eslint/eslint-plugin": "npm:^7.13.0"
@@ -2276,7 +2278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sudoo/marked-mixin-date@npm:^1.0.0":
+"@sudoo/marked-mixin-date@npm:1.0.0":
   version: 1.0.0
   resolution: "@sudoo/marked-mixin-date@npm:1.0.0"
   dependencies:
@@ -2287,7 +2289,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sudoo/marked-mixin-json@npm:^1.0.0":
+"@sudoo/marked-mixin-json@npm:1.0.0":
   version: 1.0.0
   resolution: "@sudoo/marked-mixin-json@npm:1.0.0"
   dependencies:
@@ -2298,7 +2300,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sudoo/marked-mixin-math@npm:^1.4.0":
+"@sudoo/marked-mixin-math@npm:1.4.0":
   version: 1.4.0
   resolution: "@sudoo/marked-mixin-math@npm:1.4.0"
   dependencies:
@@ -2309,7 +2311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sudoo/marked-mixin-object@npm:^1.3.0":
+"@sudoo/marked-mixin-object@npm:1.3.0":
   version: 1.3.0
   resolution: "@sudoo/marked-mixin-object@npm:1.3.0"
   dependencies:
@@ -2320,7 +2322,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sudoo/marked-mixin-parse@npm:^1.0.0":
+"@sudoo/marked-mixin-parse@npm:1.0.0":
   version: 1.0.0
   resolution: "@sudoo/marked-mixin-parse@npm:1.0.0"
   dependencies:
