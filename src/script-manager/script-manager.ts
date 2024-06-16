@@ -4,7 +4,7 @@
  * @description Script Manager
  */
 
-import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, PromiseOr, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature } from "@imbricate/core";
 import { fileSystemOriginCreateScript } from "../script/create-script";
 import { fileSystemOriginGetScript } from "../script/get-script";
 import { fileSystemOriginHasScript } from "../script/has-script";
@@ -15,6 +15,7 @@ import { fileSystemOriginRemoveScript } from "../script/remove-script";
 import { fileSystemOriginRenameScript } from "../script/rename-script";
 import { fileSystemOriginSearchScripts } from "../script/search-scripts";
 import { FileSystemOriginPayload } from "../definition/origin";
+import { MarkedResult } from "@sudoo/marked";
 
 export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase implements IImbricateScriptManager {
 
@@ -148,5 +149,14 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
             this._origin,
             query,
         );
+    }
+
+    public async executeScriptSnippet(
+        _snippet: string,
+        _features: SandboxFeature[],
+        _config: SandboxExecuteConfig,
+        _parameter: SandboxExecuteParameter,
+    ): Promise<MarkedResult> {
+
     }
 }
