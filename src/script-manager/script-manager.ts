@@ -4,7 +4,10 @@
  * @description Script Manager
  */
 
-import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, PromiseOr, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { MarkedResult } from "@sudoo/marked";
+import { FileSystemOriginPayload } from "../definition/origin";
+import { prepareFileSystemFeatures } from "../features/prepare";
 import { fileSystemOriginCreateScript } from "../script/create-script";
 import { fileSystemOriginGetScript } from "../script/get-script";
 import { fileSystemOriginHasScript } from "../script/has-script";
@@ -14,8 +17,6 @@ import { fileSystemOriginQueryScripts } from "../script/query-scripts";
 import { fileSystemOriginRemoveScript } from "../script/remove-script";
 import { fileSystemOriginRenameScript } from "../script/rename-script";
 import { fileSystemOriginSearchScripts } from "../script/search-scripts";
-import { FileSystemOriginPayload } from "../definition/origin";
-import { MarkedResult } from "@sudoo/marked";
 
 export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase implements IImbricateScriptManager {
 
@@ -152,11 +153,31 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
     }
 
     public async executeScriptSnippet(
-        _snippet: string,
-        _features: SandboxFeature[],
-        _config: SandboxExecuteConfig,
-        _parameter: SandboxExecuteParameter,
+        snippet: string,
+        features: SandboxFeature[],
+        configuration: SandboxExecuteConfig,
+        parameters: SandboxExecuteParameter,
     ): Promise<MarkedResult> {
 
+        const originFeatures: SandboxFeature[] = prepareFileSystemFeatures(
+            this._origin,
+        );
+
+        const environment: SandboxEnvironment = {
+            origin: {
+                type: this._origin.originType,
+            },
+        };
+
+        return await executeSandboxScript(
+            snippet,
+            [
+                ...originFeatures,
+                ...features,
+            ],
+            environment,
+            configuration,
+            parameters,
+        );
     }
 }
