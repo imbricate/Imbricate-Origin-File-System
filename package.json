@@ -40,7 +40,7 @@
     "@babel/core": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
-    "@imbricate/core": "^1.30.0",
+    "@imbricate/core": "^1.31.0",
     "@imbricate/test-origin-jest": "^1.4.0",
     "@sudoo/marked": "^3.21.4",
     "@types/jest": "^29.5.12",
