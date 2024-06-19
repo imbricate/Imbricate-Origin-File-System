@@ -5,6 +5,7 @@
  */
 
 import { attemptMarkDir } from "@sudoo/io";
+import { encodeFileSystemComponent } from "../util/encode";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 
 export const SCRIPT_META_FILE_EXTENSION: string = ".meta.json";
@@ -28,7 +29,11 @@ export const fixMetaScriptFileName = (
     uuid: string,
 ): string => {
 
-    return `${scriptName}.${uuid}${SCRIPT_META_FILE_EXTENSION}`;
+    const fixedFileName: string = scriptName.trim();
+
+    const encodedFilename: string = encodeFileSystemComponent(fixedFileName);
+
+    return `${encodedFilename}.${uuid}${SCRIPT_META_FILE_EXTENSION}`;
 };
 
 export const fixScriptFileName = (
