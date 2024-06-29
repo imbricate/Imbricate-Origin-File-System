@@ -52,8 +52,19 @@ export const fileSystemRetitlePage = async (
 
         if (page.identifier === identifier) {
 
-            const oldMetaFile: string = fixPageMetadataFileName(page.directories, page.title, identifier);
-            const newMetaFile: string = fixPageMetadataFileName(page.directories, newTitle, identifier);
+            const oldMetaFile: string = fixPageMetadataFileName(
+                page.directories,
+                page.title,
+                identifier,
+                page.variant,
+            );
+
+            const newMetaFile: string = fixPageMetadataFileName(
+                page.directories,
+                newTitle,
+                identifier,
+                page.variant,
+            );
 
             const oldMetaFilePath: string = joinCollectionFolderPath(
                 basePath,

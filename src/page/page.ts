@@ -4,7 +4,7 @@
  * @description Page
  */
 
-import { IImbricatePage, ImbricatePageAttributes, ImbricatePageBase, ImbricatePageCapability, ImbricatePageHistoryRecord } from "@imbricate/core";
+import { IImbricatePage, IMBRICATE_PAGE_VARIANT, ImbricatePageAttributes, ImbricatePageBase, ImbricatePageCapability, ImbricatePageHistoryRecord } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -53,6 +53,9 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
     }
     public get identifier(): string {
         return this._metadata.identifier;
+    }
+    public get variant(): IMBRICATE_PAGE_VARIANT {
+        return this._metadata.variant;
     }
     public get digest(): string {
         return this._metadata.digest;
@@ -184,7 +187,13 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
             this._collectionUniqueIdentifier,
         );
 
-        const fileName: string = fixPageMetadataFileName(this.directories, this.title, this.identifier);
+        const fileName: string = fixPageMetadataFileName(
+            this.directories,
+            this.title,
+            this.identifier,
+            this.variant,
+        );
+
         const metadataFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionUniqueIdentifier,

@@ -39,7 +39,12 @@ export const fileSystemReadPageMetadata = async (
         basePath,
         collectionUniqueIdentifier,
         pageMetadataFolderName,
-        fixPageMetadataFileName(targetPage.directories, targetPage.title, identifier),
+        fixPageMetadataFileName(
+            targetPage.directories,
+            targetPage.title,
+            identifier,
+            targetPage.variant,
+        ),
     );
 
     const metadataContent: string = await readTextFile(metadataFilePath);

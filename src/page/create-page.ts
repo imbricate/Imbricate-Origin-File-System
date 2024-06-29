@@ -61,7 +61,12 @@ export const fileSystemCreatePage = async (
     await putFileToCollectionMetaFolder(
         basePath,
         collectionUniqueIdentifier,
-        fixPageMetadataFileName(directories, title, uuid),
+        fixPageMetadataFileName(
+            directories,
+            title,
+            uuid,
+            variant,
+        ),
         stringifyFileSystemPageMetadata(metadata),
     );
 

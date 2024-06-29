@@ -16,6 +16,7 @@ export const fixPageMetadataFileName = (
     directories: string[],
     fileName: string,
     identifier: string,
+    variant: IMBRICATE_PAGE_VARIANT,
 ): string => {
 
     let fixedFileName: string = fileName.trim();
@@ -30,7 +31,7 @@ export const fixPageMetadataFileName = (
     const encodedFilename: string = encodeFileSystemComponent(directoriesIncludedFileName);
 
     if (!fixedFileName.endsWith(metaJSONExtension)) {
-        fixedFileName = `${encodedFilename}.${identifier}${metaJSONExtension}`;
+        fixedFileName = `${encodedFilename}.${identifier}.${variant}${metaJSONExtension}`;
     }
 
     return fixedFileName;
