@@ -33,6 +33,8 @@ export const fileSystemPutPage = async (
         title: pageMetadata.title,
         directories: pageMetadata.directories,
 
+        variant: pageMetadata.variant,
+
         identifier: pageMetadata.identifier,
 
         digest: updatedDigest,

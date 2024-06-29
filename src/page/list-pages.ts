@@ -4,7 +4,7 @@
  * @description List Pages
  */
 
-import { ImbricatePageSnapshot } from "@imbricate/core";
+import { IMBRICATE_PAGE_VARIANT, ImbricatePageSnapshot } from "@imbricate/core";
 import { directoryFiles } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { decodeFileSystemComponent } from "../util/encode";
@@ -76,6 +76,7 @@ export const fileSystemListAllPages = async (
                 identifier: uuid,
                 directories: decoded,
                 title,
+                variant: IMBRICATE_PAGE_VARIANT.MARKDOWN, // TODO: Implement
             };
         });
 };

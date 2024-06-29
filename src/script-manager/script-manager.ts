@@ -4,10 +4,8 @@
  * @description Script Manager
  */
 
-import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
-import { MarkedResult } from "@sudoo/marked";
+import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, IMBRICATE_EXECUTABLE_VARIANT, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { FileSystemOriginPayload } from "../definition/origin";
-import { prepareFileSystemFeatures } from "../features/prepare";
 import { fileSystemOriginCreateScript } from "../script/create-script";
 import { fileSystemOriginGetScript } from "../script/get-script";
 import { fileSystemOriginHasScript } from "../script/has-script";
@@ -56,6 +54,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
 
     public async createScript(
         scriptName: string,
+        variant: IMBRICATE_EXECUTABLE_VARIANT,
         initialScript: string,
         description?: string,
     ): Promise<IImbricateScript> {
@@ -64,6 +63,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
             this._basePath,
             this._origin,
             scriptName,
+            variant,
             initialScript,
             description,
         );
@@ -154,30 +154,21 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
 
     public async executeScriptSnippet(
         snippet: string,
-        features: SandboxFeature[],
-        configuration: SandboxExecuteConfig,
-        parameters: SandboxExecuteParameter,
-    ): Promise<MarkedResult> {
+        variant: IMBRICATE_EXECUTABLE_VARIANT,
+        parameters: ImbricateExecuteParameters,
+        interfaceEnvironment: ImbricateExecuteEnvironment,
+    ): Promise<ImbricateExecuteResult> {
 
-        const originFeatures: SandboxFeature[] = prepareFileSystemFeatures(
-            this._origin,
-        );
-
-        const environment: SandboxEnvironment = {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const environment: ImbricateExecuteEnvironment = {
+            ...interfaceEnvironment,
             origin: {
                 type: this._origin.originType,
             },
         };
 
-        return await executeSandboxScript(
-            snippet,
-            [
-                ...originFeatures,
-                ...features,
-            ],
-            environment,
-            configuration,
-            parameters,
-        );
+        return {
+            code: IMBRICATE_EXECUTE_RESULT_CODE.NOT_SUPPORT,
+        };
     }
 }

@@ -4,7 +4,7 @@
  * @description Create Page
  */
 
-import { IImbricatePage } from "@imbricate/core";
+import { IImbricatePage, IMBRICATE_PAGE_VARIANT } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { digestString } from "../util/digest";
@@ -17,7 +17,9 @@ export const fileSystemCreatePage = async (
     collectionUniqueIdentifier: string,
     directories: string[],
     title: string,
+    variant: IMBRICATE_PAGE_VARIANT,
     initialContent: string,
+    description?: string,
 ): Promise<IImbricatePage> => {
 
     await ensureCollectionFolder(basePath, collectionUniqueIdentifier);
@@ -37,6 +39,9 @@ export const fileSystemCreatePage = async (
 
         title,
         directories,
+
+        variant,
+
         identifier: uuid,
 
         digest: digested,
@@ -49,6 +54,8 @@ export const fileSystemCreatePage = async (
         updatedAt: currentTime,
 
         attributes: {},
+
+        description,
     };
 
     await putFileToCollectionMetaFolder(
