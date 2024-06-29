@@ -4,10 +4,8 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata, SandboxEnvironment, SandboxExecuteConfig, SandboxExecuteParameter, SandboxFeature, executeSandboxScript } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
-import { MarkedResult } from "@sudoo/marked";
-import { prepareFileSystemFeatures } from "../features/prepare";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
 import { stringifyFileSystemScriptMetadata } from "./definition";
@@ -177,32 +175,22 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
     }
 
     public async execute(
-        features: SandboxFeature[],
-        configuration: SandboxExecuteConfig,
-        parameters: SandboxExecuteParameter,
-    ): Promise<MarkedResult> {
+        parameters: ImbricateExecuteParameters,
+        interfaceEnvironments: ImbricateExecuteEnvironment,
+    ): Promise<ImbricateExecuteResult> {
 
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         const script: string = await this.readScript();
 
-        const originFeatures: SandboxFeature[] = prepareFileSystemFeatures(
-            this._origin,
-        );
-
-        const environment: SandboxEnvironment = {
+        const environment: ImbricateExecuteEnvironment = {
+            ...interfaceEnvironments,
             origin: {
                 type: this._origin.originType,
             },
         };
 
-        return await executeSandboxScript(
-            script,
-            [
-                ...originFeatures,
-                ...features,
-            ],
-            environment,
-            configuration,
-            parameters,
-        );
+        return {
+            code: IMBRICATE_EXECUTE_RESULT_CODE.NOT_SUPPORT,
+        };
     }
 }
