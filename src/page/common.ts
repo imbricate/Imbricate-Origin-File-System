@@ -4,6 +4,7 @@
  * @description Common
  */
 
+import { IMBRICATE_PAGE_VARIANT } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { encodeFileSystemComponent } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -39,12 +40,13 @@ export const getPageContent = async (
     basePath: string,
     collectionUniqueIdentifier: string,
     identifier: string,
+    variant: IMBRICATE_PAGE_VARIANT,
 ): Promise<string> => {
 
     const targetFilePath = joinCollectionFolderPath(
         basePath,
         collectionUniqueIdentifier,
-        fixFileNameFromIdentifier(identifier),
+        fixFileNameFromIdentifier(identifier, variant),
     );
 
     return await readTextFile(targetFilePath);
@@ -83,9 +85,10 @@ export const putFileToCollectionMetaFolder = async (
     await writeTextFile(targetFilePath, content);
 };
 
-export const fixFileNameFromIdentifier = (identifier: string): string => {
+export const fixFileNameFromIdentifier = (
+    identifier: string,
+    variant: IMBRICATE_PAGE_VARIANT,
+): string => {
 
-    const markDownExtension: string = ".md";
-
-    return `${identifier}${markDownExtension}`;
+    return `${identifier}.${variant}`;
 };

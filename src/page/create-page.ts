@@ -28,7 +28,7 @@ export const fileSystemCreatePage = async (
     await putFileToCollectionFolder(
         basePath,
         collectionUniqueIdentifier,
-        fixFileNameFromIdentifier(uuid),
+        fixFileNameFromIdentifier(uuid, variant),
         initialContent,
     );
 

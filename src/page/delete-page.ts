@@ -39,7 +39,7 @@ export const fileSystemDeletePage = async (
     const targetFilePath = joinCollectionFolderPath(
         basePath,
         collectionUniqueIdentifier,
-        fixFileNameFromIdentifier(identifier),
+        fixFileNameFromIdentifier(identifier, page.variant),
     );
 
     const metaFileName: string = fixPageMetadataFileName(page.directories, page.title, identifier);

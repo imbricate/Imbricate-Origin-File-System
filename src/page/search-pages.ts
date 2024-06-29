@@ -96,6 +96,7 @@ export const fileSystemSearchPages = async (
                     basePath,
                     collectionUniqueIdentifier,
                     page.identifier,
+                    page.variant,
                 );
 
                 const contentInLines: string[] = content.split("\n");

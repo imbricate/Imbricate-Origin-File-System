@@ -23,7 +23,7 @@ export const fileSystemPutPage = async (
     await putFileToCollectionFolder(
         basePath,
         collectionUniqueIdentifier,
-        fixFileNameFromIdentifier(pageMetadata.identifier),
+        fixFileNameFromIdentifier(pageMetadata.identifier, pageMetadata.variant),
         content,
     );
 
