@@ -4,6 +4,7 @@
  * @description Common
  */
 
+import { IMBRICATE_EXECUTABLE_VARIANT } from "@imbricate/core";
 import { attemptMarkDir } from "@sudoo/io";
 import { encodeFileSystemComponent } from "../util/encode";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
@@ -27,13 +28,14 @@ export const ensureScriptFolders = async (basePath: string): Promise<void> => {
 export const fixMetaScriptFileName = (
     scriptName: string,
     uuid: string,
+    variant: IMBRICATE_EXECUTABLE_VARIANT,
 ): string => {
 
     const fixedFileName: string = scriptName.trim();
 
     const encodedFilename: string = encodeFileSystemComponent(fixedFileName);
 
-    return `${encodedFilename}.${uuid}${SCRIPT_META_FILE_EXTENSION}`;
+    return `${encodedFilename}.${uuid}.${variant}${SCRIPT_META_FILE_EXTENSION}`;
 };
 
 export const fixScriptFileName = (

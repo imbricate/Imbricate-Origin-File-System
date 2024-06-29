@@ -34,8 +34,17 @@ export const fileSystemOriginRenameScript = async (
 
         if (script.identifier === scriptIdentifier) {
 
-            const oldMetaFile: string = fixMetaScriptFileName(script.scriptName, script.identifier);
-            const newMetaFile: string = fixMetaScriptFileName(newScriptName, script.identifier);
+            const oldMetaFile: string = fixMetaScriptFileName(
+                script.scriptName,
+                script.identifier,
+                script.variant,
+            );
+
+            const newMetaFile: string = fixMetaScriptFileName(
+                newScriptName,
+                script.identifier,
+                script.variant,
+            );
 
             const oldMetaFilePath: string = getScriptsMetadataFolderPath(
                 basePath,

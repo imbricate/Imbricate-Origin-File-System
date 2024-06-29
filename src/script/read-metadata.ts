@@ -27,7 +27,12 @@ export const fileSystemOriginReadScriptMetadata = async (
         return null;
     }
 
-    const fileName: string = fixMetaScriptFileName(scriptSnapshot.scriptName, identifier);
+    const fileName: string = fixMetaScriptFileName(
+        scriptSnapshot.scriptName,
+        identifier,
+        scriptSnapshot.variant,
+    );
+
     const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
         basePath,
         fileName,

@@ -24,6 +24,7 @@ export const fileSystemOriginPutScript = async (
     const fileName: string = fixMetaScriptFileName(
         scriptMetadata.scriptName,
         scriptMetadata.identifier,
+        scriptMetadata.variant,
     );
 
     const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
@@ -36,6 +37,8 @@ export const fileSystemOriginPutScript = async (
 
         scriptName: scriptMetadata.scriptName,
         identifier: scriptMetadata.identifier,
+
+        variant: scriptMetadata.variant,
 
         digest: updatedDigest,
         historyRecords: scriptMetadata.historyRecords,

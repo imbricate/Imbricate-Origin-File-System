@@ -4,7 +4,7 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTABLE_VARIANT, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
@@ -43,6 +43,9 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
     }
     public get identifier(): string {
         return this._metadata.identifier;
+    }
+    public get variant(): IMBRICATE_EXECUTABLE_VARIANT {
+        return this._metadata.variant;
     }
     public get digest(): string {
         return this._metadata.digest;
@@ -161,7 +164,12 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
 
         await ensureScriptFolders(this._basePath);
 
-        const fileName: string = fixMetaScriptFileName(this.scriptName, this.identifier);
+        const fileName: string = fixMetaScriptFileName(
+            this.scriptName,
+            this.identifier,
+            this.variant,
+        );
+
         const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
             this._basePath,
             fileName,

@@ -32,7 +32,12 @@ export const fileSystemOriginRemoveScript = async (
         throw new Error(`Script ${identifier} not found`);
     }
 
-    const fileName: string = fixMetaScriptFileName(script.scriptName, identifier);
+    const fileName: string = fixMetaScriptFileName(
+        script.scriptName,
+        identifier,
+        script.variant,
+    );
+
     const scriptMetadataFilePath: string = getScriptsMetadataFolderPath(
         basePath,
         fileName,

@@ -9,6 +9,7 @@ import { directoryFiles } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { decodeFileSystemComponent } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
+import { PAGE_META_FILE_EXTENSION } from "./common";
 import { pageMetadataFolderName } from "./definition";
 
 export const fileSystemListDirectoriesPages = async (
@@ -55,10 +56,10 @@ export const fileSystemListAllPages = async (
     const files: string[] = await directoryFiles(collectionFolderPath);
 
     return files
-        .filter((file: string) => file.endsWith(".meta.json"))
+        .filter((file: string) => file.endsWith(PAGE_META_FILE_EXTENSION))
         .filter((file: string) => !file.startsWith("."))
         .map((file: string) => {
-            return file.slice(0, file.length - ".meta.json".length);
+            return file.slice(0, file.length - PAGE_META_FILE_EXTENSION.length);
         })
         .map((file: string) => {
 

@@ -9,6 +9,8 @@ import { encodeFileSystemComponent } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { pageMetadataFolderName } from "./definition";
 
+export const PAGE_META_FILE_EXTENSION: string = ".meta.json";
+
 export const fixPageMetadataFileName = (
     directories: string[],
     fileName: string,
@@ -17,7 +19,7 @@ export const fixPageMetadataFileName = (
 
     let fixedFileName: string = fileName.trim();
 
-    const metaJSONExtension: string = ".meta.json";
+    const metaJSONExtension: string = PAGE_META_FILE_EXTENSION;
 
     const directoriesIncludedFileName: string = [
         ...directories,
