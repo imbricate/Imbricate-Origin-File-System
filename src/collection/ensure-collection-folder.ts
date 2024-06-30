@@ -7,7 +7,7 @@
 import { attemptMarkDir, isFolder, pathExists } from "@sudoo/io";
 import { getCollectionFolderPath, joinCollectionFolderPath } from "../util/path-joiner";
 
-const metadataFolderName: string = ".metadata";
+export const metadataFolderName: string = ".metadata";
 
 export const ensureCollectionFolder = async (
     basePath: string,

@@ -5,13 +5,15 @@
  */
 
 import { IImbricateCollection, IImbricateCollectionManager, IImbricateOrigin, ImbricateCollectionManagerBase, ImbricateCollectionManagerCapability } from "@imbricate/core";
+import { directoryFiles, pathExists, removeDirectory } from "@sudoo/io";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { FileSystemImbricateCollection } from "../collection";
+import { metadataFolderName } from "../collection/ensure-collection-folder";
 import { FileSystemCollectionMetadata, FileSystemCollectionMetadataCollection } from "../definition/collection";
 import { FileSystemOriginPayload } from "../definition/origin";
 import { fileSystemOriginRenameCollection } from "../origin/rename-collection";
 import { createOrGetFile, putFile } from "../util/io";
-import { joinCollectionMetaFilePath } from "../util/path-joiner";
+import { joinCollectionFolderPath, joinCollectionMetaFilePath } from "../util/path-joiner";
 
 export class FileSystemImbricateCollectionManager extends ImbricateCollectionManagerBase implements IImbricateCollectionManager {
 
@@ -206,6 +208,30 @@ export class FileSystemImbricateCollectionManager extends ImbricateCollectionMan
         };
 
         await this._putCollectionsMetaData(newMetaData);
+
+        const toBeDeletedFolderPath: string =
+            joinCollectionFolderPath(this._basePath, collectionUniqueIdentifier);
+
+        const toBeDeletedExist: boolean = await pathExists(toBeDeletedFolderPath);
+
+        if (!toBeDeletedExist) {
+            return;
+        }
+
+        const toBeDeletedFiles: string[] =
+            await directoryFiles(toBeDeletedFolderPath);
+
+        for (const file of toBeDeletedFiles) {
+            if (file === metadataFolderName) {
+                await removeDirectory(joinCollectionFolderPath(
+                    this._basePath,
+                    collectionUniqueIdentifier,
+                    metadataFolderName,
+                ));
+            }
+        }
+
+        await removeDirectory(toBeDeletedFolderPath);
     }
 
     private async _getCollectionsMetaData(): Promise<FileSystemCollectionMetadata> {
