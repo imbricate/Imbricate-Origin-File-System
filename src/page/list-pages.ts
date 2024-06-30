@@ -4,7 +4,7 @@
  * @description List Pages
  */
 
-import { IMBRICATE_PAGE_VARIANT, ImbricatePageSnapshot } from "@imbricate/core";
+import { IMBRICATE_PAGE_VARIANT, ImbricatePageSnapshot, isValidImbricatePageVariant } from "@imbricate/core";
 import { directoryFiles } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { decodeFileSystemComponent } from "../util/encode";
@@ -63,8 +63,19 @@ export const fileSystemListAllPages = async (
         })
         .map((file: string) => {
 
-            const uuid: string = file.split(".").pop() as string;
-            const encoded: string = file.slice(0, file.length - uuid.length - 1);
+            const splited: [string, string, string] = file.split(".") as [string, string, string];
+
+            if (splited.length !== 3) {
+                throw new Error(`Invalid file name: ${file}`);
+            }
+
+            const encoded: string = splited[0];
+            const uuid: string = splited[1];
+            const variant: IMBRICATE_PAGE_VARIANT = splited[2] as IMBRICATE_PAGE_VARIANT;
+
+            if (!isValidImbricatePageVariant(variant)) {
+                throw new Error(`Invalid variant: ${variant}`);
+            }
 
             const decoded: string[] =
                 decodeFileSystemComponent(encoded)
@@ -76,7 +87,7 @@ export const fileSystemListAllPages = async (
                 identifier: uuid,
                 directories: decoded,
                 title,
-                variant: IMBRICATE_PAGE_VARIANT.MARKDOWN, // TODO: Implement
+                variant,
             };
         });
 };
