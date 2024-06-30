@@ -8,7 +8,7 @@ import { IImbricatePage, IMBRICATE_PAGE_VARIANT, ImbricatePageAttributes, Imbric
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
-import { fixPageMetadataFileName } from "./common";
+import { fixFileNameFromIdentifier, fixPageMetadataFileName } from "./common";
 import { FileSystemPageMetadata, pageMetadataFolderName, stringifyFileSystemPageMetadata } from "./definition";
 
 export class FileSystemImbricatePage extends ImbricatePageBase implements IImbricatePage {
@@ -87,7 +87,7 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
         const targetFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionUniqueIdentifier,
-            this._fixFileNameFromIdentifier(this.identifier),
+            fixFileNameFromIdentifier(this.identifier, this.variant),
         );
 
         return await readTextFile(targetFilePath);
@@ -103,7 +103,7 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
         const targetFilePath = joinCollectionFolderPath(
             this._basePath,
             this._collectionUniqueIdentifier,
-            this._fixFileNameFromIdentifier(this.identifier),
+            fixFileNameFromIdentifier(this.identifier, this.variant),
         );
 
         await writeTextFile(targetFilePath, content);
@@ -206,12 +206,5 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
             metadataFilePath,
             stringifyFileSystemPageMetadata(updatedMetadata),
         );
-    }
-
-    private _fixFileNameFromIdentifier(identifier: string): string {
-
-        const markDownExtension: string = ".md";
-
-        return `${identifier}${markDownExtension}`;
     }
 }
