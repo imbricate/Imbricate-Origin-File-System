@@ -4,9 +4,9 @@
  * @description Common
  */
 
-import { IMBRICATE_EXECUTABLE_VARIANT } from "@imbricate/core";
+import { ImbricateScriptVariant } from "@imbricate/core";
 import { attemptMarkDir } from "@sudoo/io";
-import { encodeFileSystemComponent } from "../util/encode";
+import { encodeFileSystemComponent, encodeFileSystemObject } from "../util/encode";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 
 export const SCRIPT_META_FILE_EXTENSION: string = ".meta.json";
@@ -28,14 +28,15 @@ export const ensureScriptFolders = async (basePath: string): Promise<void> => {
 export const fixMetaScriptFileName = (
     scriptName: string,
     uuid: string,
-    variant: IMBRICATE_EXECUTABLE_VARIANT,
+    variant: ImbricateScriptVariant,
 ): string => {
 
     const fixedFileName: string = scriptName.trim();
 
     const encodedFilename: string = encodeFileSystemComponent(fixedFileName);
+    const encodedVariant: string = encodeFileSystemObject(variant);
 
-    return `${encodedFilename}.${uuid}.${variant}${SCRIPT_META_FILE_EXTENSION}`;
+    return `${encodedFilename}.${uuid}.${encodedVariant}${SCRIPT_META_FILE_EXTENSION}`;
 };
 
 export const fixScriptFileName = (
