@@ -4,7 +4,7 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTABLE_VARIANT, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata, ImbricateScriptVariant } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
@@ -44,7 +44,7 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
     public get identifier(): string {
         return this._metadata.identifier;
     }
-    public get variant(): IMBRICATE_EXECUTABLE_VARIANT {
+    public get variant(): ImbricateScriptVariant {
         return this._metadata.variant;
     }
     public get digest(): string {
