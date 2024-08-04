@@ -4,7 +4,7 @@
  * @description Page
  */
 
-import { IImbricatePage, IMBRICATE_PAGE_VARIANT, ImbricatePageAttributes, ImbricatePageBase, ImbricatePageCapability, ImbricatePageHistoryRecord } from "@imbricate/core";
+import { IImbricatePage, ImbricateAuthor, ImbricatePageAttributes, ImbricatePageBase, ImbricatePageCapability, ImbricatePageHistoryRecord, ImbricatePageVariant } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { joinCollectionFolderPath } from "../util/path-joiner";
@@ -54,7 +54,7 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
     public get identifier(): string {
         return this._metadata.identifier;
     }
-    public get variant(): IMBRICATE_PAGE_VARIANT {
+    public get variant(): ImbricatePageVariant {
         return this._metadata.variant;
     }
     public get digest(): string {
@@ -127,11 +127,16 @@ export class FileSystemImbricatePage extends ImbricatePageBase implements IImbri
         await this._updateMetadata(updatedMetadata);
     }
 
-    public async refreshUpdateMetadata(updatedAt: Date, digest: string): Promise<void> {
+    public async refreshUpdateMetadata(
+        updatedAt: Date,
+        digest: string,
+        author: ImbricateAuthor,
+    ): Promise<void> {
 
         const newHistoryRecord: ImbricatePageHistoryRecord = {
             updatedAt,
             digest,
+            author,
         };
 
         const updatedMetadata: FileSystemPageMetadata = {

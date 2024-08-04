@@ -4,7 +4,7 @@
  * @description Script Manager
  */
 
-import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, IMBRICATE_EXECUTABLE_VARIANT, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateSearchScriptConfig } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IImbricateScriptManager, ImbricateAuthor, ImbricateScriptManagerBase, ImbricateScriptManagerCapability, ImbricateScriptMetadata, ImbricateScriptQuery, ImbricateScriptSearchResult, ImbricateScriptSnapshot, ImbricateScriptVariant, ImbricateSearchScriptConfig } from "@imbricate/core";
 import { FileSystemOriginPayload } from "../definition/origin";
 import { fileSystemOriginCreateScript } from "../script/create-script";
 import { fileSystemOriginGetScript } from "../script/get-script";
@@ -54,7 +54,8 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
 
     public async createScript(
         scriptName: string,
-        variant: IMBRICATE_EXECUTABLE_VARIANT,
+        variant: ImbricateScriptVariant,
+        author: ImbricateAuthor,
         initialScript: string,
         description?: string,
     ): Promise<IImbricateScript> {
@@ -64,6 +65,7 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
             this._origin,
             scriptName,
             variant,
+            author,
             initialScript,
             description,
         );
@@ -150,25 +152,5 @@ export class FileSystemImbricateScriptManager extends ImbricateScriptManagerBase
             this._origin,
             query,
         );
-    }
-
-    public async executeScriptSnippet(
-        snippet: string,
-        variant: IMBRICATE_EXECUTABLE_VARIANT,
-        parameters: ImbricateExecuteParameters,
-        interfaceEnvironment: ImbricateExecuteEnvironment,
-    ): Promise<ImbricateExecuteResult> {
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const environment: ImbricateExecuteEnvironment = {
-            ...interfaceEnvironment,
-            origin: {
-                type: this._origin.originType,
-            },
-        };
-
-        return {
-            code: IMBRICATE_EXECUTE_RESULT_CODE.NOT_SUPPORT,
-        };
     }
 }
