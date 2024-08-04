@@ -4,7 +4,7 @@
  * @description List Scripts
  */
 
-import { IMBRICATE_EXECUTABLE_VARIANT, ImbricateScriptSnapshot, isValidImbricateExecutableVariant } from "@imbricate/core";
+import { IMBRICATE_EXECUTABLE_VARIANT, ImbricateScriptSnapshot, isValidImbricateScriptLanguage } from "@imbricate/core";
 import { directoryFiles } from "@sudoo/io";
 import { decodeFileSystemComponent } from "../util/encode";
 import { getScriptsMetadataFolderPath } from "../util/path-joiner";
@@ -37,7 +37,7 @@ export const fileSystemOriginListScripts = async (
             const identifier: string = splited[1];
             const variant: IMBRICATE_EXECUTABLE_VARIANT = splited[2] as IMBRICATE_EXECUTABLE_VARIANT;
 
-            if (!isValidImbricateExecutableVariant(variant)) {
+            if (!isValidImbricateScriptLanguage(variant)) {
                 throw new Error(`Invalid variant: ${variant}`);
             }
 

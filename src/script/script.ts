@@ -4,7 +4,7 @@
  * @description Script
  */
 
-import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata, ImbricateScriptVariant } from "@imbricate/core";
+import { IImbricateOrigin, IImbricateScript, IMBRICATE_EXECUTE_RESULT_CODE, ImbricateAuthor, ImbricateExecuteEnvironment, ImbricateExecuteParameters, ImbricateExecuteResult, ImbricateScriptAttributes, ImbricateScriptBase, ImbricateScriptCapability, ImbricateScriptHistoryRecord, ImbricateScriptMetadata, ImbricateScriptVariant } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
 import { getScriptsFolderPath, getScriptsMetadataFolderPath } from "../util/path-joiner";
 import { ensureScriptFolders, fixMetaScriptFileName, fixScriptFileName } from "./common";
@@ -107,11 +107,16 @@ export class FileSystemImbricateScript extends ImbricateScriptBase implements II
         await this._updateMetadata(newMetadata);
     }
 
-    public async refreshUpdateMetadata(updatedAt: Date, digest: string): Promise<void> {
+    public async refreshUpdateMetadata(
+        updatedAt: Date,
+        digest: string,
+        author: ImbricateAuthor,
+    ): Promise<void> {
 
         const newHistoryRecord: ImbricateScriptHistoryRecord = {
             updatedAt: new Date(),
             digest,
+            author,
         };
 
         const newMetadata: ImbricateScriptMetadata = {
