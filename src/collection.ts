@@ -4,7 +4,7 @@
  * @description Collection
  */
 
-import { IImbricateCollection, IImbricatePage, IMBRICATE_PAGE_VARIANT, ImbricateCollectionBase, ImbricateCollectionCapability, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricateSearchPageConfig } from "@imbricate/core";
+import { IImbricateCollection, IImbricatePage, ImbricateAuthor, ImbricateCollectionBase, ImbricateCollectionCapability, ImbricatePageMetadata, ImbricatePageQuery, ImbricatePageSearchResult, ImbricatePageSnapshot, ImbricatePageVariant, ImbricateSearchPageConfig } from "@imbricate/core";
 import { FileSystemCollectionMetadataCollection } from "./definition/collection";
 import { FileSystemOriginPayload } from "./definition/origin";
 import { fileSystemCreatePage } from "./page/create-page";
@@ -99,7 +99,8 @@ export class FileSystemImbricateCollection extends ImbricateCollectionBase imple
     public async createPage(
         directories: string[],
         title: string,
-        variant: IMBRICATE_PAGE_VARIANT,
+        variant: ImbricatePageVariant,
+        author: ImbricateAuthor,
         initialContent: string,
         description?: string,
     ): Promise<IImbricatePage> {
@@ -110,6 +111,7 @@ export class FileSystemImbricateCollection extends ImbricateCollectionBase imple
             directories,
             title,
             variant,
+            author,
             initialContent,
             description,
         );

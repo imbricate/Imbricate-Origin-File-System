@@ -4,7 +4,7 @@
  * @description Create Page
  */
 
-import { IImbricatePage, IMBRICATE_PAGE_VARIANT } from "@imbricate/core";
+import { IImbricatePage, ImbricateAuthor, ImbricatePageVariant } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
 import { digestString } from "../util/digest";
@@ -17,7 +17,8 @@ export const fileSystemCreatePage = async (
     collectionUniqueIdentifier: string,
     directories: string[],
     title: string,
-    variant: IMBRICATE_PAGE_VARIANT,
+    variant: ImbricatePageVariant,
+    author: ImbricateAuthor,
     initialContent: string,
     description?: string,
 ): Promise<IImbricatePage> => {
@@ -48,6 +49,7 @@ export const fileSystemCreatePage = async (
         historyRecords: [{
             updatedAt: currentTime,
             digest: digested,
+            author,
         }],
 
         createdAt: currentTime,

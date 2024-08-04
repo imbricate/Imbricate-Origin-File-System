@@ -4,9 +4,9 @@
  * @description Common
  */
 
-import { IMBRICATE_PAGE_VARIANT } from "@imbricate/core";
+import { ImbricatePageVariant, getImbricatePageVariantLanguageExtension } from "@imbricate/core";
 import { readTextFile, writeTextFile } from "@sudoo/io";
-import { encodeFileSystemComponent } from "../util/encode";
+import { encodeFileSystemComponent, encodeFileSystemObject } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { pageMetadataFolderName } from "./definition";
 
@@ -16,7 +16,7 @@ export const fixPageMetadataFileName = (
     directories: string[],
     fileName: string,
     identifier: string,
-    variant: IMBRICATE_PAGE_VARIANT,
+    variant: ImbricatePageVariant,
 ): string => {
 
     let fixedFileName: string = fileName.trim();
@@ -29,9 +29,10 @@ export const fixPageMetadataFileName = (
     ].join("/");
 
     const encodedFilename: string = encodeFileSystemComponent(directoriesIncludedFileName);
+    const encodedVariant: string = encodeFileSystemObject(variant);
 
     if (!fixedFileName.endsWith(metaJSONExtension)) {
-        fixedFileName = `${encodedFilename}.${identifier}.${variant}${metaJSONExtension}`;
+        fixedFileName = `${encodedFilename}.${identifier}.${encodedVariant}${metaJSONExtension}`;
     }
 
     return fixedFileName;
@@ -41,7 +42,7 @@ export const getPageContent = async (
     basePath: string,
     collectionUniqueIdentifier: string,
     identifier: string,
-    variant: IMBRICATE_PAGE_VARIANT,
+    variant: ImbricatePageVariant,
 ): Promise<string> => {
 
     const targetFilePath = joinCollectionFolderPath(
@@ -88,8 +89,10 @@ export const putFileToCollectionMetaFolder = async (
 
 export const fixFileNameFromIdentifier = (
     identifier: string,
-    variant: IMBRICATE_PAGE_VARIANT,
+    variant: ImbricatePageVariant,
 ): string => {
 
-    return `${identifier}.${variant}`;
+    const extension = getImbricatePageVariantLanguageExtension(variant.language);
+
+    return `${identifier}.${extension}`;
 };

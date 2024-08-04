@@ -2116,10 +2116,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "@imbricate/core@npm:2.6.0"
-  checksum: 10c0/7c2252fd9a7ccfe2f09dc483c97d8d6faf11816faa19bfc70f7be5e20353f67c840f0a9d56d891e75f789fc5f3b2b50aa6ca56d6bd39813911d3acd7b6bc820f
+"@imbricate/core@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "@imbricate/core@npm:2.6.2"
+  checksum: 10c0/38ea56203a35882c09e5cb841273c5e1c6346103d8b4d5d8dc32a604d47e2b86e63678a3638a33bb469695daf5b72f079cc3e078a362c408772680e258b4760a
   languageName: node
   linkType: hard
 
@@ -2130,8 +2130,8 @@ __metadata:
     "@babel/core": "npm:^7.25.2"
     "@babel/preset-env": "npm:^7.25.3"
     "@babel/preset-typescript": "npm:^7.24.7"
-    "@imbricate/core": "npm:^2.6.0"
-    "@imbricate/test-origin-jest": "npm:^2.2.0"
+    "@imbricate/core": "npm:^2.6.2"
+    "@imbricate/test-origin-jest": "npm:^2.3.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
@@ -2149,12 +2149,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@imbricate/test-origin-jest@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@imbricate/test-origin-jest@npm:2.2.0"
+"@imbricate/test-origin-jest@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@imbricate/test-origin-jest@npm:2.3.0"
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/5dda33e884620a0e3f081800c088e42daa510e2b636e5d2768b5ba0e082395648dc14fdefe4f243ec632c8f482a9c6b997329b8ce487dcb17ea9339a785fc8df
+  checksum: 10c0/bf2d2da7b429d61915407648837fe864e8731c38943e986a3cffb56b48052468fb8ff2a6a697bd2095e3cd697c8f829a4ece5a9472536bd7757e9bad01ebface
   languageName: node
   linkType: hard
 

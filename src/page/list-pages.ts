@@ -4,10 +4,10 @@
  * @description List Pages
  */
 
-import { IMBRICATE_PAGE_VARIANT, ImbricatePageSnapshot, isValidImbricatePageVariant } from "@imbricate/core";
+import { ImbricatePageSnapshot, ImbricatePageVariant, isValidImbricatePageVariantLanguage } from "@imbricate/core";
 import { directoryFiles } from "@sudoo/io";
 import { ensureCollectionFolder } from "../collection/ensure-collection-folder";
-import { decodeFileSystemComponent } from "../util/encode";
+import { decodeFileSystemComponent, decodeFileSystemObject } from "../util/encode";
 import { joinCollectionFolderPath } from "../util/path-joiner";
 import { PAGE_META_FILE_EXTENSION } from "./common";
 import { pageMetadataFolderName } from "./definition";
@@ -71,10 +71,12 @@ export const fileSystemListAllPages = async (
 
             const encoded: string = splited[0];
             const uuid: string = splited[1];
-            const variant: IMBRICATE_PAGE_VARIANT = splited[2] as IMBRICATE_PAGE_VARIANT;
+            const encodedVariant: string = splited[2];
 
-            if (!isValidImbricatePageVariant(variant)) {
-                throw new Error(`Invalid variant: ${variant}`);
+            const variant: ImbricatePageVariant = decodeFileSystemObject(encodedVariant) as ImbricatePageVariant;
+
+            if (!isValidImbricatePageVariantLanguage(variant.language)) {
+                throw new Error(`Invalid variant language: ${variant.language}`);
             }
 
             const decoded: string[] =
