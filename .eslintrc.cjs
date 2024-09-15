@@ -15,6 +15,7 @@ module.exports = {
             "error",
             {
                 "argsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_",
             },
         ],
         "comma-dangle": [

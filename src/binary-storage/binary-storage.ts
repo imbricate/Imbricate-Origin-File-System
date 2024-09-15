@@ -49,7 +49,7 @@ export class FileSystemBinaryStorage extends ImbricateBinaryStorageBase implemen
         try {
             Buffer.from(binary, "base64");
             return true;
-        } catch (error) {
+        } catch (_error) {
             return false;
         }
     }
