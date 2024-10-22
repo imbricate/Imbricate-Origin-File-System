@@ -1732,10 +1732,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^2.6.2":
-  version: 2.6.2
-  resolution: "@imbricate/core@npm:2.6.2"
-  checksum: 10c0/38ea56203a35882c09e5cb841273c5e1c6346103d8b4d5d8dc32a604d47e2b86e63678a3638a33bb469695daf5b72f079cc3e078a362c408772680e258b4760a
+"@imbricate/core@file:../Imbricate/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
+  version: 3.0.0
+  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=1526ff&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  checksum: 10c0/7903da5eca5dde45dafadae1b7992f3ecbc4309beee33cb893327ec5508f27201fba1e41d7812df9e6d1101ab0ba03949b0bdbd08ccb27a80e7c5857a937e284
   languageName: node
   linkType: hard
 
@@ -1746,7 +1746,7 @@ __metadata:
     "@babel/core": "npm:^7.25.9"
     "@babel/preset-env": "npm:^7.25.9"
     "@babel/preset-typescript": "npm:^7.25.9"
-    "@imbricate/core": "npm:^2.6.2"
+    "@imbricate/core": "file:../Imbricate/app"
     "@imbricate/test-origin-jest": "npm:^2.3.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
