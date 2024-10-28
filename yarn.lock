@@ -1531,9 +1531,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.25.9":
-  version: 7.25.9
-  resolution: "@babel/preset-typescript@npm:7.25.9"
+"@babel/preset-typescript@npm:^7.26.0":
+  version: 7.26.0
+  resolution: "@babel/preset-typescript@npm:7.26.0"
   dependencies:
     "@babel/helper-plugin-utils": "npm:^7.25.9"
     "@babel/helper-validator-option": "npm:^7.25.9"
@@ -1542,7 +1542,7 @@ __metadata:
     "@babel/plugin-transform-typescript": "npm:^7.25.9"
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 10c0/cbcc5b4bf2891e367627338961113febbe58d361e9a03bd2c8340ede914870f74db35ee367cfd8d0fca0872149bfb58b090d0a4815de7c05d0a8abb3d961eead
+  checksum: 10c0/20d86bc45d2bbfde2f84fc7d7b38746fa6481d4bde6643039ad4b1ff0b804c6d210ee43e6830effd8571f2ff43fa7ffd27369f42f2b3a2518bb92dc86c780c61
   languageName: node
   linkType: hard
 
@@ -1734,8 +1734,8 @@ __metadata:
 
 "@imbricate/core@file:../Imbricate/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
   version: 3.0.0
-  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=fd9227&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
-  checksum: 10c0/935a442301759705583b253a23fece5e4990011c483f0ce0e9e870b13e8f39078561cb1117c61b07353c6ba1aa6ba7089814075b7a20845a1582a8ce4cc071f7
+  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=81f1d1&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  checksum: 10c0/3360eaa82f51746f4670d7500d834cd8990fe1f0e91d43b2eced3d965fef0316f2f7e68abef26b3aa7531af1a3e20e551e8918e4540cb29d628b9de05ed2ae65
   languageName: node
   linkType: hard
 
@@ -1745,7 +1745,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.25.9"
     "@babel/preset-env": "npm:^7.25.9"
-    "@babel/preset-typescript": "npm:^7.25.9"
+    "@babel/preset-typescript": "npm:^7.26.0"
     "@imbricate/core": "file:../Imbricate/app"
     "@imbricate/test-origin-jest": "npm:^2.3.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
