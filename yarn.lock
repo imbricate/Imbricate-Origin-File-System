@@ -1734,8 +1734,8 @@ __metadata:
 
 "@imbricate/core@file:../Imbricate/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
   version: 3.0.0
-  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=fd9227&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
-  checksum: 10c0/935a442301759705583b253a23fece5e4990011c483f0ce0e9e870b13e8f39078561cb1117c61b07353c6ba1aa6ba7089814075b7a20845a1582a8ce4cc071f7
+  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=81f1d1&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  checksum: 10c0/3360eaa82f51746f4670d7500d834cd8990fe1f0e91d43b2eced3d965fef0316f2f7e68abef26b3aa7531af1a3e20e551e8918e4540cb29d628b9de05ed2ae65
   languageName: node
   linkType: hard
 
@@ -1752,7 +1752,7 @@ __metadata:
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29.5.13"
-    "@types/node": "npm:^22.7.8"
+    "@types/node": "npm:^22.8.2"
     "@typescript-eslint/eslint-plugin": "npm:^8.11.0"
     "@typescript-eslint/parser": "npm:^8.11.0"
     babel-jest: "npm:^29.7.0"
@@ -2324,12 +2324,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.7.8":
-  version: 22.7.8
-  resolution: "@types/node@npm:22.7.8"
+"@types/node@npm:^22.8.2":
+  version: 22.8.2
+  resolution: "@types/node@npm:22.8.2"
   dependencies:
-    undici-types: "npm:~6.19.2"
-  checksum: 10c0/3d3b3a2ec5a57ca4fd37b34dce415620993ca5f87cea2c728ffe73aa31446dbfe19c53171c478447bd7d78011ef4845a46ab2f0dc38e699cc75b3d100a60c690
+    undici-types: "npm:~6.19.8"
+  checksum: 10c0/c6fa6c54c23e61015cace1517c4101602cae0ff3c4f6604f6cdb89875143921830e5602cabe8b4f90f90363451687a0497f1d07d30be8104fee758d6d44c90ac
   languageName: node
   linkType: hard
 
@@ -5748,7 +5748,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.2":
+"undici-types@npm:~6.19.8":
   version: 6.19.8
   resolution: "undici-types@npm:6.19.8"
   checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
