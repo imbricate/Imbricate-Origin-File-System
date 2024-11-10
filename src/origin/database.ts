@@ -14,15 +14,17 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatab
         return new ImbricateFileSystemDatabaseManager();
     }
 
-    getDatabases(): PromiseLike<IImbricateDatabase[]> {
+    public getDatabases(): PromiseLike<IImbricateDatabase[]> {
+
         throw new Error("Method not implemented.");
     }
 
-    createDatabase(
+    public createDatabase(
         _databaseName: string,
         _schema: ImbricateDatabaseSchema,
         _uniqueIdentifier?: string,
     ): PromiseLike<IImbricateDatabase> {
+
         throw new Error("Method not implemented.");
     }
 }

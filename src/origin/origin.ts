@@ -16,11 +16,12 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
     readonly uniqueIdentifier: string;
     readonly payloads: Record<string, any>;
 
-    getDatabaseManager(): IImbricateOriginDatabaseManager {
+    public getDatabaseManager(): IImbricateOriginDatabaseManager {
 
         return ImbricateFileSystemDatabaseManager.create();
     }
-    getStaticManager(): IImbricateOriginStaticManager {
+
+    public getStaticManager(): IImbricateOriginStaticManager {
 
         return ImbricateFileSystemStaticManager.create();
     }
