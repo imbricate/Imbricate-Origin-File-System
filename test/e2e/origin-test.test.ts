@@ -6,6 +6,7 @@
  */
 
 import { ImbricateOriginTestingTarget, startImbricateOriginTest } from "@imbricate/test-origin-jest";
+import { RMRFFolder } from "@sudoo/io";
 import * as Path from "path";
 import { ImbricateFileSystemOrigin } from "../../src";
 
@@ -20,6 +21,7 @@ const testingTarget = ImbricateOriginTestingTarget.fromConstructor(
     },
     async () => {
 
+        await RMRFFolder(Path.resolve("origin-test"));
     },
 );
 

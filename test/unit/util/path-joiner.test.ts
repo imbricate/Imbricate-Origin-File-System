@@ -11,8 +11,7 @@ describe("Given [Path Joiner] Helper Methods", (): void => {
 
     test("should be able to join collection meta file path", (): void => {
 
-        const basePath: string = "/base/path";
-        const joined: string[] = joinDatabaseMetaFileRoute(basePath);
+        const joined: string[] = joinDatabaseMetaFileRoute();
 
         expect(joined).toEqual(
             ["database"],

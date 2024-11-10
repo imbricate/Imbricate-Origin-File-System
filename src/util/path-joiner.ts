@@ -12,6 +12,10 @@ export const joinDatabaseMetaFileRoute = (
         return ["database"];
     }
 
+    if (uniqueIdentifier.endsWith(".json")) {
+        return ["database", uniqueIdentifier];
+    }
+
     return ["database", `${uniqueIdentifier}.json`];
 };
 

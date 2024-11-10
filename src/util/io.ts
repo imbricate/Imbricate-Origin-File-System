@@ -38,8 +38,9 @@ export const listFileFromDirectory = async (
     pathRoute: string[],
 ): Promise<string[]> => {
 
+    const directory: string = Path.join(basePath, ...pathRoute);
     const files: string[] = await directoryFiles(
-        Path.join(basePath, ...pathRoute),
+        directory,
     );
 
     return files;
@@ -51,9 +52,11 @@ export const putFile = async (
     content: string,
 ): Promise<void> => {
 
+    await attemptMarkDir(basePath);
     for (let i = 0; i < pathRoute.length - 1; i++) {
 
         const currentPath: string = Path.join(basePath, ...pathRoute.slice(0, i + 1));
+
         await attemptMarkDir(currentPath);
     }
 
@@ -61,4 +64,15 @@ export const putFile = async (
         Path.join(basePath, ...pathRoute),
         content,
     );
+};
+
+export const readFile = async (
+    basePath: string,
+    pathRoute: string[],
+): Promise<string> => {
+
+    const content: string = await readTextFile(
+        Path.join(basePath, ...pathRoute),
+    );
+    return content;
 };

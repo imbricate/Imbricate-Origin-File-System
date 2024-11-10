@@ -4,8 +4,7 @@
  * @description Action
  */
 
-import { readTextFile } from "@sudoo/io";
-import { listFileFromDirectory, putFile } from "../util/io";
+import { listFileFromDirectory, putFile, readFile } from "../util/io";
 import { joinDatabaseMetaFileRoute } from "../util/path-joiner";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
@@ -32,7 +31,9 @@ export const getDatabaseMetaList = async (
     const result: ImbricateFileSystemDatabaseMeta[] = [];
     for (const file of files) {
 
-        const content: string = await readTextFile(file);
+        const metaFileRoutes: string[] = joinDatabaseMetaFileRoute(file);
+
+        const content: string = await readFile(basePath, metaFileRoutes);
         const parsed: ImbricateFileSystemDatabaseMeta = JSON.parse(content);
 
         result.push(parsed);
