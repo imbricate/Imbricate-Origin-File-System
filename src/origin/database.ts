@@ -38,9 +38,14 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatab
             this._basePath,
         );
 
-        console.log(databaseMetaList);
+        return databaseMetaList.map((item: ImbricateFileSystemDatabaseMeta) => {
 
-        throw new Error("Method not implemented.");
+            return ImbricateFileSystemDatabase.create(
+                item.uniqueIdentifier,
+                item.databaseName,
+                item.schema,
+            );
+        });
     }
 
     public async createDatabase(
