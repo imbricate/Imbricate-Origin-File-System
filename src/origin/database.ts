@@ -7,6 +7,8 @@
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { IImbricateOriginDatabaseManager } from "@imbricate/core/origin/database-manager";
+import { UUIDVersion1 } from "@sudoo/uuid";
+import { ImbricateFileSystemDatabase } from "../database/database";
 
 export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatabaseManager {
 
@@ -19,12 +21,18 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatab
         throw new Error("Method not implemented.");
     }
 
-    public createDatabase(
-        _databaseName: string,
-        _schema: ImbricateDatabaseSchema,
-        _uniqueIdentifier?: string,
-    ): PromiseLike<IImbricateDatabase> {
+    public async createDatabase(
+        databaseName: string,
+        schema: ImbricateDatabaseSchema,
+        uniqueIdentifier?: string,
+    ): Promise<IImbricateDatabase> {
 
-        throw new Error("Method not implemented.");
+        const identifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
+
+        return ImbricateFileSystemDatabase.create(
+            identifier,
+            databaseName,
+            schema,
+        );
     }
 }
