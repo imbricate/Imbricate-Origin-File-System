@@ -6,7 +6,7 @@
 
 import { readTextFile } from "@sudoo/io";
 import { listFileFromDirectory, putFile } from "../util/io";
-import { joinDatabaseMetaFilePath } from "../util/path-joiner";
+import { joinDatabaseMetaFileRoute } from "../util/path-joiner";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
 export const putDatabaseMeta = async (
@@ -14,23 +14,20 @@ export const putDatabaseMeta = async (
     metadata: ImbricateFileSystemDatabaseMeta,
 ): Promise<void> => {
 
-    const filePath: string = joinDatabaseMetaFilePath(
-        basePath,
+    const pathRoute: string[] = joinDatabaseMetaFileRoute(
         metadata.uniqueIdentifier,
     );
 
-    await putFile(filePath, JSON.stringify(metadata));
+    await putFile(basePath, pathRoute, JSON.stringify(metadata));
 };
 
 export const getDatabaseMetaList = async (
     basePath: string,
 ): Promise<ImbricateFileSystemDatabaseMeta[]> => {
 
-    const directoryPath: string = joinDatabaseMetaFilePath(
-        basePath,
-    );
+    const pathRoute: string[] = joinDatabaseMetaFileRoute();
 
-    const files: string[] = await listFileFromDirectory(directoryPath);
+    const files: string[] = await listFileFromDirectory(basePath, pathRoute);
 
     const result: ImbricateFileSystemDatabaseMeta[] = [];
     for (const file of files) {

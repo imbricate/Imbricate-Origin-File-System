@@ -4,20 +4,15 @@
  * @description Path Joiner
  */
 
-import * as Path from "path";
-
-export const joinDatabaseMetaFilePath = (
-    basePath: string,
+export const joinDatabaseMetaFileRoute = (
     uniqueIdentifier?: string,
-): string => {
-
-    const resolved: string = Path.resolve(basePath);
+): string[] => {
 
     if (typeof uniqueIdentifier === "undefined") {
-        return Path.join(resolved, "database");
+        return ["database"];
     }
 
-    return Path.join(resolved, "database", uniqueIdentifier);
+    return ["database", `${uniqueIdentifier}.json`];
 };
 
 export const buildUrlWithScheme = (url: string): string => {

@@ -34,22 +34,31 @@ export const createOrGetFile = async (
 };
 
 export const listFileFromDirectory = async (
-    directoryPath: string,
+    basePath: string,
+    pathRoute: string[],
 ): Promise<string[]> => {
 
-    await attemptMarkDir(directoryPath);
-    const files: string[] = await directoryFiles(directoryPath);
+    const files: string[] = await directoryFiles(
+        Path.join(basePath, ...pathRoute),
+    );
 
     return files;
 };
 
 export const putFile = async (
-    path: string,
+    basePath: string,
+    pathRoute: string[],
     content: string,
 ): Promise<void> => {
 
-    const folderPath = Path.dirname(path);
+    for (let i = 0; i < pathRoute.length - 1; i++) {
 
-    await attemptMarkDir(folderPath);
-    await writeTextFile(path, content);
+        const currentPath: string = Path.join(basePath, ...pathRoute.slice(0, i + 1));
+        await attemptMarkDir(currentPath);
+    }
+
+    await writeTextFile(
+        Path.join(basePath, ...pathRoute),
+        content,
+    );
 };
