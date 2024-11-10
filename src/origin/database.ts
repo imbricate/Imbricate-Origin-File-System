@@ -8,8 +8,9 @@ import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { IImbricateOriginDatabaseManager } from "@imbricate/core/origin/database-manager";
 import { UUIDVersion1 } from "@sudoo/uuid";
-import { putDatabaseMetaFile } from "../database/action";
+import { getDatabaseMetaList, putDatabaseMeta } from "../database/action";
 import { ImbricateFileSystemDatabase } from "../database/database";
+import { ImbricateFileSystemDatabaseMeta } from "../database/definition";
 
 export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatabaseManager {
 
@@ -31,7 +32,13 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatab
         this._basePath = basePath;
     }
 
-    public getDatabases(): PromiseLike<IImbricateDatabase[]> {
+    public async getDatabases(): Promise<IImbricateDatabase[]> {
+
+        const databaseMetaList: ImbricateFileSystemDatabaseMeta[] = await getDatabaseMetaList(
+            this._basePath,
+        );
+
+        console.log(databaseMetaList);
 
         throw new Error("Method not implemented.");
     }
@@ -44,7 +51,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatab
 
         const identifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
 
-        await putDatabaseMetaFile(
+        await putDatabaseMeta(
             this._basePath,
             {
                 uniqueIdentifier: identifier,

@@ -4,7 +4,7 @@
  * @description IO
  */
 
-import { attemptMarkDir, isFile, pathExists, readTextFile, writeTextFile } from "@sudoo/io";
+import { attemptMarkDir, directoryFiles, isFile, pathExists, readTextFile, writeTextFile } from "@sudoo/io";
 import * as Path from "path";
 
 export const createOrGetFile = async (
@@ -31,6 +31,16 @@ export const createOrGetFile = async (
     await writeTextFile(path, defaultValue);
 
     return defaultValue;
+};
+
+export const listFileFromDirectory = async (
+    directoryPath: string,
+): Promise<string[]> => {
+
+    await attemptMarkDir(directoryPath);
+    const files: string[] = await directoryFiles(directoryPath);
+
+    return files;
 };
 
 export const putFile = async (

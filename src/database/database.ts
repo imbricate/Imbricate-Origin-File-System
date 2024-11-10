@@ -4,10 +4,9 @@
  * @description Database
  */
 
-import { DocumentProperties, IImbricateDocument, DocumentUniqueIdentifier } from "@imbricate/core";
+import { DocumentProperties, DocumentUniqueIdentifier, IImbricateDocument } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
-import { IImbricateOriginDatabaseManager } from "@imbricate/core/origin/database-manager";
 
 export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
@@ -39,12 +38,16 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         this.schema = schema;
     }
 
-    createDocument(properties: DocumentProperties): PromiseLike<IImbricateDocument> {
+    public createDocument(
+        _properties: DocumentProperties,
+    ): PromiseLike<IImbricateDocument> {
 
         throw new Error("Method not implemented.");
     }
 
-    getDocument(uniqueIdentifier: DocumentUniqueIdentifier): PromiseLike<IImbricateDocument | null> {
+    public getDocument(
+        _uniqueIdentifier: DocumentUniqueIdentifier,
+    ): PromiseLike<IImbricateDocument | null> {
 
         throw new Error("Method not implemented.");
     }

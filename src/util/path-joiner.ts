@@ -8,10 +8,15 @@ import * as Path from "path";
 
 export const joinDatabaseMetaFilePath = (
     basePath: string,
-    uniqueIdentifier: string,
+    uniqueIdentifier?: string,
 ): string => {
 
     const resolved: string = Path.resolve(basePath);
+
+    if (typeof uniqueIdentifier === "undefined") {
+        return Path.join(resolved, "database");
+    }
+
     return Path.join(resolved, "database", uniqueIdentifier);
 };
 
