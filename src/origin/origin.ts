@@ -12,13 +12,34 @@ import { ImbricateFileSystemStaticManager } from "./static";
 
 export class ImbricateFileSystemOrigin implements IImbricateOrigin {
 
-    readonly originType: string;
-    readonly uniqueIdentifier: string;
-    readonly payloads: Record<string, any>;
+    public static create(
+        uniqueIdentifier: string,
+        payloads: Record<string, any>,
+    ): ImbricateFileSystemOrigin {
+
+        return new ImbricateFileSystemOrigin(
+            uniqueIdentifier,
+            payloads,
+        );
+    }
+
+    private constructor(
+        uniqueIdentifier: string,
+        payloads: Record<string, any>,
+    ) {
+
+        this.uniqueIdentifier = uniqueIdentifier;
+        this.payloads = payloads;
+    }
+
+    public readonly uniqueIdentifier: string;
+    public readonly payloads: Record<string, any>;
 
     public getDatabaseManager(): IImbricateOriginDatabaseManager {
 
-        return ImbricateFileSystemDatabaseManager.create();
+        return ImbricateFileSystemDatabaseManager.create(
+            this.payloads.basePath,
+        );
     }
 
     public getStaticManager(): IImbricateOriginStaticManager {
