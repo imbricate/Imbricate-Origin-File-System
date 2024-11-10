@@ -13,22 +13,18 @@ import { ImbricateFileSystemStaticManager } from "./static";
 export class ImbricateFileSystemOrigin implements IImbricateOrigin {
 
     public static create(
-        uniqueIdentifier: string,
         payloads: Record<string, any>,
     ): ImbricateFileSystemOrigin {
 
         return new ImbricateFileSystemOrigin(
-            uniqueIdentifier,
             payloads,
         );
     }
 
     private constructor(
-        uniqueIdentifier: string,
         payloads: Record<string, any>,
     ) {
 
-        this.uniqueIdentifier = uniqueIdentifier;
         this.payloads = payloads;
     }
 

@@ -7,12 +7,12 @@
 
 import { ImbricateOriginTestingTarget, startImbricateOriginTest } from "@imbricate/test-origin-jest";
 import * as Path from "path";
-import { FileSystemImbricateOrigin } from "../../src";
+import { ImbricateFileSystemOrigin } from "../../src";
 
 const testingTarget = ImbricateOriginTestingTarget.fromConstructor(
     async () => {
 
-        const origin: FileSystemImbricateOrigin = FileSystemImbricateOrigin.withPayloads({
+        const origin: ImbricateFileSystemOrigin = ImbricateFileSystemOrigin.create({
             basePath: Path.resolve("origin-test"),
             asynchronousPoolLimit: 10,
         });
