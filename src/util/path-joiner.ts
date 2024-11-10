@@ -6,12 +6,13 @@
 
 import * as Path from "path";
 
-export const joinStaticFilePath = (
+export const joinDatabaseMetaFilePath = (
     basePath: string,
+    uniqueIdentifier: string,
 ): string => {
 
     const resolved: string = Path.resolve(basePath);
-    return Path.join(resolved, "collection.meta.json");
+    return Path.join(resolved, "database", uniqueIdentifier);
 };
 
 export const buildUrlWithScheme = (url: string): string => {
