@@ -18,6 +18,9 @@ const testingTarget = ImbricateOriginTestingTarget.fromConstructor(
         });
         return origin;
     },
+    async () => {
+
+    },
 );
 
 startImbricateOriginTest(testingTarget);
