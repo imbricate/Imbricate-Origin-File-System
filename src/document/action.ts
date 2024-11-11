@@ -6,18 +6,21 @@
 
 import { ImbricateFileSystemDatabaseMeta } from "../database/definition";
 import { listFileFromDirectory, putFile, readFile } from "../util/io";
-import { joinDatabaseMetaFileRoute } from "../util/path-joiner";
+import { joinDatabaseMetaFileRoute, joinDocumentFileRoute } from "../util/path-joiner";
+import { ImbricateFileSystemDocument } from "./document";
 
-export const putDatabaseMeta = async (
+export const putDocument = async (
     basePath: string,
-    metadata: ImbricateFileSystemDatabaseMeta,
+    databaseUniqueIdentifier: string,
+    document: ImbricateFileSystemDocument,
 ): Promise<void> => {
 
-    const pathRoute: string[] = joinDatabaseMetaFileRoute(
-        metadata.uniqueIdentifier,
+    const pathRoute: string[] = joinDocumentFileRoute(
+        databaseUniqueIdentifier,
+        document.uniqueIdentifier,
     );
 
-    await putFile(basePath, pathRoute, JSON.stringify(metadata, null, 2));
+    await putFile(basePath, pathRoute, JSON.stringify(document, null, 2));
 };
 
 export const getDatabaseMetaList = async (

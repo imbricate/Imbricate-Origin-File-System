@@ -6,6 +6,19 @@
 
 import { joinPath } from "@sudoo/io";
 
+export const joinDocumentFileRoute = (
+    databaseUniqueIdentifier: string,
+    documentUniqueIdentifier: string,
+): string[] => {
+
+    return [
+        "database",
+        databaseUniqueIdentifier,
+        "document",
+        documentUniqueIdentifier,
+    ];
+};
+
 export const joinDatabaseMetaFileRoute = (
     uniqueIdentifier?: string,
 ): string[] => {
