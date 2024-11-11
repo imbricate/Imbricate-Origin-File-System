@@ -8,14 +8,31 @@ import { joinPath } from "@sudoo/io";
 
 export const joinDocumentFileRoute = (
     databaseUniqueIdentifier: string,
-    documentUniqueIdentifier: string,
+    documentUniqueIdentifier?: string,
 ): string[] => {
+
+    if (typeof documentUniqueIdentifier === "undefined") {
+        return [
+            "database",
+            databaseUniqueIdentifier,
+            "document",
+        ];
+    }
+
+    if (documentUniqueIdentifier.endsWith(".json")) {
+        return [
+            "database",
+            databaseUniqueIdentifier,
+            "document",
+            documentUniqueIdentifier,
+        ];
+    }
 
     return [
         "database",
         databaseUniqueIdentifier,
         "document",
-        documentUniqueIdentifier,
+        `${documentUniqueIdentifier}.json`,
     ];
 };
 

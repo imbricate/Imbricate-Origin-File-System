@@ -53,6 +53,23 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             databasePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
+            properties,
+        );
+    }
+
+    public static async fromInstance(
+        author: ImbricateAuthor,
+        databasePath: string,
+        databaseUniqueIdentifier: string,
+        instance: ImbricateFileSystemDocumentInstance,
+    ) {
+
+        return new ImbricateFileSystemDocument(
+            author,
+            databasePath,
+            databaseUniqueIdentifier,
+            instance.uniqueIdentifier,
+            instance.properties,
         );
     }
 
@@ -62,11 +79,14 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private readonly _databaseUniqueIdentifier: string;
     private readonly _documentUniqueIdentifier: string;
 
+    private readonly _properties: DocumentProperties;
+
     private constructor(
         author: ImbricateAuthor,
         databasePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
+        properties: DocumentProperties,
     ) {
 
         this._databasePath = databasePath;
@@ -74,6 +94,8 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         this._databaseUniqueIdentifier = databaseUniqueIdentifier;
         this._documentUniqueIdentifier = documentUniqueIdentifier;
+
+        this._properties = properties;
     }
 
     public get uniqueIdentifier(): string {
@@ -88,10 +110,10 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         throw new Error("Method not implemented.");
     }
 
-    public getProperties(
-    ): PromiseLike<DocumentProperties> {
+    public async getProperties(
+    ): Promise<DocumentProperties> {
 
-        throw new Error("Method not implemented.");
+        return this._properties;
     }
 
     public addEditRecords(

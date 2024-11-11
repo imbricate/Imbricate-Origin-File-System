@@ -4,9 +4,9 @@
  * @description Action
  */
 
-import { ImbricateFileSystemDatabaseMeta } from "../database/definition";
+import { ImbricateDocumentQuery } from "@imbricate/core";
 import { listFileFromDirectory, putFile, readFile } from "../util/io";
-import { joinDatabaseMetaFileRoute, joinDocumentFileRoute } from "../util/path-joiner";
+import { joinDocumentFileRoute } from "../util/path-joiner";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
 
 export const putDocument = async (
@@ -23,21 +23,33 @@ export const putDocument = async (
     await putFile(basePath, pathRoute, JSON.stringify(document, null, 2));
 };
 
-export const getDatabaseMetaList = async (
+export const getDocumentList = async (
     basePath: string,
-): Promise<ImbricateFileSystemDatabaseMeta[]> => {
+    databaseUniqueIdentifier: string,
+    query: ImbricateDocumentQuery,
+): Promise<ImbricateFileSystemDocumentInstance[]> => {
 
-    const pathRoute: string[] = joinDatabaseMetaFileRoute();
+    const pathRoute: string[] = joinDocumentFileRoute(
+        databaseUniqueIdentifier,
+    );
 
     const files: string[] = await listFileFromDirectory(basePath, pathRoute);
 
-    const result: ImbricateFileSystemDatabaseMeta[] = [];
-    for (const file of files) {
+    const result: ImbricateFileSystemDocumentInstance[] = [];
+    const startPoint: number = query.skip || 0;
+    const endPoint: number = query.limit ? startPoint + query.limit : files.length;
 
-        const metaFileRoutes: string[] = joinDatabaseMetaFileRoute(file);
+    for (let i: number = startPoint; i < endPoint; i++) {
 
-        const content: string = await readFile(basePath, metaFileRoutes);
-        const parsed: ImbricateFileSystemDatabaseMeta = JSON.parse(content);
+        const file: string = files[i];
+
+        const fileRoute: string[] = joinDocumentFileRoute(
+            databaseUniqueIdentifier,
+            file,
+        );
+
+        const content: string = await readFile(basePath, fileRoute);
+        const parsed: ImbricateFileSystemDocumentInstance = JSON.parse(content);
 
         result.push(parsed);
     }

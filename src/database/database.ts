@@ -8,6 +8,8 @@ import { DocumentProperties, IImbricateDocument, ImbricateAuthor, ImbricateDocum
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
+import { getDocumentList } from "../document/action";
+import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
 
 export class ImbricateFileSystemDatabase implements IImbricateDatabase {
@@ -77,10 +79,30 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         throw new Error("Method not implemented.");
     }
 
-    public queryDocuments(
-        _query: ImbricateDocumentQuery,
-    ): PromiseLike<IImbricateDocument[]> {
+    public async queryDocuments(
+        query: ImbricateDocumentQuery,
+    ): Promise<IImbricateDocument[]> {
 
-        throw new Error("Method not implemented.");
+        const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
+            this._databasePath,
+            this.uniqueIdentifier,
+            query,
+        );
+
+        const results: IImbricateDocument[] = [];
+
+        for (const documentInstance of documents) {
+
+            const document = await ImbricateFileSystemDocument.fromInstance(
+                this._author,
+                this._databasePath,
+                this.uniqueIdentifier,
+                documentInstance,
+            );
+
+            results.push(document);
+        }
+
+        return results;
     }
 }
