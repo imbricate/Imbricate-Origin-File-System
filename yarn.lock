@@ -1866,8 +1866,8 @@ __metadata:
 
 "@imbricate/core@file:../Imbricate/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
   version: 3.0.0
-  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=d61ef8&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
-  checksum: 10c0/21b3a9953c70c92bad8b2517ac27e3c7785df3c24c2b0a6c49412477a692aa9ceae18905234ac31a0a5a2607755e6717e671cd246dfbe97acf5ff1f8dbd3c09f
+  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=bd136d&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  checksum: 10c0/b9681ed86b93ced65fdaf614988c52748f2365866729cf8e99c3ec8a2b519942328d63fab5969f49299f984ad345c6d5c12932e482574ee661005685144fb06d
   languageName: node
   linkType: hard
 
@@ -1899,10 +1899,10 @@ __metadata:
 
 "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
   version: 2.3.0
-  resolution: "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app#../Imbricate-Testing-Origin-Jest/app::hash=ee3e3d&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  resolution: "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app#../Imbricate-Testing-Origin-Jest/app::hash=216a7e&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/e0714c3c39ae50281dad63149e2092900e67285d5c32e180c2a76995f33f7ef1a702e22141b1e38909a3aae3fb8921cfdff1e6708650257a7d3e2e9c1e63b0c5
+  checksum: 10c0/39888697f04a33c08f86f3b8da263eb4d38894eb91b27a1eace6194b03285c718a4ddce3b50b8371c767787c362d2ff2fc630bf351f938810daa4fe0151392df
   languageName: node
   linkType: hard
 
