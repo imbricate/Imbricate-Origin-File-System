@@ -6,6 +6,16 @@
 
 import { joinPath } from "@sudoo/io";
 
+export const joinTextFileRoute = (
+    textUniqueIdentifier: string,
+): string[] => {
+
+    return [
+        "text",
+        textUniqueIdentifier,
+    ];
+};
+
 export const joinDocumentFileRoute = (
     databaseUniqueIdentifier: string,
     documentUniqueIdentifier?: string,
