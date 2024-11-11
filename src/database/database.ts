@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DocumentProperties, IImbricateDocument } from "@imbricate/core";
+import { DocumentProperties, IImbricateDocument, ImbricateAuthor } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -13,6 +13,7 @@ import { ImbricateFileSystemDocument } from "../document/document";
 export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public static create(
+        author: ImbricateAuthor,
         databasePath: string,
         uniqueIdentifier: string,
         databaseName: string,
@@ -20,6 +21,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     ): ImbricateFileSystemDatabase {
 
         return new ImbricateFileSystemDatabase(
+            author,
             databasePath,
             uniqueIdentifier,
             databaseName,
@@ -27,6 +29,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         );
     }
 
+    private readonly _author: ImbricateAuthor;
     private readonly _databasePath: string;
 
     public readonly uniqueIdentifier: string;
@@ -34,12 +37,14 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public readonly schema: ImbricateDatabaseSchema;
 
     private constructor(
+        author: ImbricateAuthor,
         databasePath: string,
         uniqueIdentifier: string,
         databaseName: string,
         schema: ImbricateDatabaseSchema,
     ) {
 
+        this._author = author;
         this._databasePath = databasePath;
 
         this.uniqueIdentifier = uniqueIdentifier;
@@ -55,6 +60,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         const document: IImbricateDocument = await ImbricateFileSystemDocument
             .fromScratchAndSave(
+                this._author,
                 this._databasePath,
                 this.uniqueIdentifier,
                 documentUniqueIdentifier,

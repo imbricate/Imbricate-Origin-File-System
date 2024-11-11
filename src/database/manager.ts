@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateDatabaseSchema } from "@imbricate/core";
+import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { joinDatabaseBasePath } from "../util/path-joiner";
 import { getDatabaseMetaList, putDatabaseMeta } from "./action";
@@ -14,20 +14,25 @@ import { ImbricateFileSystemDatabaseMeta } from "./definition";
 export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseManager {
 
     public static create(
+        author: ImbricateAuthor,
         basePath: string,
     ): ImbricateFileSystemDatabaseManager {
 
         return new ImbricateFileSystemDatabaseManager(
+            author,
             basePath,
         );
     }
 
+    private readonly _author: ImbricateAuthor;
     private readonly _basePath: string;
 
     private constructor(
+        author: ImbricateAuthor,
         basePath: string,
     ) {
 
+        this._author = author;
         this._basePath = basePath;
     }
 
@@ -45,6 +50,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             );
 
             return ImbricateFileSystemDatabase.create(
+                this._author,
                 databaseBasePath,
                 item.uniqueIdentifier,
                 item.databaseName,
@@ -76,6 +82,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         );
 
         return ImbricateFileSystemDatabase.create(
+            this._author,
             databaseBasePath,
             identifier,
             databaseName,

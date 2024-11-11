@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE } from "@imbricate/core";
+import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, ImbricateAuthor } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -12,6 +12,7 @@ import { ImbricateFileSystemDocumentInstance } from "./definition";
 export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static async fromScratchAndSave(
+        author: ImbricateAuthor,
         databasePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
@@ -34,7 +35,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const initialEditRecords = [{
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
-            author: null as any,
+            author,
             operations,
         }];
 
@@ -48,6 +49,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         await putDocument(databasePath, databaseUniqueIdentifier, instance);
 
         return new ImbricateFileSystemDocument(
+            author,
             databasePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
@@ -55,6 +57,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         );
     }
 
+    private readonly _author: ImbricateAuthor;
     private readonly _databasePath: string;
 
     private readonly _databaseUniqueIdentifier: string;
@@ -63,6 +66,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private _properties: DocumentProperties;
 
     private constructor(
+        author: ImbricateAuthor,
         databasePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
@@ -70,6 +74,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     ) {
 
         this._databasePath = databasePath;
+        this._author = author;
 
         this._databaseUniqueIdentifier = databaseUniqueIdentifier;
         this._documentUniqueIdentifier = documentUniqueIdentifier;

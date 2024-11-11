@@ -37,6 +37,7 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
     public getDatabaseManager(): IImbricateDatabaseManager {
 
         return ImbricateFileSystemDatabaseManager.create(
+            this.payloads.author,
             this.payloads.basePath,
         );
     }
@@ -44,6 +45,7 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
     public getTextManager(): ImbricateFileSystemTextManager {
 
         return ImbricateFileSystemTextManager.create(
+            this.payloads.author,
             this.payloads.basePath,
         );
     }
