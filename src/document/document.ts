@@ -54,6 +54,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
             properties,
+            initialEditRecords,
         );
     }
 
@@ -70,6 +71,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             databaseUniqueIdentifier,
             instance.uniqueIdentifier,
             instance.properties,
+            instance.editRecords,
         );
     }
 
@@ -80,6 +82,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private readonly _documentUniqueIdentifier: string;
 
     private readonly _properties: DocumentProperties;
+    private readonly _editRecords: DocumentEditRecord[];
 
     private constructor(
         author: ImbricateAuthor,
@@ -87,6 +90,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
         properties: DocumentProperties,
+        editRecords: DocumentEditRecord[],
     ) {
 
         this._basePath = basePath;
@@ -96,18 +100,57 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         this._documentUniqueIdentifier = documentUniqueIdentifier;
 
         this._properties = properties;
+        this._editRecords = editRecords;
     }
 
     public get uniqueIdentifier(): string {
         return this._documentUniqueIdentifier;
     }
 
-    public putProperty(
-        _key: DocumentPropertyKey,
-        _value: DocumentPropertyValue,
-    ): PromiseLike<void> {
+    public async putProperty(
+        key: DocumentPropertyKey,
+        value: DocumentPropertyValue,
+    ): Promise<DocumentEditRecord[]> {
 
-        throw new Error("Method not implemented.");
+        const editRecords: DocumentEditRecord[] = await this.putProperties({
+            ...this._properties,
+            [key]: value,
+        });
+
+        return editRecords;
+    }
+
+    public async putProperties(
+        properties: DocumentProperties,
+    ): Promise<DocumentEditRecord[]> {
+
+        const operations: DocumentEditOperation[] = [];
+
+        for (const key of Object.keys(properties)) {
+
+            const value: DocumentPropertyValue = properties[key as DocumentPropertyKey];
+
+            operations.push({
+                key,
+                action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT,
+                value,
+            });
+        }
+
+        const editRecord: DocumentEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            author: this._author,
+            operations,
+        };
+
+        await putDocument(this._basePath, this._databaseUniqueIdentifier, {
+            uniqueIdentifier: this._documentUniqueIdentifier,
+            properties,
+            editRecords: this._editRecords,
+        });
+
+        return [editRecord];
     }
 
     public async getProperties(
@@ -121,5 +164,11 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     ): PromiseLike<void> {
 
         throw new Error("Method not implemented.");
+    }
+
+    public async getEditRecords(
+    ): Promise<DocumentEditRecord[]> {
+
+        return this._editRecords;
     }
 }
