@@ -1,7 +1,7 @@
 {
   "name": "@imbricate/origin-file-system",
   "packageManager": "yarn@4.5.1",
-  "version": "1.24.0",
+  "version": "3.0.0",
   "description": "File System Origin Implementation for Imbricate",
   "scripts": {
     "test": "jest",
@@ -40,8 +40,8 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
-    "@imbricate/core": "file:../Imbricate/app",
-    "@imbricate/test-origin-jest": "file:../Imbricate-Testing-Origin-Jest/app",
+    "@imbricate/core": "^3.0.0",
+    "@imbricate/test-origin-jest": "^3.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^8.14.0",

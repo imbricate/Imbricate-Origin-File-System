@@ -1864,10 +1864,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@file:../Imbricate/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
+"@imbricate/core@npm:^3.0.0":
   version: 3.0.0
-  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=bd136d&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
-  checksum: 10c0/b9681ed86b93ced65fdaf614988c52748f2365866729cf8e99c3ec8a2b519942328d63fab5969f49299f984ad345c6d5c12932e482574ee661005685144fb06d
+  resolution: "@imbricate/core@npm:3.0.0"
+  checksum: 10c0/1569ba65ebe52745c9d143e68960c43a544763fdba825c19c4d926ff6c6a9d6878c942c43fcc077ac51710a91a7769b36158b2b6442faa20dccdf1fbe7fa173a
   languageName: node
   linkType: hard
 
@@ -1878,8 +1878,8 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@babel/preset-env": "npm:^7.26.0"
     "@babel/preset-typescript": "npm:^7.26.0"
-    "@imbricate/core": "file:../Imbricate/app"
-    "@imbricate/test-origin-jest": "file:../Imbricate-Testing-Origin-Jest/app"
+    "@imbricate/core": "npm:^3.0.0"
+    "@imbricate/test-origin-jest": "npm:^3.0.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
@@ -1897,12 +1897,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
-  version: 2.3.0
-  resolution: "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app#../Imbricate-Testing-Origin-Jest/app::hash=216a7e&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+"@imbricate/test-origin-jest@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@imbricate/test-origin-jest@npm:3.0.0"
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/39888697f04a33c08f86f3b8da263eb4d38894eb91b27a1eace6194b03285c718a4ddce3b50b8371c767787c362d2ff2fc630bf351f938810daa4fe0151392df
+  checksum: 10c0/06c7afd83e7c07eff4be47c4dfc4bb858c6a49e5b070106d3bbf67dbee96cc5c58d7883e026cffeb58340e9ddd0cbe913a5afdbd9deedb3c9863f33b5676590c
   languageName: node
   linkType: hard
 
