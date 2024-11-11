@@ -8,7 +8,7 @@ import { DocumentProperties, IImbricateDocument, ImbricateAuthor, ImbricateDocum
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
-import { getDocumentList } from "../document/action";
+import { getDocumentByUniqueIdentifier, getDocumentList } from "../document/action";
 import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
 
@@ -72,11 +72,29 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         return document;
     }
 
-    public getDocument(
-        _uniqueIdentifier: string,
-    ): PromiseLike<IImbricateDocument | null> {
+    public async getDocument(
+        uniqueIdentifier: string,
+    ): Promise<IImbricateDocument | null> {
 
-        throw new Error("Method not implemented.");
+        const documentInstance: ImbricateFileSystemDocumentInstance | null =
+            await getDocumentByUniqueIdentifier(
+                this._basePath,
+                this.uniqueIdentifier,
+                uniqueIdentifier,
+            );
+
+        if (!documentInstance) {
+            return null;
+        }
+
+        const document: IImbricateDocument = ImbricateFileSystemDocument.fromInstance(
+            this._author,
+            this._basePath,
+            this.uniqueIdentifier,
+            documentInstance,
+        );
+
+        return document;
     }
 
     public async queryDocuments(
@@ -93,7 +111,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         for (const documentInstance of documents) {
 
-            const document = await ImbricateFileSystemDocument.fromInstance(
+            const document = ImbricateFileSystemDocument.fromInstance(
                 this._author,
                 this._basePath,
                 this.uniqueIdentifier,

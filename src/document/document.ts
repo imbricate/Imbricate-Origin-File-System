@@ -57,7 +57,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         );
     }
 
-    public static async fromInstance(
+    public static fromInstance(
         author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,

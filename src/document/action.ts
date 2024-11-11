@@ -23,6 +23,30 @@ export const putDocument = async (
     await putFile(basePath, pathRoute, JSON.stringify(document, null, 2));
 };
 
+export const getDocumentByUniqueIdentifier = async (
+    basePath: string,
+    databaseUniqueIdentifier: string,
+    documentUniqueIdentifier: string,
+): Promise<ImbricateFileSystemDocumentInstance | null> => {
+
+    const pathRoute: string[] = joinDocumentFileRoute(
+        databaseUniqueIdentifier,
+        documentUniqueIdentifier,
+    );
+
+    try {
+
+        const content: string = await readFile(basePath, pathRoute);
+        const parsed: ImbricateFileSystemDocumentInstance = JSON.parse(content);
+
+        return parsed;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+
+        return null;
+    }
+};
+
 export const getDocumentList = async (
     basePath: string,
     databaseUniqueIdentifier: string,
