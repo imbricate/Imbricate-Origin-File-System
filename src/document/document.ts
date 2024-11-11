@@ -4,49 +4,55 @@
  * @description Document
  */
 
-import { DocumentProperties, IImbricateDocument } from "@imbricate/core";
-import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
+import { DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument } from "@imbricate/core";
 
 export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static create(
+        databasePath: string,
         uniqueIdentifier: string,
-        databaseName: string,
-        schema: ImbricateDatabaseSchema,
+        properties: DocumentProperties,
     ): ImbricateFileSystemDocument {
 
         return new ImbricateFileSystemDocument(
+            databasePath,
             uniqueIdentifier,
-            databaseName,
-            schema,
+            properties,
         );
     }
 
+    private readonly _databasePath: string;
+
     public readonly uniqueIdentifier: string;
-    public readonly databaseName: string;
-    public readonly schema: ImbricateDatabaseSchema;
+
+    private _properties: DocumentProperties;
 
     private constructor(
+        databasePath: string,
         uniqueIdentifier: string,
-        databaseName: string,
-        schema: ImbricateDatabaseSchema,
+        properties: DocumentProperties,
     ) {
 
+        this._databasePath = databasePath;
+
         this.uniqueIdentifier = uniqueIdentifier;
-        this.databaseName = databaseName;
-        this.schema = schema;
+        this._properties = properties;
     }
 
-    public createDocument(
-        _properties: DocumentProperties,
-    ): PromiseLike<IImbricateDocument> {
+    public get properties(): DocumentProperties {
+        return this._properties;
+    }
+
+    public putProperty(
+        _key: DocumentPropertyKey,
+        _value: DocumentPropertyValue,
+    ): PromiseLike<void> {
 
         throw new Error("Method not implemented.");
     }
-
-    public getDocument(
-        _uniqueIdentifier: DocumentUniqueIdentifier,
-    ): PromiseLike<IImbricateDocument | null> {
+    public addEditRecords(
+        _records: DocumentEditRecord[],
+    ): PromiseLike<void> {
 
         throw new Error("Method not implemented.");
     }
