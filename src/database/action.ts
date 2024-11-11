@@ -17,7 +17,7 @@ export const putDatabaseMeta = async (
         metadata.uniqueIdentifier,
     );
 
-    await putFile(basePath, pathRoute, JSON.stringify(metadata));
+    await putFile(basePath, pathRoute, JSON.stringify(metadata, null, 2));
 };
 
 export const getDatabaseMetaList = async (
