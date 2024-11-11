@@ -14,6 +14,10 @@ const testingTarget = ImbricateOriginTestingTarget.fromConstructor(
     async () => {
 
         const origin: ImbricateFileSystemOrigin = ImbricateFileSystemOrigin.create({
+            author: {
+                category: "local",
+                identifier: "test",
+            },
             basePath: Path.resolve("origin-test"),
             asynchronousPoolLimit: 10,
         });

@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DocumentProperties, IImbricateDocument, ImbricateAuthor } from "@imbricate/core";
+import { DocumentProperties, IImbricateDocument, ImbricateAuthor, ImbricateDocumentQuery } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -73,6 +73,13 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public getDocument(
         _uniqueIdentifier: string,
     ): PromiseLike<IImbricateDocument | null> {
+
+        throw new Error("Method not implemented.");
+    }
+
+    public queryDocuments(
+        _query: ImbricateDocumentQuery,
+    ): PromiseLike<IImbricateDocument[]> {
 
         throw new Error("Method not implemented.");
     }

@@ -53,7 +53,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             databasePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
-            properties,
         );
     }
 
@@ -63,14 +62,11 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private readonly _databaseUniqueIdentifier: string;
     private readonly _documentUniqueIdentifier: string;
 
-    private _properties: DocumentProperties;
-
     private constructor(
         author: ImbricateAuthor,
         databasePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
-        properties: DocumentProperties,
     ) {
 
         this._databasePath = databasePath;
@@ -78,22 +74,22 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         this._databaseUniqueIdentifier = databaseUniqueIdentifier;
         this._documentUniqueIdentifier = documentUniqueIdentifier;
-
-        this._properties = properties;
     }
 
     public get uniqueIdentifier(): string {
         return this._documentUniqueIdentifier;
     }
 
-    public get properties(): DocumentProperties {
-        return this._properties;
-    }
-
     public putProperty(
         _key: DocumentPropertyKey,
         _value: DocumentPropertyValue,
     ): PromiseLike<void> {
+
+        throw new Error("Method not implemented.");
+    }
+
+    public getProperties(
+    ): PromiseLike<DocumentProperties> {
 
         throw new Error("Method not implemented.");
     }
