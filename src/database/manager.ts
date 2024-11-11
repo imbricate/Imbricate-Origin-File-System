@@ -6,6 +6,7 @@
 
 import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateDatabaseSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
+import { joinDatabaseBasePath } from "../util/path-joiner";
 import { getDatabaseMetaList, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabase } from "./database";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
@@ -38,7 +39,13 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
 
         return databaseMetaList.map((item: ImbricateFileSystemDatabaseMeta) => {
 
+            const databaseBasePath: string = joinDatabaseBasePath(
+                this._basePath,
+                item.uniqueIdentifier,
+            );
+
             return ImbricateFileSystemDatabase.create(
+                databaseBasePath,
                 item.uniqueIdentifier,
                 item.databaseName,
                 item.schema,
@@ -63,7 +70,13 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             },
         );
 
+        const databaseBasePath: string = joinDatabaseBasePath(
+            this._basePath,
+            identifier,
+        );
+
         return ImbricateFileSystemDatabase.create(
+            databaseBasePath,
             identifier,
             databaseName,
             schema,

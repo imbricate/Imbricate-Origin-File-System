@@ -14,7 +14,7 @@ describe("Given [Path Joiner] Helper Methods", (): void => {
         const joined: string[] = joinDatabaseMetaFileRoute();
 
         expect(joined).toEqual(
-            ["database"],
+            ["database-meta"],
         );
     });
 });

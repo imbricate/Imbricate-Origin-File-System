@@ -4,19 +4,29 @@
  * @description Path Joiner
  */
 
+import { joinPath } from "@sudoo/io";
+
 export const joinDatabaseMetaFileRoute = (
     uniqueIdentifier?: string,
 ): string[] => {
 
     if (typeof uniqueIdentifier === "undefined") {
-        return ["database"];
+        return ["database-meta"];
     }
 
     if (uniqueIdentifier.endsWith(".json")) {
-        return ["database", uniqueIdentifier];
+        return ["database-meta", uniqueIdentifier];
     }
 
-    return ["database", `${uniqueIdentifier}.json`];
+    return ["database-meta", `${uniqueIdentifier}.json`];
+};
+
+export const joinDatabaseBasePath = (
+    basePath: string,
+    uniqueIdentifier: string,
+): string => {
+
+    return joinPath(basePath, "database", uniqueIdentifier);
 };
 
 export const buildUrlWithScheme = (url: string): string => {
