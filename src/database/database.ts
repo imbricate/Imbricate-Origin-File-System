@@ -56,9 +56,10 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public async createDocument(
         properties: DocumentProperties,
+        uniqueIdentifier?: string,
     ): Promise<IImbricateDocument> {
 
-        const documentUniqueIdentifier: string = UUIDVersion1.generateString();
+        const documentUniqueIdentifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
 
         const document: IImbricateDocument = await ImbricateFileSystemDocument
             .fromScratchAndSave(
