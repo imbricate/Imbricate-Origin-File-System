@@ -13,7 +13,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static async fromScratchAndSave(
         author: ImbricateAuthor,
-        databasePath: string,
+        basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
         properties: DocumentProperties,
@@ -46,11 +46,11 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             editRecords: initialEditRecords,
         };
 
-        await putDocument(databasePath, databaseUniqueIdentifier, instance);
+        await putDocument(basePath, databaseUniqueIdentifier, instance);
 
         return new ImbricateFileSystemDocument(
             author,
-            databasePath,
+            basePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
             properties,
@@ -59,14 +59,14 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static async fromInstance(
         author: ImbricateAuthor,
-        databasePath: string,
+        basePath: string,
         databaseUniqueIdentifier: string,
         instance: ImbricateFileSystemDocumentInstance,
     ) {
 
         return new ImbricateFileSystemDocument(
             author,
-            databasePath,
+            basePath,
             databaseUniqueIdentifier,
             instance.uniqueIdentifier,
             instance.properties,
@@ -74,7 +74,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     }
 
     private readonly _author: ImbricateAuthor;
-    private readonly _databasePath: string;
+    private readonly _basePath: string;
 
     private readonly _databaseUniqueIdentifier: string;
     private readonly _documentUniqueIdentifier: string;
@@ -83,13 +83,13 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     private constructor(
         author: ImbricateAuthor,
-        databasePath: string,
+        basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
         properties: DocumentProperties,
     ) {
 
-        this._databasePath = databasePath;
+        this._basePath = basePath;
         this._author = author;
 
         this._databaseUniqueIdentifier = databaseUniqueIdentifier;

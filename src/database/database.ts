@@ -16,7 +16,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public static create(
         author: ImbricateAuthor,
-        databasePath: string,
+        basePath: string,
         uniqueIdentifier: string,
         databaseName: string,
         schema: ImbricateDatabaseSchema,
@@ -24,7 +24,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         return new ImbricateFileSystemDatabase(
             author,
-            databasePath,
+            basePath,
             uniqueIdentifier,
             databaseName,
             schema,
@@ -32,7 +32,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     }
 
     private readonly _author: ImbricateAuthor;
-    private readonly _databasePath: string;
+    private readonly _basePath: string;
 
     public readonly uniqueIdentifier: string;
     public readonly databaseName: string;
@@ -40,14 +40,14 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     private constructor(
         author: ImbricateAuthor,
-        databasePath: string,
+        basePath: string,
         uniqueIdentifier: string,
         databaseName: string,
         schema: ImbricateDatabaseSchema,
     ) {
 
         this._author = author;
-        this._databasePath = databasePath;
+        this._basePath = basePath;
 
         this.uniqueIdentifier = uniqueIdentifier;
         this.databaseName = databaseName;
@@ -63,7 +63,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         const document: IImbricateDocument = await ImbricateFileSystemDocument
             .fromScratchAndSave(
                 this._author,
-                this._databasePath,
+                this._basePath,
                 this.uniqueIdentifier,
                 documentUniqueIdentifier,
                 properties,
@@ -84,7 +84,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     ): Promise<IImbricateDocument[]> {
 
         const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
-            this._databasePath,
+            this._basePath,
             this.uniqueIdentifier,
             query,
         );
@@ -95,7 +95,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
             const document = await ImbricateFileSystemDocument.fromInstance(
                 this._author,
-                this._databasePath,
+                this._basePath,
                 this.uniqueIdentifier,
                 documentInstance,
             );
