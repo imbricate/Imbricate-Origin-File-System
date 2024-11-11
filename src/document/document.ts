@@ -4,39 +4,81 @@
  * @description Document
  */
 
-import { DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument } from "@imbricate/core";
+import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE } from "@imbricate/core";
+import { UUIDVersion1 } from "@sudoo/uuid";
+import { putDocument } from "./action";
+import { ImbricateFileSystemDocumentInstance } from "./definition";
 
 export class ImbricateFileSystemDocument implements IImbricateDocument {
 
-    public static create(
+    public static async fromScratchAndSave(
         databasePath: string,
-        uniqueIdentifier: string,
+        databaseUniqueIdentifier: string,
+        documentUniqueIdentifier: string,
         properties: DocumentProperties,
-    ): ImbricateFileSystemDocument {
+    ): Promise<ImbricateFileSystemDocument> {
+
+        const operations: DocumentEditOperation[] = [];
+
+        for (const key of Object.keys(properties)) {
+
+            const value: DocumentPropertyValue = properties[key as DocumentPropertyKey];
+
+            operations.push({
+                key,
+                action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT,
+                value,
+            });
+        }
+
+        const initialEditRecords = [{
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            author: null as any,
+            operations,
+        }];
+
+        const instance: ImbricateFileSystemDocumentInstance = {
+
+            uniqueIdentifier: documentUniqueIdentifier,
+            properties,
+            editRecords: initialEditRecords,
+        };
+
+        await putDocument(databasePath, databaseUniqueIdentifier, instance);
 
         return new ImbricateFileSystemDocument(
             databasePath,
-            uniqueIdentifier,
+            databaseUniqueIdentifier,
+            documentUniqueIdentifier,
             properties,
         );
     }
 
     private readonly _databasePath: string;
 
-    public readonly uniqueIdentifier: string;
+    private readonly _databaseUniqueIdentifier: string;
+    private readonly _documentUniqueIdentifier: string;
 
     private _properties: DocumentProperties;
 
     private constructor(
         databasePath: string,
-        uniqueIdentifier: string,
+        databaseUniqueIdentifier: string,
+        documentUniqueIdentifier: string,
         properties: DocumentProperties,
     ) {
 
         this._databasePath = databasePath;
 
-        this.uniqueIdentifier = uniqueIdentifier;
+        this._databaseUniqueIdentifier = databaseUniqueIdentifier;
+        this._documentUniqueIdentifier = documentUniqueIdentifier;
+
         this._properties = properties;
+    }
+
+    public get uniqueIdentifier(): string {
+        return this._documentUniqueIdentifier;
     }
 
     public get properties(): DocumentProperties {
@@ -50,6 +92,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         throw new Error("Method not implemented.");
     }
+
     public addEditRecords(
         _records: DocumentEditRecord[],
     ): PromiseLike<void> {

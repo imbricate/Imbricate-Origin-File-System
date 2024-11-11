@@ -7,12 +7,12 @@
 import { ImbricateFileSystemDatabaseMeta } from "../database/definition";
 import { listFileFromDirectory, putFile, readFile } from "../util/io";
 import { joinDatabaseMetaFileRoute, joinDocumentFileRoute } from "../util/path-joiner";
-import { ImbricateFileSystemDocument } from "./document";
+import { ImbricateFileSystemDocumentInstance } from "./definition";
 
 export const putDocument = async (
     basePath: string,
     databaseUniqueIdentifier: string,
-    document: ImbricateFileSystemDocument,
+    document: ImbricateFileSystemDocumentInstance,
 ): Promise<void> => {
 
     const pathRoute: string[] = joinDocumentFileRoute(

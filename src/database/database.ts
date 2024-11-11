@@ -51,13 +51,15 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         properties: DocumentProperties,
     ): Promise<IImbricateDocument> {
 
-        const uniqueIdentifier: string = UUIDVersion1.generateString();
+        const documentUniqueIdentifier: string = UUIDVersion1.generateString();
 
-        const document: IImbricateDocument = ImbricateFileSystemDocument.create(
-            this._databasePath,
-            uniqueIdentifier,
-            properties,
-        );
+        const document: IImbricateDocument = await ImbricateFileSystemDocument
+            .fromScratchAndSave(
+                this._databasePath,
+                this.uniqueIdentifier,
+                documentUniqueIdentifier,
+                properties,
+            );
 
         return document;
     }
