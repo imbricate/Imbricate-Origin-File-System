@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateDatabaseManager, IImbricateOrigin } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager } from "@imbricate/core";
 import { ImbricateFileSystemDatabaseManager } from "../database/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
@@ -45,8 +45,12 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
     public getTextManager(): ImbricateFileSystemTextManager {
 
         return ImbricateFileSystemTextManager.create(
-            this.payloads.author,
             this.payloads.basePath,
         );
+    }
+
+    public getStaticManager(): IImbricateStaticManager {
+
+        throw new Error("Method not implemented.");
     }
 }

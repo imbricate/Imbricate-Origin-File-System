@@ -10,8 +10,13 @@ export const joinTextFileRoute = (
     textUniqueIdentifier: string,
 ): string[] => {
 
+    const firstTwoHash: string = textUniqueIdentifier.substring(0, 2);
+    const secondTwoHash: string = textUniqueIdentifier.substring(2, 4);
+
     return [
         "text",
+        firstTwoHash,
+        secondTwoHash,
         textUniqueIdentifier,
     ];
 };
