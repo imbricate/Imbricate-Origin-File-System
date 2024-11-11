@@ -4,15 +4,13 @@
  * @description Manager
  */
 
-import { IImbricateDatabase } from "@imbricate/core/database/interface";
-import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
-import { IImbricateOriginDatabaseManager } from "@imbricate/core/origin/database-manager";
+import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateDatabaseSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getDatabaseMetaList, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabase } from "./database";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
-export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatabaseManager {
+export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseManager {
 
     public static create(
         basePath: string,
