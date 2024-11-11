@@ -4,12 +4,10 @@
  * @description Origin
  */
 
-import { IImbricateOrigin } from "@imbricate/core";
-import { IImbricateOriginDatabaseManager } from "@imbricate/core/origin/database-manager";
-import { IImbricateOriginStaticManager } from "@imbricate/core/origin/static-manager";
+import { IImbricateDatabaseManager, IImbricateOrigin } from "@imbricate/core";
+import { ImbricateFileSystemDatabaseManager } from "../database/manager";
+import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
-import { ImbricateFileSystemDatabaseManager } from "./database";
-import { ImbricateFileSystemStaticManager } from "./static";
 
 export class ImbricateFileSystemOrigin implements IImbricateOrigin {
 
@@ -36,15 +34,17 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
         return digestString(this.payloads.basePath);
     }
 
-    public getDatabaseManager(): IImbricateOriginDatabaseManager {
+    public getDatabaseManager(): IImbricateDatabaseManager {
 
         return ImbricateFileSystemDatabaseManager.create(
             this.payloads.basePath,
         );
     }
 
-    public getStaticManager(): IImbricateOriginStaticManager {
+    public getTextManager(): ImbricateFileSystemTextManager {
 
-        return ImbricateFileSystemStaticManager.create();
+        return ImbricateFileSystemTextManager.create(
+            this.payloads.basePath,
+        );
     }
 }

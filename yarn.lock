@@ -1866,8 +1866,8 @@ __metadata:
 
 "@imbricate/core@file:../Imbricate/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
   version: 3.0.0
-  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=4b76ec&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
-  checksum: 10c0/72454d75be5e60b3b3cae39e2a45296b92dc91ab09842cc7f6e17622bac495100bce92eb107362abb2cf6ce50192477ecfcf17fe1bfcefe2fa94fb6eb3857af2
+  resolution: "@imbricate/core@file:../Imbricate/app#../Imbricate/app::hash=54caed&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  checksum: 10c0/c47c83ef77878fee93cc580e2cd385824376753104728845e7f3a3bc3c38de94dcf3c9a1200407418e2e55ab73c6e4503c0b79a6cd7e2d172d0612536bb2a000
   languageName: node
   linkType: hard
 

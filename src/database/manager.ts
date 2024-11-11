@@ -1,16 +1,16 @@
 /**
  * @author WMXPY
- * @namespace Origin
- * @description Database
+ * @namespace Database
+ * @description Manager
  */
 
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { IImbricateOriginDatabaseManager } from "@imbricate/core/origin/database-manager";
 import { UUIDVersion1 } from "@sudoo/uuid";
-import { getDatabaseMetaList, putDatabaseMeta } from "../database/action";
-import { ImbricateFileSystemDatabase } from "../database/database";
-import { ImbricateFileSystemDatabaseMeta } from "../database/definition";
+import { getDatabaseMetaList, putDatabaseMeta } from "./action";
+import { ImbricateFileSystemDatabase } from "./database";
+import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
 export class ImbricateFileSystemDatabaseManager implements IImbricateOriginDatabaseManager {
 
