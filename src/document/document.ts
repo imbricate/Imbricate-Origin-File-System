@@ -144,6 +144,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             operations,
         };
 
+        this._properties = properties;
         await putDocument(this._basePath, this._databaseUniqueIdentifier, {
             uniqueIdentifier: this._documentUniqueIdentifier,
             properties,
@@ -166,7 +167,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const newEditRecords: DocumentEditRecord[] = this._editRecords.concat(records);
 
         this._editRecords = newEditRecords;
-
         await putDocument(this._basePath, this._databaseUniqueIdentifier, {
             uniqueIdentifier: this._documentUniqueIdentifier,
             properties: this._properties,
