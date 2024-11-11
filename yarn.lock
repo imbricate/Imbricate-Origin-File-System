@@ -1899,10 +1899,10 @@ __metadata:
 
 "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app::locator=%40imbricate%2Forigin-file-system%40workspace%3A.":
   version: 2.3.0
-  resolution: "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app#../Imbricate-Testing-Origin-Jest/app::hash=b3649d&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
+  resolution: "@imbricate/test-origin-jest@file:../Imbricate-Testing-Origin-Jest/app#../Imbricate-Testing-Origin-Jest/app::hash=bdad18&locator=%40imbricate%2Forigin-file-system%40workspace%3A."
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/7e2d122635e943b0f300388596c337ba53110832b064e280c2d34d1729d355dcd39a0b98adaf55d169f02eec5a100540e85583076b66ce3e3ec65325e431bf2b
+  checksum: 10c0/732f69a2930e49b637d145d7842117b9820d030bafa33329957675525da25058c0b9208e6cb3938ee239d18f92b283a4b0fbd041d11c5b4fe4479f3aaacf0466
   languageName: node
   linkType: hard
 

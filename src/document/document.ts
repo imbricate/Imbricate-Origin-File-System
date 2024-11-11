@@ -81,8 +81,8 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private readonly _databaseUniqueIdentifier: string;
     private readonly _documentUniqueIdentifier: string;
 
-    private readonly _properties: DocumentProperties;
-    private readonly _editRecords: DocumentEditRecord[];
+    private _properties: DocumentProperties;
+    private _editRecords: DocumentEditRecord[];
 
     private constructor(
         author: ImbricateAuthor,
@@ -159,11 +159,19 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         return this._properties;
     }
 
-    public addEditRecords(
-        _records: DocumentEditRecord[],
-    ): PromiseLike<void> {
+    public async addEditRecords(
+        records: DocumentEditRecord[],
+    ): Promise<void> {
 
-        throw new Error("Method not implemented.");
+        const newEditRecords: DocumentEditRecord[] = this._editRecords.concat(records);
+
+        this._editRecords = newEditRecords;
+
+        await putDocument(this._basePath, this._databaseUniqueIdentifier, {
+            uniqueIdentifier: this._documentUniqueIdentifier,
+            properties: this._properties,
+            editRecords: newEditRecords,
+        });
     }
 
     public async getEditRecords(
