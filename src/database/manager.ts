@@ -7,7 +7,7 @@
 import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
-import { getDatabaseMetaList, putDatabaseMeta } from "./action";
+import { getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabase } from "./database";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
@@ -36,7 +36,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         this._basePath = basePath;
     }
 
-    public async getDatabases(): Promise<IImbricateDatabase[]> {
+    public async listDatabases(): Promise<IImbricateDatabase[]> {
 
         const databaseMetaList: ImbricateFileSystemDatabaseMeta[] = await getDatabaseMetaList(
             this._basePath,
@@ -54,13 +54,33 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         });
     }
 
+    public async getDatabase(uniqueIdentifier: string): Promise<IImbricateDatabase | null> {
+
+        const databaseMeta: ImbricateFileSystemDatabaseMeta | null = await getDatabaseMeta(
+            this._basePath,
+            uniqueIdentifier,
+        );
+
+        if (!databaseMeta) {
+            return null;
+        }
+
+        return ImbricateFileSystemDatabase.create(
+            this._author,
+            this._basePath,
+            databaseMeta.uniqueIdentifier,
+            databaseMeta.databaseName,
+            databaseMeta.schema,
+        );
+    }
+
     public async createDatabase(
         databaseName: string,
         schema: ImbricateDatabaseSchemaForCreation,
         uniqueIdentifier?: string,
     ): Promise<IImbricateDatabase> {
 
-        const databases: IImbricateDatabase[] = await this.getDatabases();
+        const databases: IImbricateDatabase[] = await this.listDatabases();
         for (const database of databases) {
             if (database.databaseName === databaseName) {
                 throw new Error(`Database named '${databaseName}' already exists`);

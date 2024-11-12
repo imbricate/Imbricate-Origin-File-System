@@ -20,6 +20,29 @@ export const putDatabaseMeta = async (
     await putFile(basePath, pathRoute, JSON.stringify(metadata, null, 2));
 };
 
+export const getDatabaseMeta = async (
+    basePath: string,
+    databaseUniqueIdentifier: string,
+): Promise<ImbricateFileSystemDatabaseMeta | null> => {
+
+    const pathRoute: string[] = joinDatabaseMetaFileRoute(
+        databaseUniqueIdentifier,
+    );
+
+    try {
+
+        const content: string = await readFile(basePath, pathRoute);
+        const parsed: ImbricateFileSystemDatabaseMeta = JSON.parse(content);
+
+        return parsed;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+
+        return null;
+    }
+};
+
 export const getDatabaseMetaList = async (
     basePath: string,
 ): Promise<ImbricateFileSystemDatabaseMeta[]> => {
