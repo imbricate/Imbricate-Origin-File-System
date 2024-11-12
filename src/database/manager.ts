@@ -4,8 +4,9 @@
  * @description Manager
  */
 
-import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema } from "@imbricate/core";
+import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
+import { fixDatabaseSchema } from "../util/fix-schema";
 import { getDatabaseMetaList, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabase } from "./database";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
@@ -55,18 +56,19 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
 
     public async createDatabase(
         databaseName: string,
-        schema: ImbricateDatabaseSchema,
+        schema: ImbricateDatabaseSchemaForCreation,
         uniqueIdentifier?: string,
     ): Promise<IImbricateDatabase> {
 
         const identifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
+        const fixedSchema: ImbricateDatabaseSchema = fixDatabaseSchema(schema);
 
         await putDatabaseMeta(
             this._basePath,
             {
                 uniqueIdentifier: identifier,
                 databaseName,
-                schema,
+                schema: fixedSchema,
             },
         );
 
@@ -75,7 +77,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             this._basePath,
             identifier,
             databaseName,
-            schema,
+            fixedSchema,
         );
     }
 }

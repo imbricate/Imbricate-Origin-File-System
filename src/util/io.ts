@@ -12,6 +12,14 @@ export const listFileFromDirectory = async (
     pathRoute: string[],
 ): Promise<string[]> => {
 
+    await attemptMarkDir(basePath);
+    for (let i = 0; i < pathRoute.length; i++) {
+
+        const currentPath: string = Path.join(basePath, ...pathRoute.slice(0, i + 1));
+
+        await attemptMarkDir(currentPath);
+    }
+
     const directory: string = Path.join(basePath, ...pathRoute);
     const files: string[] = await directoryFiles(
         directory,
