@@ -60,6 +60,13 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         uniqueIdentifier?: string,
     ): Promise<IImbricateDatabase> {
 
+        const databases: IImbricateDatabase[] = await this.getDatabases();
+        for (const database of databases) {
+            if (database.databaseName === databaseName) {
+                throw new Error(`Database named '${databaseName}' already exists`);
+            }
+        }
+
         const identifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
         const fixedSchema: ImbricateDatabaseSchema = fixDatabaseSchema(schema);
 
