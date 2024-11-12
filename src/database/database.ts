@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DocumentProperties, IImbricateDocument, ImbricateAuthor, ImbricateDocumentQuery } from "@imbricate/core";
+import { DocumentProperties, IImbricateDocument, ImbricateAuthor, ImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -59,10 +59,16 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         uniqueIdentifier?: string,
     ): Promise<IImbricateDocument> {
 
+        const validationResult: string | null = validateImbricateProperties(properties, this.schema);
+        if (typeof validationResult === "string") {
+            throw new Error(`Properties validation failed, ${validationResult}`);
+        }
+
         const documentUniqueIdentifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
 
         const document: IImbricateDocument = await ImbricateFileSystemDocument
             .fromScratchAndSave(
+                this.schema,
                 this._author,
                 this._basePath,
                 this.uniqueIdentifier,
@@ -89,6 +95,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         }
 
         const document: IImbricateDocument = ImbricateFileSystemDocument.fromInstance(
+            this.schema,
             this._author,
             this._basePath,
             this.uniqueIdentifier,
@@ -113,6 +120,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         for (const documentInstance of documents) {
 
             const document = ImbricateFileSystemDocument.fromInstance(
+                this.schema,
                 this._author,
                 this._basePath,
                 this.uniqueIdentifier,

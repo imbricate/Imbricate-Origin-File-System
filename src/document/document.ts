@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, ImbricateAuthor } from "@imbricate/core";
+import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -12,6 +12,7 @@ import { ImbricateFileSystemDocumentInstance } from "./definition";
 export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static async fromScratchAndSave(
+        schema: ImbricateDatabaseSchema,
         author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,
@@ -49,6 +50,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         await putDocument(basePath, databaseUniqueIdentifier, instance);
 
         return new ImbricateFileSystemDocument(
+            schema,
             author,
             basePath,
             databaseUniqueIdentifier,
@@ -59,6 +61,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     }
 
     public static fromInstance(
+        schema: ImbricateDatabaseSchema,
         author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,
@@ -66,6 +69,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     ) {
 
         return new ImbricateFileSystemDocument(
+            schema,
             author,
             basePath,
             databaseUniqueIdentifier,
@@ -75,6 +79,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         );
     }
 
+    private readonly _schema: ImbricateDatabaseSchema;
     private readonly _author: ImbricateAuthor;
     private readonly _basePath: string;
 
@@ -85,6 +90,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private _editRecords: DocumentEditRecord[];
 
     private constructor(
+        schema: ImbricateDatabaseSchema,
         author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,
@@ -93,6 +99,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         editRecords: DocumentEditRecord[],
     ) {
 
+        this._schema = schema;
         this._basePath = basePath;
         this._author = author;
 
@@ -123,6 +130,11 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     public async putProperties(
         properties: DocumentProperties,
     ): Promise<DocumentEditRecord[]> {
+
+        const validationResult: string | null = validateImbricateProperties(properties, this._schema);
+        if (typeof validationResult === "string") {
+            throw new Error(`Properties validation failed, ${validationResult}`);
+        }
 
         const operations: DocumentEditOperation[] = [];
 

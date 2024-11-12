@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation } from "@imbricate/core";
+import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
 import { getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
@@ -89,6 +89,11 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
 
         const identifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
         const fixedSchema: ImbricateDatabaseSchema = fixDatabaseSchema(schema);
+
+        const validationResult: string | null = validateImbricateSchema(fixedSchema);
+        if (typeof validationResult === "string") {
+            throw new Error(`Properties validation failed, ${validationResult}`);
+        }
 
         await putDatabaseMeta(
             this._basePath,
