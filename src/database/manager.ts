@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { IImbricateDatabase, IImbricateDatabaseManager, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
+import { DatabaseEditRecord, IImbricateDatabase, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
 import { getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
@@ -95,12 +95,25 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             throw new Error(`Properties validation failed, ${validationResult}`);
         }
 
+        const initialEditRecords: DatabaseEditRecord[] = [{
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            author: this._author,
+            operations: [
+                {
+                    action: IMBRICATE_DATABASE_EDIT_TYPE.PUT_SCHEMA,
+                    value: fixedSchema,
+                },
+            ],
+        }];
+
         await putDatabaseMeta(
             this._basePath,
             {
                 uniqueIdentifier: identifier,
                 databaseName,
                 schema: fixedSchema,
+                editRecords: initialEditRecords,
             },
         );
 

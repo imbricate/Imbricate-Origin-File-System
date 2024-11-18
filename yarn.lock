@@ -1864,10 +1864,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "@imbricate/core@npm:3.0.3"
-  checksum: 10c0/95abbadf731ac7dabb797dc0cbf7bf20aa5e4e88ed1aa0d0f8cb2e57523be432533d7d9ee70f9801f793d2bfe8031e26b669433884f4e2a3d2dfcdc8d24f9b13
+"@imbricate/core@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "@imbricate/core@npm:3.0.4"
+  checksum: 10c0/bb5a7ddb5ee64464c913ad4dc4c4f10c2f2c5984e1177331acd90a1d009feb612a895511ac085d8de5dc23f8a66d71b0269c34ec53ad024847dc3b4f38989b59
   languageName: node
   linkType: hard
 
@@ -1878,7 +1878,7 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@babel/preset-env": "npm:^7.26.0"
     "@babel/preset-typescript": "npm:^7.26.0"
-    "@imbricate/core": "npm:^3.0.3"
+    "@imbricate/core": "npm:^3.0.4"
     "@imbricate/test-origin-jest": "npm:^3.0.1"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"

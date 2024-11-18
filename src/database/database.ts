@@ -11,6 +11,8 @@ import { UUIDVersion1 } from "@sudoo/uuid";
 import { getDocumentByUniqueIdentifier, getDocumentList } from "../document/action";
 import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
+import { getDatabaseMeta, putDatabaseMeta } from "./action";
+import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
 export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
@@ -36,7 +38,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public readonly uniqueIdentifier: string;
     public readonly databaseName: string;
-    public readonly schema: ImbricateDatabaseSchema;
+    public schema: ImbricateDatabaseSchema;
 
     private constructor(
         author: ImbricateAuthor,
@@ -52,6 +54,26 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         this.uniqueIdentifier = uniqueIdentifier;
         this.databaseName = databaseName;
         this.schema = schema;
+    }
+
+    public async putSchema(
+        schema: ImbricateDatabaseSchema,
+    ): Promise<void> {
+
+        const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
+
+        if (!currentMeta) {
+            throw new Error("Database meta not found");
+        }
+
+        const newMeta: ImbricateFileSystemDatabaseMeta = {
+            ...currentMeta,
+            schema,
+        };
+
+        await putDatabaseMeta(this._basePath, newMeta);
+        this.schema = schema;
+        return;
     }
 
     public async createDocument(
