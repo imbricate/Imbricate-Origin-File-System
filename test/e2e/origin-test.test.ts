@@ -6,7 +6,7 @@
  */
 
 import { ImbricateOriginTestingTarget, startImbricateOriginTest } from "@imbricate/test-origin-jest";
-import { RMRFFolder } from "@sudoo/io";
+import { RMRFFolder, pathExists } from "@sudoo/io";
 import * as Path from "path";
 import { ImbricateFileSystemOrigin } from "../../src";
 
@@ -25,6 +25,10 @@ const testingTarget = ImbricateOriginTestingTarget.fromConstructor(
     },
     async () => {
 
+        const pathExist: boolean = await pathExists(Path.resolve("origin-test"));
+        if (!pathExist) {
+            return;
+        }
         await RMRFFolder(Path.resolve("origin-test"));
     },
 );

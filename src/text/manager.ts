@@ -5,9 +5,9 @@
  */
 
 import { IImbricateText, IImbricateTextManager } from "@imbricate/core";
-import { UUIDVersion1 } from "@sudoo/uuid";
-import { ImbricateFileSystemText } from "./text";
+import { digestString } from "../util/digest";
 import { getTextByUniqueIdentifier } from "./action";
+import { ImbricateFileSystemText } from "./text";
 
 export class ImbricateFileSystemTextManager implements IImbricateTextManager {
 
@@ -56,7 +56,7 @@ export class ImbricateFileSystemTextManager implements IImbricateTextManager {
     ): Promise<IImbricateText> {
 
         const textUniqueIdentifier: string =
-            uniqueIdentifier ?? UUIDVersion1.generateString();
+            uniqueIdentifier ?? digestString(content);
 
         const text: IImbricateText = await ImbricateFileSystemText.createAndSave(
             this._basePath,
