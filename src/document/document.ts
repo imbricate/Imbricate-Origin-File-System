@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, validateImbricateProperties } from "@imbricate/core";
+import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -24,7 +24,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         for (const key of Object.keys(properties)) {
 
-            const value: DocumentPropertyValue = properties[key as DocumentPropertyKey];
+            const value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE> = properties[key as DocumentPropertyKey];
 
             operations.push({
                 key,
@@ -116,7 +116,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public async putProperty(
         key: DocumentPropertyKey,
-        value: DocumentPropertyValue,
+        value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE>,
     ): Promise<DocumentEditRecord[]> {
 
         const editRecords: DocumentEditRecord[] = await this.putProperties({
@@ -140,7 +140,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         for (const key of Object.keys(properties)) {
 
-            const value: DocumentPropertyValue = properties[key as DocumentPropertyKey];
+            const value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE> = properties[key as DocumentPropertyKey];
 
             operations.push({
                 key,
