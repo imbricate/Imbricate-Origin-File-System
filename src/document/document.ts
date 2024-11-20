@@ -114,6 +114,10 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         return this._documentUniqueIdentifier;
     }
 
+    public get properties(): DocumentProperties {
+        return this._properties;
+    }
+
     public async putProperty(
         key: DocumentPropertyKey,
         value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE>,
@@ -164,12 +168,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         });
 
         return [editRecord];
-    }
-
-    public async getProperties(
-    ): Promise<DocumentProperties> {
-
-        return this._properties;
     }
 
     public async addEditRecords(
