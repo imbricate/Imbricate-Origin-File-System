@@ -1864,10 +1864,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "@imbricate/core@npm:3.1.1"
-  checksum: 10c0/47085bbb7505fb7ac53b449a5c39633dbb106e8d222a96135ac52504632b34f1e9e6cf2ca19489d897d7bf947551defec7b71cb7b0173bd7021c53837d0e2f82
+"@imbricate/core@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@imbricate/core@npm:3.1.2"
+  checksum: 10c0/1d3ce89314d5086fbc02e1f12c401aabed76ecbddf67c27adbc2eb16fdf3d8ec16f69c54fff1f3f53307ceb174d3970d1f7bd4d5ec0bcf62b8e39a4204600cd0
   languageName: node
   linkType: hard
 
@@ -1878,13 +1878,13 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@babel/preset-env": "npm:^7.26.0"
     "@babel/preset-typescript": "npm:^7.26.0"
-    "@imbricate/core": "npm:^3.1.1"
-    "@imbricate/test-origin-jest": "npm:^3.1.1"
+    "@imbricate/core": "npm:^3.1.2"
+    "@imbricate/test-origin-jest": "npm:^3.1.2"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29.5.14"
-    "@types/node": "npm:^22.9.0"
+    "@types/node": "npm:^22.9.1"
     "@typescript-eslint/eslint-plugin": "npm:^8.15.0"
     "@typescript-eslint/parser": "npm:^8.15.0"
     babel-jest: "npm:^29.7.0"
@@ -1897,12 +1897,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@imbricate/test-origin-jest@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "@imbricate/test-origin-jest@npm:3.1.1"
+"@imbricate/test-origin-jest@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "@imbricate/test-origin-jest@npm:3.1.2"
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/8a0962084abc01c61cfca3df2f09016c9f90ef4f601321159ae05a9a27abb5e1141e3c8cfb73a9108c549faa5b4f184206a7c9bdb6ff59d86b17c032125123ea
+  checksum: 10c0/31dd88413590d3d15d823bbaa9b5b08b91dfe890b746fbc01693a5824b5debcdf76d4323454412a611a894acab01307a8a3a9ea65faf3b29414ddce042bc255a
   languageName: node
   linkType: hard
 
@@ -2470,12 +2470,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.9.0":
-  version: 22.9.0
-  resolution: "@types/node@npm:22.9.0"
+"@types/node@npm:^22.9.1":
+  version: 22.9.1
+  resolution: "@types/node@npm:22.9.1"
   dependencies:
     undici-types: "npm:~6.19.8"
-  checksum: 10c0/3f46cbe0a49bab4ba30494025e4c8a6e699b98ac922857aa1f0209ce11a1313ee46e6808b8f13fe5b8b960a9d7796b77c8d542ad4e9810e85ef897d5593b5d51
+  checksum: 10c0/ea489ae603aa8874e4e88980aab6f2dad09c755da779c88dd142983bfe9609803c89415ca7781f723072934066f63daf2b3339ef084a8ad1a8079cf3958be243
   languageName: node
   linkType: hard
 
