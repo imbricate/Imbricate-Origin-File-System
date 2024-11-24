@@ -4,13 +4,13 @@
  * @description Fix Schema
  */
 
-import { ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, ImbricateDatabaseSchemaProperty, ImbricateDatabaseSchemaPropertyForCreation } from "@imbricate/core";
+import { IMBRICATE_PROPERTY_TYPE, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, ImbricateDatabaseSchemaProperty, ImbricateDatabaseSchemaPropertyForCreation } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 
 export const fixDatabaseSchema = (schema: ImbricateDatabaseSchemaForCreation): ImbricateDatabaseSchema => {
 
-    const fixedProperties: ImbricateDatabaseSchemaProperty[] =
-        schema.properties.map((property: ImbricateDatabaseSchemaPropertyForCreation) => {
+    const fixedProperties: Array<ImbricateDatabaseSchemaProperty<IMBRICATE_PROPERTY_TYPE>> =
+        schema.properties.map((property: ImbricateDatabaseSchemaPropertyForCreation<IMBRICATE_PROPERTY_TYPE>) => {
 
             return {
                 ...property,
