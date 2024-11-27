@@ -30,22 +30,38 @@ export const performSearch = async (
                     if (typeof property.value === "string") {
 
                         const text = await textManager.getText(property.value);
-                        const textContent = await text?.getContent();
 
-                        if (textContent?.includes(keyword)) {
+                        if (!text) {
+                            continue properties;
+                        }
 
-                            items.push({
-                                target: {
-                                    type: IMBRICATE_SEARCH_TARGET_TYPE.MARKDOWN,
+                        const textContent = await text.getContent();
+
+                        if (!textContent) {
+                            continue properties;
+                        }
+
+                        const lines = textContent.split("\n");
+
+                        for (let i = 0; i < lines.length; i++) {
+                            const line = lines[i];
+
+                            if (line.includes(keyword)) {
+
+                                items.push({
                                     target: {
-                                        databaseUniqueIdentifier: database.uniqueIdentifier,
-                                        documentUniqueIdentifier: document.uniqueIdentifier,
-                                        propertyUniqueIdentifier: propertyKey,
+                                        type: IMBRICATE_SEARCH_TARGET_TYPE.MARKDOWN,
+                                        target: {
+                                            databaseUniqueIdentifier: database.uniqueIdentifier,
+                                            documentUniqueIdentifier: document.uniqueIdentifier,
+                                            propertyUniqueIdentifier: propertyKey,
+                                            lineNumber: i,
+                                        },
                                     },
-                                },
-                                primary: textContent.slice(0, 15),
-                                secondary: textContent.slice(0, 100),
-                            });
+                                    primary: line,
+                                    secondary: line,
+                                });
+                            }
                         }
                     }
 
