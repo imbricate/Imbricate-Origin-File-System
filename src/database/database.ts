@@ -81,7 +81,12 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         uniqueIdentifier?: string,
     ): Promise<IImbricateDocument> {
 
-        const validationResult: string | null = validateImbricateProperties(properties, this.schema);
+        const validationResult: string | null = validateImbricateProperties(
+            properties,
+            this.schema,
+            true,
+        );
+
         if (typeof validationResult === "string") {
             throw new Error(`Properties validation failed, ${validationResult}`);
         }

@@ -135,7 +135,12 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         properties: DocumentProperties,
     ): Promise<DocumentEditRecord[]> {
 
-        const validationResult: string | null = validateImbricateProperties(properties, this._schema);
+        const validationResult: string | null = validateImbricateProperties(
+            properties,
+            this._schema,
+            true,
+        );
+
         if (typeof validationResult === "string") {
             throw new Error(`Properties validation failed, ${validationResult}`);
         }
