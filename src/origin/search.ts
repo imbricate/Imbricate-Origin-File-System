@@ -4,7 +4,7 @@
  * @description Search
  */
 
-import { IImbricateDatabase, IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateSearchItem, ImbricateSearchResult } from "@imbricate/core";
+import { IImbricateDatabase, IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateSearchItem, ImbricateSearchResult, findPrimaryProperty } from "@imbricate/core";
 
 export const performSearch = async (
     keyword: string,
@@ -48,6 +48,11 @@ export const performSearch = async (
 
                             if (line.includes(keyword)) {
 
+                                const documentPrimaryKey = findPrimaryProperty(
+                                    database.schema,
+                                    document.properties,
+                                );
+
                                 items.push({
                                     target: {
                                         type: IMBRICATE_SEARCH_TARGET_TYPE.MARKDOWN,
@@ -59,7 +64,11 @@ export const performSearch = async (
                                         },
                                     },
                                     primary: line,
+                                    sourceDatabaseName: database.databaseName,
+                                    sourceDocumentPrimaryKey: documentPrimaryKey ? String(documentPrimaryKey.value) : undefined,
+                                    secondaryPrevious: lines[i - 1] ? [lines[i - 1]] : [],
                                     secondary: line,
+                                    secondaryNext: lines[i + 1] ? [lines[i + 1]] : [],
                                 });
                             }
                         }
