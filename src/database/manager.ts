@@ -7,7 +7,7 @@
 import { DatabaseEditRecord, IImbricateDatabase, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
-import { getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
+import { deleteDatabaseMeta, getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabase } from "./database";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
@@ -49,6 +49,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
                 item.uniqueIdentifier,
                 item.databaseName,
                 item.schema,
+                item.annotations,
             );
         });
     }
@@ -69,6 +70,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             databaseMeta.uniqueIdentifier,
             databaseMeta.databaseName,
             databaseMeta.schema,
+            databaseMeta.annotations,
         );
     }
 
@@ -121,6 +123,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             identifier,
             databaseName,
             fixedSchema,
+            {},
         );
     }
 
@@ -138,14 +141,9 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             throw new Error("Database not found");
         }
 
-        await putDatabaseMeta(
+        await deleteDatabaseMeta(
             this._basePath,
-            {
-                ...databaseMeta,
-                schema: {
-                    properties: {},
-                },
-            },
+            uniqueIdentifier,
         );
     }
 }

@@ -4,7 +4,7 @@
  * @description Action
  */
 
-import { listFileFromDirectory, putFile, readFile } from "../util/io";
+import { deleteFile, listFileFromDirectory, putFile, readFile } from "../util/io";
 import { joinDatabaseMetaFileRoute } from "../util/path-joiner";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
@@ -18,6 +18,18 @@ export const putDatabaseMeta = async (
     );
 
     await putFile(basePath, pathRoute, JSON.stringify(metadata, null, 2));
+};
+
+export const deleteDatabaseMeta = async (
+    basePath: string,
+    databaseUniqueIdentifier: string,
+): Promise<void> => {
+
+    const pathRoute: string[] = joinDatabaseMetaFileRoute(
+        databaseUniqueIdentifier,
+    );
+
+    await deleteFile(basePath, pathRoute);
 };
 
 export const getDatabaseMeta = async (

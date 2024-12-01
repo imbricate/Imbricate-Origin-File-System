@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { IImbricateText, IImbricateTextManager } from "@imbricate/core";
+import { IImbricateText, IImbricateTextManager, ImbricateTextAuditOptions } from "@imbricate/core";
 import { digestString } from "../util/digest";
 import { getTextByUniqueIdentifier } from "./action";
 import { ImbricateFileSystemText } from "./text";
@@ -52,11 +52,10 @@ export class ImbricateFileSystemTextManager implements IImbricateTextManager {
 
     public async createText(
         content: string,
-        uniqueIdentifier?: string,
+        _auditOptions?: ImbricateTextAuditOptions,
     ): Promise<IImbricateText> {
 
-        const textUniqueIdentifier: string =
-            uniqueIdentifier ?? digestString(content);
+        const textUniqueIdentifier: string = digestString(content);
 
         const text: IImbricateText = await ImbricateFileSystemText.createAndSave(
             this._basePath,

@@ -21,6 +21,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         uniqueIdentifier: string,
         databaseName: string,
         schema: ImbricateDatabaseSchema,
+        annotations: DatabaseAnnotations,
     ): ImbricateFileSystemDatabase {
 
         return new ImbricateFileSystemDatabase(
@@ -28,6 +29,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
             uniqueIdentifier,
             databaseName,
             schema,
+            annotations,
         );
     }
 
@@ -43,6 +45,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         uniqueIdentifier: string,
         databaseName: string,
         schema: ImbricateDatabaseSchema,
+        annotations: DatabaseAnnotations,
     ) {
 
         this._basePath = basePath;
@@ -50,6 +53,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         this.uniqueIdentifier = uniqueIdentifier;
         this.databaseName = databaseName;
         this.schema = schema;
+        this.annotations = annotations;
     }
 
     public async putSchema(
