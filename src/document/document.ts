@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, validateImbricateProperties } from "@imbricate/core";
+import { DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAuditOptions, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -13,11 +13,11 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static async fromScratchAndSave(
         schema: ImbricateDatabaseSchema,
-        author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
         properties: DocumentProperties,
+        author?: ImbricateAuthor,
     ): Promise<ImbricateFileSystemDocument> {
 
         const operations: DocumentEditOperation[] = [];
@@ -51,7 +51,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         return new ImbricateFileSystemDocument(
             schema,
-            author,
             basePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
@@ -62,7 +61,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public static fromInstance(
         schema: ImbricateDatabaseSchema,
-        author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,
         instance: ImbricateFileSystemDocumentInstance,
@@ -70,7 +68,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         return new ImbricateFileSystemDocument(
             schema,
-            author,
             basePath,
             databaseUniqueIdentifier,
             instance.uniqueIdentifier,
@@ -80,7 +77,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     }
 
     private readonly _schema: ImbricateDatabaseSchema;
-    private readonly _author: ImbricateAuthor;
     private readonly _basePath: string;
 
     private readonly _databaseUniqueIdentifier: string;
@@ -91,7 +87,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     private constructor(
         schema: ImbricateDatabaseSchema,
-        author: ImbricateAuthor,
         basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
@@ -101,7 +96,6 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         this._schema = schema;
         this._basePath = basePath;
-        this._author = author;
 
         this._databaseUniqueIdentifier = databaseUniqueIdentifier;
         this._documentUniqueIdentifier = documentUniqueIdentifier;
@@ -121,18 +115,20 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     public async putProperty(
         key: DocumentPropertyKey,
         value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE>,
+        auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<DocumentEditRecord[]> {
 
         const editRecords: DocumentEditRecord[] = await this.putProperties({
             ...this._properties,
             [key]: value,
-        });
+        }, auditOptions);
 
         return editRecords;
     }
 
     public async putProperties(
         properties: DocumentProperties,
+        auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<DocumentEditRecord[]> {
 
         const validationResult: string | null = validateImbricateProperties(
@@ -161,7 +157,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const editRecord: DocumentEditRecord = {
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
-            author: this._author,
+            author: auditOptions?.author,
             operations,
         };
 

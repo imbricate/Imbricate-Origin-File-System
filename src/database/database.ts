@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DocumentProperties, IImbricateDocument, ImbricateAuthor, ImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseEditRecord, DocumentProperties, IImbricateDocument, ImbricateDatabaseAuditOptions, ImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -17,7 +17,6 @@ import { ImbricateFileSystemDatabaseMeta } from "./definition";
 export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public static create(
-        author: ImbricateAuthor,
         basePath: string,
         uniqueIdentifier: string,
         databaseName: string,
@@ -25,7 +24,6 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     ): ImbricateFileSystemDatabase {
 
         return new ImbricateFileSystemDatabase(
-            author,
             basePath,
             uniqueIdentifier,
             databaseName,
@@ -33,7 +31,6 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         );
     }
 
-    private readonly _author: ImbricateAuthor;
     private readonly _basePath: string;
 
     public readonly uniqueIdentifier: string;
@@ -41,14 +38,12 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public schema: ImbricateDatabaseSchema;
 
     private constructor(
-        author: ImbricateAuthor,
         basePath: string,
         uniqueIdentifier: string,
         databaseName: string,
         schema: ImbricateDatabaseSchema,
     ) {
 
-        this._author = author;
         this._basePath = basePath;
 
         this.uniqueIdentifier = uniqueIdentifier;
@@ -58,7 +53,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public async putSchema(
         schema: ImbricateDatabaseSchema,
-    ): Promise<void> {
+    ): Promise<DatabaseEditRecord[]> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
 
@@ -73,12 +68,13 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         await putDatabaseMeta(this._basePath, newMeta);
         this.schema = schema;
-        return;
+
+        return [];
     }
 
     public async createDocument(
         properties: DocumentProperties,
-        uniqueIdentifier?: string,
+        auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<IImbricateDocument> {
 
         const validationResult: string | null = validateImbricateProperties(
@@ -91,16 +87,16 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
             throw new Error(`Properties validation failed, ${validationResult}`);
         }
 
-        const documentUniqueIdentifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
+        const documentUniqueIdentifier: string = UUIDVersion1.generateString();
 
         const document: IImbricateDocument = await ImbricateFileSystemDocument
             .fromScratchAndSave(
                 this.schema,
-                this._author,
                 this._basePath,
                 this.uniqueIdentifier,
                 documentUniqueIdentifier,
                 properties,
+                auditOptions?.author,
             );
 
         return document;
@@ -123,7 +119,6 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         const document: IImbricateDocument = ImbricateFileSystemDocument.fromInstance(
             this.schema,
-            this._author,
             this._basePath,
             this.uniqueIdentifier,
             documentInstance,
@@ -148,7 +143,6 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
             const document = ImbricateFileSystemDocument.fromInstance(
                 this.schema,
-                this._author,
                 this._basePath,
                 this.uniqueIdentifier,
                 documentInstance,

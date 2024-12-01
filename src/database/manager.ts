@@ -118,7 +118,6 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         );
 
         return ImbricateFileSystemDatabase.create(
-            this._author,
             this._basePath,
             identifier,
             databaseName,
