@@ -45,7 +45,6 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         return databaseMetaList.map((item: ImbricateFileSystemDatabaseMeta) => {
 
             return ImbricateFileSystemDatabase.create(
-                this._author,
                 this._basePath,
                 item.uniqueIdentifier,
                 item.databaseName,
@@ -66,7 +65,6 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         }
 
         return ImbricateFileSystemDatabase.create(
-            this._author,
             this._basePath,
             databaseMeta.uniqueIdentifier,
             databaseMeta.databaseName,

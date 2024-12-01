@@ -4,7 +4,7 @@
  * @description Definition
  */
 
-import { DatabaseEditRecord, ImbricateDatabaseSchema } from "@imbricate/core";
+import { DatabaseAnnotations, DatabaseEditRecord, ImbricateDatabaseSchema } from "@imbricate/core";
 
 export type ImbricateFileSystemDatabaseMeta = {
 
@@ -12,4 +12,5 @@ export type ImbricateFileSystemDatabaseMeta = {
     readonly databaseName: string;
     readonly schema: ImbricateDatabaseSchema;
     readonly editRecords: DatabaseEditRecord[];
+    readonly annotations: DatabaseAnnotations;
 };

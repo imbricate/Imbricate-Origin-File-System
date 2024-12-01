@@ -5,7 +5,7 @@
  */
 
 import { ImbricateDocumentQuery } from "@imbricate/core";
-import { listFileFromDirectory, putFile, readFile } from "../util/io";
+import { deleteFile, listFileFromDirectory, putFile, readFile } from "../util/io";
 import { joinDocumentFileRoute } from "../util/path-joiner";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
 
@@ -79,4 +79,18 @@ export const getDocumentList = async (
     }
 
     return result;
+};
+
+export const deleteDocument = async (
+    basePath: string,
+    databaseUniqueIdentifier: string,
+    documentUniqueIdentifier: string,
+): Promise<void> => {
+
+    const pathRoute: string[] = joinDocumentFileRoute(
+        databaseUniqueIdentifier,
+        documentUniqueIdentifier,
+    );
+
+    await deleteFile(basePath, pathRoute);
 };

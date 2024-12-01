@@ -4,7 +4,7 @@
  * @description IO
  */
 
-import { attemptMarkDir, directoryFiles, readTextFile, writeTextFile } from "@sudoo/io";
+import { attemptMarkDir, directoryFiles, readTextFile, removeFile, writeTextFile } from "@sudoo/io";
 import * as Path from "path";
 
 export const listFileFromDirectory = async (
@@ -57,4 +57,15 @@ export const readFile = async (
         Path.join(basePath, ...pathRoute),
     );
     return content;
+};
+
+export const deleteFile = async (
+    basePath: string,
+    pathRoute: string[],
+): Promise<void> => {
+
+    await attemptMarkDir(basePath);
+    await removeFile(
+        Path.join(basePath, ...pathRoute),
+    );
 };

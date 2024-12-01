@@ -4,11 +4,11 @@
  * @description Database
  */
 
-import { DatabaseEditRecord, DocumentProperties, IImbricateDocument, ImbricateDatabaseAuditOptions, ImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, ImbricateDatabaseAuditOptions, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
-import { getDocumentByUniqueIdentifier, getDocumentList } from "../document/action";
+import { deleteDocument, getDocumentByUniqueIdentifier, getDocumentList } from "../document/action";
 import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
 import { getDatabaseMeta, putDatabaseMeta } from "./action";
@@ -36,6 +36,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public readonly uniqueIdentifier: string;
     public readonly databaseName: string;
     public schema: ImbricateDatabaseSchema;
+    public annotations: DatabaseAnnotations;
 
     private constructor(
         basePath: string,
@@ -68,6 +69,66 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         await putDatabaseMeta(this._basePath, newMeta);
         this.schema = schema;
+
+        return [];
+    }
+
+    public async putAnnotation(
+        namespace: string,
+        identifier: string,
+        value: DatabaseAnnotationValue,
+        _auditOptions?: ImbricateDatabaseAuditOptions,
+    ): Promise<DatabaseEditRecord[]> {
+
+        const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
+
+        if (!currentMeta) {
+            throw new Error("Database meta not found");
+        }
+
+        const annotationKey: string = `${namespace}/${identifier}`;
+
+        const newAnnotations: DatabaseAnnotations = {
+            ...currentMeta.annotations,
+            [annotationKey]: value,
+        };
+
+        const newMeta: ImbricateFileSystemDatabaseMeta = {
+            ...currentMeta,
+            annotations: newAnnotations,
+        };
+
+        await putDatabaseMeta(this._basePath, newMeta);
+
+        return [];
+    }
+
+    public async deleteAnnotation(
+        namespace: string,
+        identifier: string,
+        _auditOptions?: ImbricateDatabaseAuditOptions,
+    ): Promise<DatabaseEditRecord[]> {
+
+        const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
+
+        if (!currentMeta) {
+            throw new Error("Database meta not found");
+        }
+
+        const annotationKey: string = `${namespace}/${identifier}`;
+
+        const newAnnotations: DatabaseAnnotations = {
+            ...currentMeta.annotations,
+        };
+
+        delete newAnnotations[annotationKey];
+
+        const newMeta: ImbricateFileSystemDatabaseMeta = {
+            ...currentMeta,
+            annotations: newAnnotations,
+        };
+
+        await putDatabaseMeta(this._basePath, newMeta);
 
         return [];
     }
@@ -127,6 +188,19 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         return document;
     }
 
+    public async countDocuments(
+        _query: ImbricateDocumentQuery,
+    ): Promise<number> {
+
+        const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
+            this._basePath,
+            this.uniqueIdentifier,
+            _query,
+        );
+
+        return documents.length;
+    }
+
     public async queryDocuments(
         query: ImbricateDocumentQuery,
     ): Promise<IImbricateDocument[]> {
@@ -152,5 +226,23 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         }
 
         return results;
+    }
+
+    public async removeDocument(
+        uniqueIdentifier: string,
+        _auditOptions?: ImbricateDocumentAuditOptions,
+    ): Promise<void> {
+
+        const document: IImbricateDocument | null = await this.getDocument(uniqueIdentifier);
+
+        if (!document) {
+            return;
+        }
+
+        await deleteDocument(
+            this._basePath,
+            this.uniqueIdentifier,
+            uniqueIdentifier,
+        );
     }
 }
