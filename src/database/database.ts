@@ -102,6 +102,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
             annotations: newAnnotations,
         };
 
+        this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
         return [];
@@ -132,6 +133,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
             annotations: newAnnotations,
         };
 
+        this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
         return [];

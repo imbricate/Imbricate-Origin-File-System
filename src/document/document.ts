@@ -230,6 +230,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             annotations: newAnnotations,
         };
 
+        this._annotations = newAnnotations;
         await putDocument(
             this._basePath,
             this._databaseUniqueIdentifier,
@@ -268,6 +269,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             annotations: newAnnotations,
         };
 
+        this._annotations = newAnnotations;
         await putDocument(
             this._basePath,
             this._databaseUniqueIdentifier,
