@@ -4,13 +4,14 @@
  * @description Definition
  */
 
-import { DocumentEditRecord, DocumentProperties } from "@imbricate/core";
+import { DocumentAnnotations, DocumentEditRecord, DocumentProperties } from "@imbricate/core";
 
 export type ImbricateFileSystemDocumentInstance = {
 
     readonly uniqueIdentifier: string;
     readonly properties: DocumentProperties;
     readonly editRecords: DocumentEditRecord[];
+    readonly annotations: DocumentAnnotations;
 };
 
 export const createImbricateFileSystemDocumentInstance = (
@@ -23,5 +24,6 @@ export const createImbricateFileSystemDocumentInstance = (
         uniqueIdentifier,
         properties,
         editRecords: [],
+        annotations: {},
     };
 };

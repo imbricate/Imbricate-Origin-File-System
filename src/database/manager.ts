@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { DatabaseEditRecord, IImbricateDatabase, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
+import { DatabaseEditRecord, IImbricateDatabase, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
 import { getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
@@ -75,7 +75,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
     public async createDatabase(
         databaseName: string,
         schema: ImbricateDatabaseSchemaForCreation,
-        uniqueIdentifier?: string,
+        _auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<IImbricateDatabase> {
 
         const databases: IImbricateDatabase[] = await this.listDatabases();
@@ -85,7 +85,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             }
         }
 
-        const identifier: string = uniqueIdentifier ?? UUIDVersion1.generateString();
+        const identifier: string = UUIDVersion1.generateString();
         const fixedSchema: ImbricateDatabaseSchema = fixDatabaseSchema(schema);
 
         const validationResult: string | null = validateImbricateSchema(fixedSchema);
@@ -112,6 +112,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
                 databaseName,
                 schema: fixedSchema,
                 editRecords: initialEditRecords,
+                annotations: {},
             },
         );
 
@@ -120,6 +121,31 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             identifier,
             databaseName,
             fixedSchema,
+        );
+    }
+
+    public async removeDatabase(
+        uniqueIdentifier: string,
+        _auditOptions?: ImbricateDatabaseAuditOptions,
+    ): Promise<void> {
+
+        const databaseMeta: ImbricateFileSystemDatabaseMeta | null = await getDatabaseMeta(
+            this._basePath,
+            uniqueIdentifier,
+        );
+
+        if (!databaseMeta) {
+            throw new Error("Database not found");
+        }
+
+        await putDatabaseMeta(
+            this._basePath,
+            {
+                ...databaseMeta,
+                schema: {
+                    properties: {},
+                },
+            },
         );
     }
 }
