@@ -13,6 +13,7 @@ import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
 import { getDatabaseMeta, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
+import { queryDocuments } from "./query";
 
 export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
@@ -211,27 +212,12 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         query: ImbricateDocumentQuery,
     ): Promise<IImbricateDocument[]> {
 
-        const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
+        return await queryDocuments(
             this._basePath,
             this.uniqueIdentifier,
+            this.schema,
             query,
         );
-
-        const results: IImbricateDocument[] = [];
-
-        for (const documentInstance of documents) {
-
-            const document = ImbricateFileSystemDocument.fromInstance(
-                this.schema,
-                this._basePath,
-                this.uniqueIdentifier,
-                documentInstance,
-            );
-
-            results.push(document);
-        }
-
-        return results;
     }
 
     public async removeDocument(
