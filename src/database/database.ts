@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, ImbricateDatabaseAuditOptions, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, ImbricateDatabaseAuditOptions, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -211,6 +211,14 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public async queryDocuments(
         query: ImbricateDocumentQuery,
     ): Promise<IImbricateDocument[]> {
+
+        const queryValidationResult: string | null = validateImbricateDocumentQuery(
+            query,
+        );
+
+        if (typeof queryValidationResult === "string") {
+            throw new Error(`Query validation failed, ${queryValidationResult}`);
+        }
 
         return await queryDocuments(
             this._basePath,

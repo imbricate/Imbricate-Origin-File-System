@@ -61,9 +61,8 @@ export const getDocumentList = async (
 
     const result: ImbricateFileSystemDocumentInstance[] = [];
     const startPoint: number = query.skip || 0;
-    const endPoint: number = query.limit ? startPoint + query.limit : files.length;
 
-    for (let i: number = startPoint; i < endPoint; i++) {
+    for (let i: number = startPoint; i < files.length; i++) {
 
         const file: string = files[i];
 
