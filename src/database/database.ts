@@ -8,7 +8,7 @@ import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, Docum
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
-import { deleteDocument, getDocumentByUniqueIdentifier, getDocumentList } from "../document/action";
+import { deleteDocument, getDocumentByUniqueIdentifier } from "../document/action";
 import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
 import { getDatabaseMeta, putDatabaseMeta } from "./action";
@@ -196,13 +196,14 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     }
 
     public async countDocuments(
-        _query: ImbricateDocumentQuery,
+        query: ImbricateDocumentQuery,
     ): Promise<number> {
 
-        const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
+        const documents: IImbricateDocument[] = await queryDocuments(
             this._basePath,
             this.uniqueIdentifier,
-            _query,
+            this.schema,
+            query,
         );
 
         return documents.length;

@@ -4,7 +4,6 @@
  * @description Action
  */
 
-import { ImbricateDocumentQuery } from "@imbricate/core";
 import { deleteFile, listFileFromDirectory, putFile, readFile } from "../util/io";
 import { joinDocumentFileRoute } from "../util/path-joiner";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -50,7 +49,6 @@ export const getDocumentByUniqueIdentifier = async (
 export const getDocumentList = async (
     basePath: string,
     databaseUniqueIdentifier: string,
-    query: ImbricateDocumentQuery,
 ): Promise<ImbricateFileSystemDocumentInstance[]> => {
 
     const pathRoute: string[] = joinDocumentFileRoute(
@@ -60,9 +58,8 @@ export const getDocumentList = async (
     const files: string[] = await listFileFromDirectory(basePath, pathRoute);
 
     const result: ImbricateFileSystemDocumentInstance[] = [];
-    const startPoint: number = query.skip || 0;
 
-    for (let i: number = startPoint; i < files.length; i++) {
+    for (let i: number = 0; i < files.length; i++) {
 
         const file: string = files[i];
 

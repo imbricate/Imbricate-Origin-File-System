@@ -19,15 +19,15 @@ export const queryDocuments = async (
     const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
         basePath,
         databaseUniqueIdentifier,
-        query,
     );
 
     const results: IImbricateDocument[] = [];
 
-    for (let i = 0; i < documents.length; i++) {
+    let restSkips: number = query.skip ?? 0;
+    documents: for (let i = 0; i < documents.length; i++) {
 
         if (typeof query.limit === "number" && results.length >= query.limit) {
-            break;
+            break documents;
         }
 
         const documentInstance: ImbricateFileSystemDocumentInstance = documents[i];
@@ -44,7 +44,7 @@ export const queryDocuments = async (
 
                 const property = document.properties[filter.propertyIdentifier];
                 if (!property) {
-                    continue;
+                    continue documents;
                 }
 
                 if (filter.target === IMBRICATE_QUERY_PROPERTY_CONDITION_TARGET.PROPERTY_TYPE) {
@@ -52,11 +52,11 @@ export const queryDocuments = async (
                     if (filter.condition === IMBRICATE_QUERY_COMPARE_CONDITION.EQUAL) {
 
                         if (!property) {
-                            continue;
+                            continue documents;
                         }
 
                         if (property.type !== filter.value) {
-                            continue;
+                            continue documents;
                         }
                     }
                 }
@@ -66,26 +66,31 @@ export const queryDocuments = async (
                     if (filter.condition === IMBRICATE_QUERY_COMPARE_CONDITION.EQUAL) {
 
                         if (!property) {
-                            continue;
+                            continue documents;
                         }
 
                         if (property.value !== filter.value) {
-                            continue;
+                            continue documents;
                         }
                     }
 
                     if (filter.condition === IMBRICATE_QUERY_COMPARE_CONDITION.EXIST) {
 
                         if (filter.value && typeof property === "undefined") {
-                            continue;
+                            continue documents;
                         }
 
                         if (!filter.value && typeof property !== "undefined") {
-                            continue;
+                            continue documents;
                         }
                     }
                 }
             }
+        }
+
+        if (restSkips > 0) {
+            restSkips--;
+            continue documents;
         }
 
         results.push(document);
