@@ -69,7 +69,19 @@ export const queryDocuments = async (
                             continue documents;
                         }
 
-                        if (property.value !== filter.value) {
+                        if (Array.isArray(property.value) && Array.isArray(filter.value)) {
+
+                            if (property.value.length !== filter.value.length) {
+                                continue documents;
+                            }
+
+                            for (const value of filter.value) {
+
+                                if (!property.value.includes(value)) {
+                                    continue documents;
+                                }
+                            }
+                        } else if (property.value !== filter.value) {
                             continue documents;
                         }
                     }
