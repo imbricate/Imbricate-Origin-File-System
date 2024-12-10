@@ -12,6 +12,8 @@ export const performSearch = async (
     textManager: IImbricateTextManager,
 ): Promise<ImbricateSearchResult> => {
 
+    const keywordRegex: RegExp = new RegExp(keyword, "i");
+
     const databases: IImbricateDatabase[] = await databaseManager.listDatabases();
     const items: ImbricateSearchItem[] = [];
 
@@ -44,9 +46,10 @@ export const performSearch = async (
                         const lines = textContent.split("\n");
 
                         for (let i = 0; i < lines.length; i++) {
+
                             const line = lines[i];
 
-                            if (line.includes(keyword)) {
+                            if (keywordRegex.test(line)) {
 
                                 const documentPrimaryKey = findPrimaryProperty(
                                     database.schema,
@@ -60,16 +63,18 @@ export const performSearch = async (
                                             databaseUniqueIdentifier: database.uniqueIdentifier,
                                             documentUniqueIdentifier: document.uniqueIdentifier,
                                             propertyUniqueIdentifier: propertyKey,
-                                            lineNumber: i,
+                                            lineNumber: i + 1,
                                         },
                                     },
-                                    primary: line,
+                                    primary: documentPrimaryKey ? String(documentPrimaryKey.value) : line,
                                     sourceDatabaseName: database.databaseName,
                                     sourceDocumentPrimaryKey: documentPrimaryKey ? String(documentPrimaryKey.value) : undefined,
                                     secondaryPrevious: lines[i - 1] ? [lines[i - 1]] : [],
                                     secondary: line,
                                     secondaryNext: lines[i + 1] ? [lines[i + 1]] : [],
                                 });
+
+                                continue properties;
                             }
                         }
                     }
@@ -81,7 +86,7 @@ export const performSearch = async (
 
                     if (typeof property.value === "string") {
 
-                        if (property.value.includes(keyword)) {
+                        if (keywordRegex.test(property.value)) {
 
                             items.push({
                                 target: {
