@@ -61,6 +61,7 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
 
         return performSearch(
             keyword,
+            this.uniqueIdentifier,
             this.getDatabaseManager(),
             this.getTextManager(),
         );

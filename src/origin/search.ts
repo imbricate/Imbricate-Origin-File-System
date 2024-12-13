@@ -8,6 +8,7 @@ import { IImbricateDatabase, IImbricateDatabaseManager, IImbricateTextManager, I
 
 export const performSearch = async (
     keyword: string,
+    originUniqueIdentifier: string,
     databaseManager: IImbricateDatabaseManager,
     textManager: IImbricateTextManager,
 ): Promise<ImbricateSearchResult> => {
@@ -60,6 +61,7 @@ export const performSearch = async (
                                     target: {
                                         type: IMBRICATE_SEARCH_TARGET_TYPE.MARKDOWN,
                                         target: {
+                                            originUniqueIdentifier,
                                             databaseUniqueIdentifier: database.uniqueIdentifier,
                                             documentUniqueIdentifier: document.uniqueIdentifier,
                                             propertyUniqueIdentifier: propertyKey,
@@ -92,6 +94,7 @@ export const performSearch = async (
                                 target: {
                                     type: IMBRICATE_SEARCH_TARGET_TYPE.DOCUMENT,
                                     target: {
+                                        originUniqueIdentifier,
                                         databaseUniqueIdentifier: database.uniqueIdentifier,
                                         documentUniqueIdentifier: document.uniqueIdentifier,
                                     },
