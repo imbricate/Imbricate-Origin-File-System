@@ -1864,10 +1864,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^3.8.2":
-  version: 3.8.2
-  resolution: "@imbricate/core@npm:3.8.2"
-  checksum: 10c0/c0a60b637689928597ae7fe40640ff1aac645ba80f917cac139d0c7b3971ea9b7a6f087cb8fe31b4ae97e43feb9607a137e6d6889423bebc94e732128e1e1844
+"@imbricate/core@npm:^3.9.0":
+  version: 3.9.0
+  resolution: "@imbricate/core@npm:3.9.0"
+  checksum: 10c0/bb118aa46d3a46775d565d7269bc2f91f105f3df9cea569afac45f3f21bc834bc0a4aac8d0a901db9dfacdb7559ff162a16c8221fab64fc3851952d9673e53f4
   languageName: node
   linkType: hard
 
@@ -1878,13 +1878,13 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@babel/preset-env": "npm:^7.26.0"
     "@babel/preset-typescript": "npm:^7.26.0"
-    "@imbricate/core": "npm:^3.8.2"
+    "@imbricate/core": "npm:^3.9.0"
     "@imbricate/test-origin-jest": "npm:^3.4.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
     "@types/jest": "npm:^29.5.14"
-    "@types/node": "npm:^22.10.1"
+    "@types/node": "npm:^22.10.2"
     "@typescript-eslint/eslint-plugin": "npm:^8.18.0"
     "@typescript-eslint/parser": "npm:^8.18.0"
     babel-jest: "npm:^29.7.0"
@@ -2470,12 +2470,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.10.1":
-  version: 22.10.1
-  resolution: "@types/node@npm:22.10.1"
+"@types/node@npm:^22.10.2":
+  version: 22.10.2
+  resolution: "@types/node@npm:22.10.2"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10c0/0fbb6d29fa35d807f0223a4db709c598ac08d66820240a2cd6a8a69b8f0bc921d65b339d850a666b43b4e779f967e6ed6cf6f0fca3575e08241e6b900364c234
+  checksum: 10c0/2c7b71a040f1ef5320938eca8ebc946e6905caa9bbf3d5665d9b3774a8d15ea9fab1582b849a6d28c7fc80756a62c5666bc66b69f42f4d5dafd1ccb193cdb4ac
   languageName: node
   linkType: hard
 
