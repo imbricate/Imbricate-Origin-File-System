@@ -130,12 +130,61 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<DocumentEditRecord[]> {
 
-        const editRecords: DocumentEditRecord[] = await this.putProperties({
+        const properties = {
             ...this._properties,
             [key]: value,
-        }, auditOptions);
+        };
 
-        return editRecords;
+        const currentDocument = await getDocumentByUniqueIdentifier(
+            this._basePath,
+            this._databaseUniqueIdentifier,
+            this._documentUniqueIdentifier,
+        );
+
+        if (!currentDocument) {
+            throw new Error("Document not found");
+        }
+
+        const validationResult: string | null = validateImbricateProperties(
+            properties,
+            this._schema,
+            true,
+        );
+
+        if (typeof validationResult === "string") {
+            throw new Error(`Properties validation failed, ${validationResult}`);
+        }
+
+        const operations: Array<DocumentEditOperation<IMBRICATE_DOCUMENT_EDIT_TYPE>> = [];
+        operations.push({
+            action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_PROPERTY,
+            value: {
+                key,
+                value,
+            },
+        });
+
+        const editRecord: DocumentEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            author: auditOptions?.author,
+            operations,
+        };
+
+        this._properties = properties;
+
+        const updatedDocument: ImbricateFileSystemDocumentInstance = {
+            ...currentDocument,
+            properties,
+        };
+
+        await putDocument(
+            this._basePath,
+            this._databaseUniqueIdentifier,
+            updatedDocument,
+        );
+
+        return [editRecord];
     }
 
     public async putProperties(
