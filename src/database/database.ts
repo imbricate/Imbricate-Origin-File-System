@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, ImbricateDatabaseAuditOptions, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAuditOptions, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -68,6 +68,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
     public async putSchema(
         schema: ImbricateDatabaseSchema,
+        auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<DatabaseEditRecord[]> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
@@ -76,22 +77,40 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
             throw new Error("Database meta not found");
         }
 
+        const editRecord: DatabaseEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            beforeVersion: this.databaseVersion,
+            afterVersion: this.databaseVersion + 1,
+            author: auditOptions?.author,
+            operations: [
+                {
+                    action: IMBRICATE_DATABASE_EDIT_TYPE.PUT_SCHEMA,
+                    value: schema,
+                },
+            ],
+        };
+
         const newMeta: ImbricateFileSystemDatabaseMeta = {
             ...currentMeta,
             schema,
+            editRecords: [
+                ...currentMeta.editRecords,
+                editRecord,
+            ],
         };
 
         await putDatabaseMeta(this._basePath, newMeta);
         this.schema = schema;
 
-        return [];
+        return [editRecord];
     }
 
     public async putAnnotation(
         namespace: string,
         identifier: string,
         value: DatabaseAnnotationValue,
-        _auditOptions?: ImbricateDatabaseAuditOptions,
+        auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<DatabaseEditRecord[]> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
@@ -107,21 +126,43 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
             [annotationKey]: value,
         };
 
+        const editRecord: DatabaseEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            beforeVersion: this.databaseVersion,
+            afterVersion: this.databaseVersion + 1,
+            author: auditOptions?.author,
+            operations: [
+                {
+                    action: IMBRICATE_DATABASE_EDIT_TYPE.PUT_ANNOTATION,
+                    value: {
+                        annotationIdentifier: identifier,
+                        annotationNamespace: namespace,
+                        data: value,
+                    },
+                },
+            ],
+        };
+
         const newMeta: ImbricateFileSystemDatabaseMeta = {
             ...currentMeta,
             annotations: newAnnotations,
+            editRecords: [
+                ...currentMeta.editRecords,
+                editRecord,
+            ],
         };
 
         this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
-        return [];
+        return [editRecord];
     }
 
     public async deleteAnnotation(
         namespace: string,
         identifier: string,
-        _auditOptions?: ImbricateDatabaseAuditOptions,
+        auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<DatabaseEditRecord[]> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
@@ -138,15 +179,36 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
 
         delete newAnnotations[annotationKey];
 
+        const editRecord: DatabaseEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            beforeVersion: this.databaseVersion,
+            afterVersion: this.databaseVersion + 1,
+            author: auditOptions?.author,
+            operations: [
+                {
+                    action: IMBRICATE_DATABASE_EDIT_TYPE.DELETE_ANNOTATION,
+                    value: {
+                        annotationIdentifier: identifier,
+                        annotationNamespace: namespace,
+                    },
+                },
+            ],
+        };
+
         const newMeta: ImbricateFileSystemDatabaseMeta = {
             ...currentMeta,
             annotations: newAnnotations,
+            editRecords: [
+                ...currentMeta.editRecords,
+                editRecord,
+            ],
         };
 
         this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
-        return [];
+        return [editRecord];
     }
 
     public async createDocument(
