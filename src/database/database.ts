@@ -94,14 +94,11 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         const newMeta: ImbricateFileSystemDatabaseMeta = {
             ...currentMeta,
             schema,
-            editRecords: [
-                ...currentMeta.editRecords,
-                editRecord,
-            ],
         };
 
-        await putDatabaseMeta(this._basePath, newMeta);
+        this.databaseVersion = this.databaseVersion + 1;
         this.schema = schema;
+        await putDatabaseMeta(this._basePath, newMeta);
 
         return [editRecord];
     }
@@ -147,12 +144,9 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         const newMeta: ImbricateFileSystemDatabaseMeta = {
             ...currentMeta,
             annotations: newAnnotations,
-            editRecords: [
-                ...currentMeta.editRecords,
-                editRecord,
-            ],
         };
 
+        this.databaseVersion = this.databaseVersion + 1;
         this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
@@ -199,12 +193,9 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         const newMeta: ImbricateFileSystemDatabaseMeta = {
             ...currentMeta,
             annotations: newAnnotations,
-            editRecords: [
-                ...currentMeta.editRecords,
-                editRecord,
-            ],
         };
 
+        this.databaseVersion = this.databaseVersion + 1;
         this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 

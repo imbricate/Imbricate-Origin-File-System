@@ -274,7 +274,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         namespace: string,
         identifier: string,
         value: DocumentAnnotationValue,
-        _auditOptions?: ImbricateDocumentAuditOptions,
+        auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<DocumentEditRecord[]> {
 
         const currentDocument = await getDocumentByUniqueIdentifier(
@@ -294,11 +294,30 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             [annotationKey]: value,
         };
 
+        const editRecord: DocumentEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            beforeVersion: this.documentVersion,
+            afterVersion: this.documentVersion + 1,
+            author: auditOptions?.author,
+            operations: [
+                {
+                    action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_ANNOTATION,
+                    value: {
+                        annotationIdentifier: identifier,
+                        annotationNamespace: namespace,
+                        data: value,
+                    },
+                },
+            ],
+        };
+
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
             ...currentDocument,
             annotations: newAnnotations,
         };
 
+        this._documentVersion += 1;
         this._annotations = newAnnotations;
         await putDocument(
             this._basePath,
@@ -306,13 +325,13 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             updatedDocument,
         );
 
-        return [];
+        return [editRecord];
     }
 
     public async deleteAnnotation(
         namespace: string,
         identifier: string,
-        _auditOptions?: ImbricateDocumentAuditOptions,
+        auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<DocumentEditRecord[]> {
 
         const currentDocument = await getDocumentByUniqueIdentifier(
@@ -333,11 +352,29 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         delete newAnnotations[annotationKey];
 
+        const editRecord: DocumentEditRecord = {
+            uniqueIdentifier: UUIDVersion1.generateString(),
+            editAt: new Date(),
+            beforeVersion: this.documentVersion,
+            afterVersion: this.documentVersion + 1,
+            author: auditOptions?.author,
+            operations: [
+                {
+                    action: IMBRICATE_DOCUMENT_EDIT_TYPE.DELETE_ANNOTATION,
+                    value: {
+                        annotationIdentifier: identifier,
+                        annotationNamespace: namespace,
+                    },
+                },
+            ],
+        };
+
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
             ...currentDocument,
             annotations: newAnnotations,
         };
 
+        this._documentVersion += 1;
         this._annotations = newAnnotations;
         await putDocument(
             this._basePath,
@@ -345,7 +382,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             updatedDocument,
         );
 
-        return [];
+        return [editRecord];
     }
 
     public async addEditRecords(
