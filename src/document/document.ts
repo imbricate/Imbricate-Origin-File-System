@@ -35,9 +35,11 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             });
         }
 
-        const initialEditRecords = [{
+        const initialEditRecords: DocumentEditRecord[] = [{
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
+            beforeVersion: -1,
+            afterVersion: 0,
             author,
             operations,
         }];
@@ -45,6 +47,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const instance: ImbricateFileSystemDocumentInstance = {
 
             uniqueIdentifier: documentUniqueIdentifier,
+            documentVersion: 0,
             properties,
             editRecords: initialEditRecords,
             annotations: {},
@@ -57,6 +60,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             basePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
+            0,
             properties,
             initialEditRecords,
             {},
@@ -75,6 +79,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             basePath,
             databaseUniqueIdentifier,
             instance.uniqueIdentifier,
+            instance.documentVersion,
             instance.properties,
             instance.editRecords,
             instance.annotations,
@@ -87,6 +92,8 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private readonly _databaseUniqueIdentifier: string;
     private readonly _documentUniqueIdentifier: string;
 
+    private _documentVersion: number;
+
     private _properties: DocumentProperties;
     private _editRecords: DocumentEditRecord[];
     private _annotations: DocumentAnnotations;
@@ -96,6 +103,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
+        documentVersion: number,
         properties: DocumentProperties,
         editRecords: DocumentEditRecord[],
         annotations: DocumentAnnotations,
@@ -107,6 +115,8 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         this._databaseUniqueIdentifier = databaseUniqueIdentifier;
         this._documentUniqueIdentifier = documentUniqueIdentifier;
 
+        this._documentVersion = documentVersion;
+
         this._properties = properties;
         this._editRecords = editRecords;
         this._annotations = annotations;
@@ -114,6 +124,10 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
     public get uniqueIdentifier(): string {
         return this._documentUniqueIdentifier;
+    }
+
+    public get documentVersion(): number {
+        return this._documentVersion;
     }
 
     public get properties(): DocumentProperties {
@@ -167,10 +181,13 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const editRecord: DocumentEditRecord = {
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
+            beforeVersion: this._documentVersion,
+            afterVersion: this._documentVersion + 1,
             author: auditOptions?.author,
             operations,
         };
 
+        this._documentVersion += 1;
         this._properties = properties;
 
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
@@ -230,10 +247,13 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const editRecord: DocumentEditRecord = {
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
+            beforeVersion: this._documentVersion,
+            afterVersion: this._documentVersion + 1,
             author: auditOptions?.author,
             operations,
         };
 
+        this._documentVersion += 1;
         this._properties = properties;
 
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
