@@ -48,6 +48,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
                 this._basePath,
                 item.uniqueIdentifier,
                 item.databaseName,
+                item.databaseVersion,
                 item.schema,
                 item.annotations,
             );
@@ -69,6 +70,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             this._basePath,
             databaseMeta.uniqueIdentifier,
             databaseMeta.databaseName,
+            databaseMeta.databaseVersion,
             databaseMeta.schema,
             databaseMeta.annotations,
         );
@@ -98,6 +100,8 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         const initialEditRecords: DatabaseEditRecord[] = [{
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
+            beforeVersion: -1,
+            afterVersion: 0,
             author: this._author,
             operations: [
                 {
@@ -112,6 +116,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             {
                 uniqueIdentifier: identifier,
                 databaseName,
+                databaseVersion: 0,
                 schema: fixedSchema,
                 editRecords: initialEditRecords,
                 annotations: {},
@@ -122,6 +127,7 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             this._basePath,
             identifier,
             databaseName,
+            0,
             fixedSchema,
             {},
         );
