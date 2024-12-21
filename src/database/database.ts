@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAuditOptions, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAuditOptions, ImbricateDatabaseFullFeatureBase, ImbricateDatabasePutSchemaOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_PutSchema_VersionConflict, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -15,13 +15,13 @@ import { getDatabaseMeta, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 import { queryDocuments } from "./query";
 
-export class ImbricateFileSystemDatabase implements IImbricateDatabase {
+export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBase implements IImbricateDatabase {
 
     public static create(
         basePath: string,
         uniqueIdentifier: string,
         databaseName: string,
-        databaseVersion: number,
+        databaseVersion: string,
         schema: ImbricateDatabaseSchema,
         annotations: DatabaseAnnotations,
     ): ImbricateFileSystemDatabase {
@@ -41,7 +41,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public readonly uniqueIdentifier: string;
     public readonly databaseName: string;
 
-    public databaseVersion: number;
+    public databaseVersion: string;
 
     public schema: ImbricateDatabaseSchema;
     public annotations: DatabaseAnnotations;
@@ -50,7 +50,7 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
         basePath: string,
         uniqueIdentifier: string,
         databaseName: string,
-        databaseVersion: number,
+        databaseVersion: string,
         schema: ImbricateDatabaseSchema,
         annotations: DatabaseAnnotations,
     ) {
@@ -69,12 +69,12 @@ export class ImbricateFileSystemDatabase implements IImbricateDatabase {
     public async putSchema(
         schema: ImbricateDatabaseSchema,
         auditOptions?: ImbricateDatabaseAuditOptions,
-    ): Promise<DatabaseEditRecord[]> {
+    ): Promise<ImbricateDatabasePutSchemaOutcome> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
 
         if (!currentMeta) {
-            throw new Error("Database meta not found");
+            return S_Database_PutSchema_VersionConflict;
         }
 
         const editRecord: DatabaseEditRecord = {

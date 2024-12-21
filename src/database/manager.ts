@@ -4,14 +4,14 @@
  * @description Manager
  */
 
-import { DatabaseEditRecord, IImbricateDatabase, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, validateImbricateSchema } from "@imbricate/core";
+import { DatabaseEditRecord, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseManagerCreateDatabaseOutcome, ImbricateDatabaseManagerFullFeatureBase, ImbricateDatabaseManagerGetDatabaseOutcome, ImbricateDatabaseManagerListDatabasesOutcome, ImbricateDatabaseManagerRemoveDatabaseOutcome, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, S_DatabaseManager_CreateDatabase_IdentifierDuplicated, S_DatabaseManager_GetDatabase_NotFound, S_DatabaseManager_RemoveDatabase_NotFound, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
 import { deleteDatabaseMeta, getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabase } from "./database";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 
-export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseManager {
+export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManagerFullFeatureBase implements IImbricateDatabaseManager {
 
     public static create(
         author: ImbricateAuthor,
@@ -32,30 +32,34 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         basePath: string,
     ) {
 
+        super();
+
         this._author = author;
         this._basePath = basePath;
     }
 
-    public async listDatabases(): Promise<IImbricateDatabase[]> {
+    public async listDatabases(): Promise<ImbricateDatabaseManagerListDatabasesOutcome> {
 
         const databaseMetaList: ImbricateFileSystemDatabaseMeta[] = await getDatabaseMetaList(
             this._basePath,
         );
 
-        return databaseMetaList.map((item: ImbricateFileSystemDatabaseMeta) => {
+        return {
+            databases: databaseMetaList.map((item: ImbricateFileSystemDatabaseMeta) => {
 
-            return ImbricateFileSystemDatabase.create(
-                this._basePath,
-                item.uniqueIdentifier,
-                item.databaseName,
-                item.databaseVersion,
-                item.schema,
-                item.annotations,
-            );
-        });
+                return ImbricateFileSystemDatabase.create(
+                    this._basePath,
+                    item.uniqueIdentifier,
+                    item.databaseName,
+                    item.databaseVersion,
+                    item.schema,
+                    item.annotations,
+                );
+            }),
+        };
     }
 
-    public async getDatabase(uniqueIdentifier: string): Promise<IImbricateDatabase | null> {
+    public async getDatabase(uniqueIdentifier: string): Promise<ImbricateDatabaseManagerGetDatabaseOutcome> {
 
         const databaseMeta: ImbricateFileSystemDatabaseMeta | null = await getDatabaseMeta(
             this._basePath,
@@ -63,27 +67,34 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         );
 
         if (!databaseMeta) {
-            return null;
+            return S_DatabaseManager_GetDatabase_NotFound;
         }
 
-        return ImbricateFileSystemDatabase.create(
-            this._basePath,
-            databaseMeta.uniqueIdentifier,
-            databaseMeta.databaseName,
-            databaseMeta.databaseVersion,
-            databaseMeta.schema,
-            databaseMeta.annotations,
-        );
+        return {
+            database: ImbricateFileSystemDatabase.create(
+                this._basePath,
+                databaseMeta.uniqueIdentifier,
+                databaseMeta.databaseName,
+                databaseMeta.databaseVersion,
+                databaseMeta.schema,
+                databaseMeta.annotations,
+            ),
+        };
     }
 
     public async createDatabase(
         databaseName: string,
         schema: ImbricateDatabaseSchemaForCreation,
         _auditOptions?: ImbricateDatabaseAuditOptions,
-    ): Promise<IImbricateDatabase> {
+    ): Promise<ImbricateDatabaseManagerCreateDatabaseOutcome> {
 
-        const databases: IImbricateDatabase[] = await this.listDatabases();
-        for (const database of databases) {
+        const databases: ImbricateDatabaseManagerListDatabasesOutcome = await this.listDatabases();
+
+        if (typeof databases === "symbol") {
+            return S_DatabaseManager_CreateDatabase_IdentifierDuplicated;
+        }
+
+        for (const database of databases.databases) {
             if (database.databaseName === databaseName) {
                 throw new Error(`Database named '${databaseName}' already exists`);
             }
@@ -123,20 +134,22 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
             },
         );
 
-        return ImbricateFileSystemDatabase.create(
-            this._basePath,
-            identifier,
-            databaseName,
-            0,
-            fixedSchema,
-            {},
-        );
+        return {
+            database: ImbricateFileSystemDatabase.create(
+                this._basePath,
+                identifier,
+                databaseName,
+                0,
+                fixedSchema,
+                {},
+            ),
+        };
     }
 
     public async removeDatabase(
         uniqueIdentifier: string,
         _auditOptions?: ImbricateDatabaseAuditOptions,
-    ): Promise<void> {
+    ): Promise<ImbricateDatabaseManagerRemoveDatabaseOutcome> {
 
         const databaseMeta: ImbricateFileSystemDatabaseMeta | null = await getDatabaseMeta(
             this._basePath,
@@ -144,12 +157,16 @@ export class ImbricateFileSystemDatabaseManager implements IImbricateDatabaseMan
         );
 
         if (!databaseMeta) {
-            throw new Error("Database not found");
+            return S_DatabaseManager_RemoveDatabase_NotFound;
         }
 
         await deleteDatabaseMeta(
             this._basePath,
             uniqueIdentifier,
         );
+
+        return {
+            success: true,
+        };
     }
 }

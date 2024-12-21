@@ -4,13 +4,13 @@
  * @description Origin
  */
 
-import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, ImbricateSearchResult } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateOrigin, ImbricateOriginExcludeStaticBase, ImbricateOriginSearchOutcome } from "@imbricate/core";
 import { ImbricateFileSystemDatabaseManager } from "../database/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
 import { performSearch } from "./search";
 
-export class ImbricateFileSystemOrigin implements IImbricateOrigin {
+export class ImbricateFileSystemOrigin extends ImbricateOriginExcludeStaticBase implements IImbricateOrigin {
 
     public static create(
         payloads: Record<string, any>,
@@ -24,6 +24,8 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
     private constructor(
         payloads: Record<string, any>,
     ) {
+
+        super();
 
         this.payloads = payloads;
     }
@@ -50,20 +52,19 @@ export class ImbricateFileSystemOrigin implements IImbricateOrigin {
         );
     }
 
-    public getStaticManager(): IImbricateStaticManager {
-
-        throw new Error("Method not implemented.");
-    }
-
     public async search(
         keyword: string,
-    ): Promise<ImbricateSearchResult> {
+    ): Promise<ImbricateOriginSearchOutcome> {
 
-        return performSearch(
+        const searchResult = await performSearch(
             keyword,
             this.uniqueIdentifier,
             this.getDatabaseManager(),
             this.getTextManager(),
         );
+
+        return {
+            items: searchResult,
+        };
     }
 }
