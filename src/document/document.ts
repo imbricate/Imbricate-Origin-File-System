@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAuditOptions, validateImbricateProperties } from "@imbricate/core";
+import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_DOCUMENT_FEATURE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAuditOptions, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
