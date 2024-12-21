@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAuditOptions, ImbricateDatabaseFullFeatureBase, ImbricateDatabasePutSchemaOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_PutSchema_VersionConflict, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -74,7 +74,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
 
         if (!currentMeta) {
-            return S_Database_PutSchema_VersionConflict;
+            return S_Database_PutSchema_Unknown;
         }
 
         const editRecord: DatabaseEditRecord = {
@@ -100,7 +100,9 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         this.schema = schema;
         await putDatabaseMeta(this._basePath, newMeta);
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async putAnnotation(
@@ -108,12 +110,12 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         identifier: string,
         value: DatabaseAnnotationValue,
         auditOptions?: ImbricateDatabaseAuditOptions,
-    ): Promise<DatabaseEditRecord[]> {
+    ): Promise<ImbricateDatabasePutAnnotationOutcome> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
 
         if (!currentMeta) {
-            throw new Error("Database meta not found");
+            return S_Database_PutAnnotation_Unknown;
         }
 
         const annotationKey: string = `${namespace}/${identifier}`;
@@ -150,14 +152,16 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async deleteAnnotation(
         namespace: string,
         identifier: string,
         auditOptions?: ImbricateDatabaseAuditOptions,
-    ): Promise<DatabaseEditRecord[]> {
+    ): Promise<ImbricateDatabaseDeleteAnnotationOutcome> {
 
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
 
@@ -199,13 +203,15 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         this.annotations = newAnnotations;
         await putDatabaseMeta(this._basePath, newMeta);
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async createDocument(
         properties: DocumentProperties,
         auditOptions?: ImbricateDatabaseAuditOptions,
-    ): Promise<IImbricateDocument> {
+    ): Promise<ImbricateDatabaseCreateDocumentOutcome> {
 
         const validationResult: string | null = validateImbricateProperties(
             properties,
@@ -229,12 +235,14 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
                 auditOptions?.author,
             );
 
-        return document;
+        return {
+            document,
+        };
     }
 
     public async getDocument(
         uniqueIdentifier: string,
-    ): Promise<IImbricateDocument | null> {
+    ): Promise<ImbricateDatabaseGetDocumentOutcome> {
 
         const documentInstance: ImbricateFileSystemDocumentInstance | null =
             await getDocumentByUniqueIdentifier(
@@ -244,7 +252,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
             );
 
         if (!documentInstance) {
-            return null;
+            return S_Database_GetDocument_NotFound;
         }
 
         const document: IImbricateDocument = ImbricateFileSystemDocument.fromInstance(
@@ -254,12 +262,14 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
             documentInstance,
         );
 
-        return document;
+        return {
+            document,
+        };
     }
 
     public async countDocuments(
         query: ImbricateDocumentQuery,
-    ): Promise<number> {
+    ): Promise<ImbricateDatabaseCountDocumentsOutcome> {
 
         const documents: IImbricateDocument[] = await queryDocuments(
             this._basePath,
@@ -268,12 +278,14 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
             query,
         );
 
-        return documents.length;
+        return {
+            count: documents.length,
+        };
     }
 
     public async queryDocuments(
         query: ImbricateDocumentQuery,
-    ): Promise<IImbricateDocument[]> {
+    ): Promise<ImbricateDatabaseQueryDocumentsOutcome> {
 
         const queryValidationResult: string | null = validateImbricateDocumentQuery(
             query,
@@ -283,23 +295,27 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
             throw new Error(`Query validation failed, ${queryValidationResult}`);
         }
 
-        return await queryDocuments(
+        const documents: IImbricateDocument[] = await queryDocuments(
             this._basePath,
             this.uniqueIdentifier,
             this.schema,
             query,
         );
+
+        return {
+            documents,
+        };
     }
 
     public async removeDocument(
         uniqueIdentifier: string,
         _auditOptions?: ImbricateDocumentAuditOptions,
-    ): Promise<void> {
+    ): Promise<ImbricateDatabaseRemoveDocumentOutcome> {
 
-        const document: IImbricateDocument | null = await this.getDocument(uniqueIdentifier);
+        const document: ImbricateDatabaseGetDocumentOutcome = await this.getDocument(uniqueIdentifier);
 
-        if (!document) {
-            return;
+        if (typeof document === "symbol") {
+            return S_Database_RemoveDocument_NotFound;
         }
 
         await deleteDocument(
@@ -307,5 +323,9 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
             this.uniqueIdentifier,
             uniqueIdentifier,
         );
+
+        return {
+            success: true,
+        };
     }
 }
