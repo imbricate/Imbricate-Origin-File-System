@@ -111,8 +111,8 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
         const initialEditRecords: DatabaseEditRecord[] = [{
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
-            beforeVersion: -1,
-            afterVersion: 0,
+            beforeVersion: "-1",
+            afterVersion: "0",
             author: this._author,
             operations: [
                 {
@@ -127,7 +127,7 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
             {
                 uniqueIdentifier: identifier,
                 databaseName,
-                databaseVersion: 0,
+                databaseVersion: "0",
                 schema: fixedSchema,
                 editRecords: initialEditRecords,
                 annotations: {},
@@ -139,7 +139,7 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
                 this._basePath,
                 identifier,
                 databaseName,
-                0,
+                "0",
                 fixedSchema,
                 {},
             ),

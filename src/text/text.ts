@@ -4,10 +4,10 @@
  * @description Text
  */
 
-import { IImbricateText } from "@imbricate/core";
+import { IImbricateText, ImbricateTextContentOnlyBase, ImbricateTextGetContentOutcome } from "@imbricate/core";
 import { putText } from "./action";
 
-export class ImbricateFileSystemText implements IImbricateText {
+export class ImbricateFileSystemText extends ImbricateTextContentOnlyBase implements IImbricateText {
 
     public static async createAndSave(
         basePath: string,
@@ -43,6 +43,8 @@ export class ImbricateFileSystemText implements IImbricateText {
         content: string,
     ) {
 
+        super();
+
         this._textUniqueIdentifier = textUniqueIdentifier;
 
         this._content = content;
@@ -52,8 +54,10 @@ export class ImbricateFileSystemText implements IImbricateText {
         return this._textUniqueIdentifier;
     }
 
-    public async getContent(): Promise<string> {
+    public async getContent(): Promise<ImbricateTextGetContentOutcome> {
 
-        return this._content;
+        return {
+            content: this._content,
+        };
     }
 }

@@ -4,12 +4,12 @@
  * @description Manager
  */
 
-import { IImbricateText, IImbricateTextManager, ImbricateTextAuditOptions } from "@imbricate/core";
+import { IImbricateText, IImbricateTextManager, ImbricateTextAuditOptions, ImbricateTextManagerCreateTextOutcome, ImbricateTextManagerFullFeatureBase, ImbricateTextManagerGetTextOutcome, S_TextManager_GetText_NotFound } from "@imbricate/core";
 import { digestString } from "../util/digest";
 import { getTextByUniqueIdentifier } from "./action";
 import { ImbricateFileSystemText } from "./text";
 
-export class ImbricateFileSystemTextManager implements IImbricateTextManager {
+export class ImbricateFileSystemTextManager extends ImbricateTextManagerFullFeatureBase implements IImbricateTextManager {
 
     public static create(
         basePath: string,
@@ -26,12 +26,14 @@ export class ImbricateFileSystemTextManager implements IImbricateTextManager {
         basePath: string,
     ) {
 
+        super();
+
         this._basePath = basePath;
     }
 
     public async getText(
         uniqueIdentifier: string,
-    ): Promise<IImbricateText | null> {
+    ): Promise<ImbricateTextManagerGetTextOutcome> {
 
         const textContent: string | null = await getTextByUniqueIdentifier(
             this._basePath,
@@ -39,7 +41,7 @@ export class ImbricateFileSystemTextManager implements IImbricateTextManager {
         );
 
         if (!textContent) {
-            return null;
+            return S_TextManager_GetText_NotFound;
         }
 
         const text: IImbricateText = ImbricateFileSystemText.createFromContent(
@@ -47,13 +49,15 @@ export class ImbricateFileSystemTextManager implements IImbricateTextManager {
             textContent,
         );
 
-        return text;
+        return {
+            text,
+        };
     }
 
     public async createText(
         content: string,
         _auditOptions?: ImbricateTextAuditOptions,
-    ): Promise<IImbricateText> {
+    ): Promise<ImbricateTextManagerCreateTextOutcome> {
 
         const textUniqueIdentifier: string = digestString(content);
 
@@ -63,6 +67,8 @@ export class ImbricateFileSystemTextManager implements IImbricateTextManager {
             content,
         );
 
-        return text;
+        return {
+            text,
+        };
     }
 }

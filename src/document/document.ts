@@ -4,12 +4,12 @@
  * @description Document
  */
 
-import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_DOCUMENT_FEATURE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAuditOptions, validateImbricateProperties } from "@imbricate/core";
+import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
 
-export class ImbricateFileSystemDocument implements IImbricateDocument {
+export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBase implements IImbricateDocument {
 
     public static async fromScratchAndSave(
         schema: ImbricateDatabaseSchema,
@@ -38,8 +38,8 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const initialEditRecords: DocumentEditRecord[] = [{
             uniqueIdentifier: UUIDVersion1.generateString(),
             editAt: new Date(),
-            beforeVersion: -1,
-            afterVersion: 0,
+            beforeVersion: "-1",
+            afterVersion: "0",
             author,
             operations,
         }];
@@ -47,7 +47,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         const instance: ImbricateFileSystemDocumentInstance = {
 
             uniqueIdentifier: documentUniqueIdentifier,
-            documentVersion: 0,
+            documentVersion: "0",
             properties,
             editRecords: initialEditRecords,
             annotations: {},
@@ -60,7 +60,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             basePath,
             databaseUniqueIdentifier,
             documentUniqueIdentifier,
-            0,
+            "0",
             properties,
             initialEditRecords,
             {},
@@ -92,7 +92,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
     private readonly _databaseUniqueIdentifier: string;
     private readonly _documentUniqueIdentifier: string;
 
-    private _documentVersion: number;
+    private _documentVersion: string;
 
     private _properties: DocumentProperties;
     private _editRecords: DocumentEditRecord[];
@@ -103,11 +103,13 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
-        documentVersion: number,
+        documentVersion: string,
         properties: DocumentProperties,
         editRecords: DocumentEditRecord[],
         annotations: DocumentAnnotations,
     ) {
+
+        super();
 
         this._schema = schema;
         this._basePath = basePath;
@@ -126,7 +128,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         return this._documentUniqueIdentifier;
     }
 
-    public get documentVersion(): number {
+    public get documentVersion(): string {
         return this._documentVersion;
     }
 
@@ -142,7 +144,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         key: DocumentPropertyKey,
         value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE>,
         auditOptions?: ImbricateDocumentAuditOptions,
-    ): Promise<DocumentEditRecord[]> {
+    ): Promise<ImbricateDocumentPutPropertyOutcome> {
 
         const properties = {
             ...this._properties,
@@ -201,13 +203,15 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             updatedDocument,
         );
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async putProperties(
         properties: DocumentProperties,
         auditOptions?: ImbricateDocumentAuditOptions,
-    ): Promise<DocumentEditRecord[]> {
+    ): Promise<ImbricateDocumentPutPropertyOutcome> {
 
         const currentDocument = await getDocumentByUniqueIdentifier(
             this._basePath,
@@ -267,7 +271,9 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
             updatedDocument,
         );
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async putAnnotation(
@@ -275,7 +281,7 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         identifier: string,
         value: DocumentAnnotationValue,
         auditOptions?: ImbricateDocumentAuditOptions,
-    ): Promise<DocumentEditRecord[]> {
+    ): Promise<ImbricateDocumentPutAnnotationOutcome> {
 
         const currentDocument = await getDocumentByUniqueIdentifier(
             this._basePath,
@@ -319,20 +325,23 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         this._documentVersion += 1;
         this._annotations = newAnnotations;
+
         await putDocument(
             this._basePath,
             this._databaseUniqueIdentifier,
             updatedDocument,
         );
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async deleteAnnotation(
         namespace: string,
         identifier: string,
         auditOptions?: ImbricateDocumentAuditOptions,
-    ): Promise<DocumentEditRecord[]> {
+    ): Promise<ImbricateDocumentDeleteAnnotationOutcome> {
 
         const currentDocument = await getDocumentByUniqueIdentifier(
             this._basePath,
@@ -376,18 +385,21 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
 
         this._documentVersion += 1;
         this._annotations = newAnnotations;
+
         await putDocument(
             this._basePath,
             this._databaseUniqueIdentifier,
             updatedDocument,
         );
 
-        return [editRecord];
+        return {
+            editRecords: [editRecord],
+        };
     }
 
     public async addEditRecords(
         records: DocumentEditRecord[],
-    ): Promise<void> {
+    ): Promise<ImbricateDocumentAddEditRecordsOutcome> {
 
         const currentDocument = await getDocumentByUniqueIdentifier(
             this._basePath,
@@ -407,16 +419,23 @@ export class ImbricateFileSystemDocument implements IImbricateDocument {
         };
 
         this._editRecords = newEditRecords;
+
         await putDocument(
             this._basePath,
             this._databaseUniqueIdentifier,
             updatedDocument,
         );
+
+        return {
+            editRecords: newEditRecords,
+        };
     }
 
     public async getEditRecords(
-    ): Promise<DocumentEditRecord[]> {
+    ): Promise<ImbricateDocumentGetEditRecordsOutcome> {
 
-        return this._editRecords;
+        return {
+            editRecords: this._editRecords,
+        };
     }
 }

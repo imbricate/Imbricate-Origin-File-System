@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAddEditRecordsOutcome, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabaseGetEditRecordsOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -54,6 +54,8 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         schema: ImbricateDatabaseSchema,
         annotations: DatabaseAnnotations,
     ) {
+
+        super();
 
         this._basePath = basePath;
 
@@ -327,5 +329,17 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         return {
             success: true,
         };
+    }
+
+    public async addEditRecords(
+        _records: DatabaseEditRecord[],
+    ): Promise<ImbricateDatabaseAddEditRecordsOutcome> {
+
+        throw new Error("Method not implemented.");
+    }
+
+    public async getEditRecords(): Promise<ImbricateDatabaseGetEditRecordsOutcome> {
+
+        throw new Error("Method not implemented.");
     }
 }

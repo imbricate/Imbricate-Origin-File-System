@@ -10,7 +10,7 @@ export type ImbricateFileSystemDatabaseMeta = {
 
     readonly uniqueIdentifier: string;
     readonly databaseName: string;
-    readonly databaseVersion: number;
+    readonly databaseVersion: string;
 
     readonly schema: ImbricateDatabaseSchema;
     readonly editRecords: DatabaseEditRecord[];

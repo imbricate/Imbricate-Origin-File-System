@@ -9,7 +9,7 @@ import { DocumentAnnotations, DocumentEditRecord, DocumentProperties } from "@im
 export type ImbricateFileSystemDocumentInstance = {
 
     readonly uniqueIdentifier: string;
-    readonly documentVersion: number;
+    readonly documentVersion: string;
 
     readonly properties: DocumentProperties;
     readonly editRecords: DocumentEditRecord[];
@@ -24,7 +24,7 @@ export const createImbricateFileSystemDocumentInstance = (
     return {
 
         uniqueIdentifier,
-        documentVersion: 0,
+        documentVersion: "0",
         properties,
         editRecords: [],
         annotations: {},
