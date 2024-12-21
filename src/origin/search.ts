@@ -4,24 +4,34 @@
  * @description Search
  */
 
-import { IImbricateDatabase, IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateSearchItem, ImbricateSearchResult, findPrimaryProperty } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateDatabaseManagerListDatabasesOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateOriginSearchOutcome, ImbricateSearchItem, ImbricateTextGetContentOutcome, ImbricateTextManagerGetTextOutcome, S_Origin_Search_Unknown, findPrimaryProperty } from "@imbricate/core";
 
 export const performSearch = async (
     keyword: string,
     originUniqueIdentifier: string,
     databaseManager: IImbricateDatabaseManager,
     textManager: IImbricateTextManager,
-): Promise<ImbricateSearchResult> => {
+): Promise<ImbricateOriginSearchOutcome> => {
 
     const keywordRegex: RegExp = new RegExp(keyword, "i");
 
-    const databases: IImbricateDatabase[] = await databaseManager.listDatabases();
+    const databases: ImbricateDatabaseManagerListDatabasesOutcome = await databaseManager.listDatabases();
+
+    if (typeof databases === "symbol") {
+        return S_Origin_Search_Unknown;
+    }
+
     const items: ImbricateSearchItem[] = [];
 
-    for (const database of databases) {
+    for (const database of databases.databases) {
 
-        const documents = await database.queryDocuments({});
-        for (const document of documents) {
+        const documents: ImbricateDatabaseQueryDocumentsOutcome = await database.queryDocuments({});
+
+        if (typeof documents === "symbol") {
+            continue;
+        }
+
+        for (const document of documents.documents) {
 
             const propertyKeys: string[] = Object.keys(document.properties);
             properties: for (const propertyKey of propertyKeys) {
@@ -32,19 +42,19 @@ export const performSearch = async (
 
                     if (typeof property.value === "string") {
 
-                        const text = await textManager.getText(property.value);
+                        const text: ImbricateTextManagerGetTextOutcome = await textManager.getText(property.value);
 
-                        if (!text) {
+                        if (typeof text === "symbol") {
                             continue properties;
                         }
 
-                        const textContent = await text.getContent();
+                        const textContent: ImbricateTextGetContentOutcome = await text.text.getContent();
 
-                        if (!textContent) {
+                        if (typeof textContent === "symbol") {
                             continue properties;
                         }
 
-                        const lines = textContent.split("\n");
+                        const lines = textContent.content.split("\n");
 
                         for (let i = 0; i < lines.length; i++) {
 

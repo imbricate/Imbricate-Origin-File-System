@@ -56,15 +56,13 @@ export class ImbricateFileSystemOrigin extends ImbricateOriginExcludeStaticBase 
         keyword: string,
     ): Promise<ImbricateOriginSearchOutcome> {
 
-        const searchResult = await performSearch(
+        const searchResult: ImbricateOriginSearchOutcome = await performSearch(
             keyword,
             this.uniqueIdentifier,
             this.getDatabaseManager(),
             this.getTextManager(),
         );
 
-        return {
-            items: searchResult,
-        };
+        return searchResult;
     }
 }
