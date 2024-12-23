@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, validateImbricateProperties } from "@imbricate/core";
+import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -158,7 +158,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (!currentDocument) {
-            throw new Error("Document not found");
+            return S_Document_PutProperty_Unknown;
         }
 
         const validationResult: string | null = validateImbricateProperties(
