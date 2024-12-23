@@ -4,7 +4,7 @@
  * @description Document
  */
 
-import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
+import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, S_Document_AddEditRecords_Unknown, S_Document_DeleteAnnotation_Unknown, S_Document_PutAnnotation_Unknown, S_Document_PutProperty_InvalidValue, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance } from "./definition";
@@ -168,7 +168,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (typeof validationResult === "string") {
-            throw new Error(`Properties validation failed, ${validationResult}`);
+            return S_Document_PutProperty_InvalidValue;
         }
 
         const operations: Array<DocumentEditOperation<IMBRICATE_DOCUMENT_EDIT_TYPE>> = [];
@@ -220,7 +220,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (!currentDocument) {
-            throw new Error("Document not found");
+            return S_Document_PutProperty_Unknown;
         }
 
         const validationResult: string | null = validateImbricateProperties(
@@ -230,7 +230,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (typeof validationResult === "string") {
-            throw new Error(`Properties validation failed, ${validationResult}`);
+            return S_Document_PutProperty_InvalidValue;
         }
 
         const operations: Array<DocumentEditOperation<IMBRICATE_DOCUMENT_EDIT_TYPE>> = [];
@@ -290,7 +290,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (!currentDocument) {
-            throw new Error("Document not found");
+            return S_Document_PutAnnotation_Unknown;
         }
 
         const annotationKey: string = `${namespace}/${identifier}`;
@@ -350,7 +350,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (!currentDocument) {
-            throw new Error("Document not found");
+            return S_Document_DeleteAnnotation_Unknown;
         }
 
         const annotationKey: string = `${namespace}/${identifier}`;
@@ -408,7 +408,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         );
 
         if (!currentDocument) {
-            throw new Error("Document not found");
+            return S_Document_AddEditRecords_Unknown;
         }
 
         const newEditRecords: DocumentEditRecord[] = this._editRecords.concat(records);

@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { DatabaseEditRecord, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseManagerCreateDatabaseOutcome, ImbricateDatabaseManagerFullFeatureBase, ImbricateDatabaseManagerGetDatabaseOutcome, ImbricateDatabaseManagerListDatabasesOutcome, ImbricateDatabaseManagerRemoveDatabaseOutcome, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, S_DatabaseManager_CreateDatabase_IdentifierDuplicated, S_DatabaseManager_GetDatabase_NotFound, S_DatabaseManager_RemoveDatabase_NotFound, validateImbricateSchema } from "@imbricate/core";
+import { DatabaseEditRecord, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseManagerCreateDatabaseOutcome, ImbricateDatabaseManagerFullFeatureBase, ImbricateDatabaseManagerGetDatabaseOutcome, ImbricateDatabaseManagerListDatabasesOutcome, ImbricateDatabaseManagerRemoveDatabaseOutcome, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, S_DatabaseManager_CreateDatabase_DatabaseNameDuplicated, S_DatabaseManager_CreateDatabase_IdentifierDuplicated, S_DatabaseManager_CreateDatabase_InvalidSchema, S_DatabaseManager_GetDatabase_NotFound, S_DatabaseManager_RemoveDatabase_NotFound, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
 import { deleteDatabaseMeta, getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
@@ -96,7 +96,7 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
 
         for (const database of databases.databases) {
             if (database.databaseName === databaseName) {
-                throw new Error(`Database named '${databaseName}' already exists`);
+                return S_DatabaseManager_CreateDatabase_DatabaseNameDuplicated;
             }
         }
 
@@ -105,7 +105,7 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
 
         const validationResult: string | null = validateImbricateSchema(fixedSchema);
         if (typeof validationResult === "string") {
-            throw new Error(`Properties validation failed, ${validationResult}`);
+            return S_DatabaseManager_CreateDatabase_InvalidSchema;
         }
 
         const initialEditRecords: DatabaseEditRecord[] = [{

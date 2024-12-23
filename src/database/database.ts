@@ -4,7 +4,7 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAddEditRecordsOutcome, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabaseGetEditRecordsOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAddEditRecordsOutcome, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabaseGetEditRecordsOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_CreateDocument_InvalidProperties, S_Database_DeleteAnnotation_Unknown, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_QueryDocuments_InvalidQuery, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
@@ -168,7 +168,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         const currentMeta = await getDatabaseMeta(this._basePath, this.uniqueIdentifier);
 
         if (!currentMeta) {
-            throw new Error("Database meta not found");
+            return S_Database_DeleteAnnotation_Unknown;
         }
 
         const annotationKey: string = `${namespace}/${identifier}`;
@@ -222,7 +222,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         );
 
         if (typeof validationResult === "string") {
-            throw new Error(`Properties validation failed, ${validationResult}`);
+            return S_Database_CreateDocument_InvalidProperties;
         }
 
         const documentUniqueIdentifier: string = UUIDVersion1.generateString();
@@ -294,7 +294,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         );
 
         if (typeof queryValidationResult === "string") {
-            throw new Error(`Query validation failed, ${queryValidationResult}`);
+            return S_Database_QueryDocuments_InvalidQuery;
         }
 
         const documents: IImbricateDocument[] = await queryDocuments(
