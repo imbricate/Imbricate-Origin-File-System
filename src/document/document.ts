@@ -140,15 +140,14 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         return this._annotations;
     }
 
-    public async putProperty(
-        key: DocumentPropertyKey,
-        value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE>,
+    public async mergeProperties(
+        properties: DocumentProperties,
         auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<ImbricateDocumentPutPropertyOutcome> {
 
-        const properties = {
+        const mergedProperties = {
             ...this._properties,
-            [key]: value,
+            ...properties,
         };
 
         const currentDocument = await getDocumentByUniqueIdentifier(
@@ -162,7 +161,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         }
 
         const validationResult: string | null = validateImbricateProperties(
-            properties,
+            mergedProperties,
             this._schema,
             true,
         );
@@ -172,13 +171,19 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         }
 
         const operations: Array<DocumentEditOperation<IMBRICATE_DOCUMENT_EDIT_TYPE>> = [];
-        operations.push({
-            action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_PROPERTY,
-            value: {
-                key,
-                value,
-            },
-        });
+
+        for (const key of Object.keys(properties)) {
+
+            const value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE> = properties[key as DocumentPropertyKey];
+
+            operations.push({
+                action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_PROPERTY,
+                value: {
+                    key,
+                    value,
+                },
+            });
+        }
 
         const editRecord: DocumentEditRecord = {
             uniqueIdentifier: UUIDVersion1.generateString(),
@@ -190,11 +195,11 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         };
 
         this._documentVersion += 1;
-        this._properties = properties;
+        this._properties = mergedProperties;
 
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
             ...currentDocument,
-            properties,
+            properties: mergedProperties,
         };
 
         await putDocument(
@@ -208,7 +213,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         };
     }
 
-    public async putProperties(
+    public async replaceProperties(
         properties: DocumentProperties,
         auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<ImbricateDocumentPutPropertyOutcome> {
