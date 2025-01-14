@@ -1867,10 +1867,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@imbricate/core@npm:^3.17.0":
-  version: 3.17.0
-  resolution: "@imbricate/core@npm:3.17.0"
-  checksum: 10c0/f39327cc7d7bd5a34c613aff73ed8bd86a602eca21c3ce9bb67fecafea1857b4f8f5d506e9d4a66658a804e57fd49e4aab8b5afccffa85a26412337724e6a4e7
+"@imbricate/core@npm:^3.19.0":
+  version: 3.19.0
+  resolution: "@imbricate/core@npm:3.19.0"
+  dependencies:
+    "@sudoo/locale": "npm:^2.0.0"
+    "@sudoo/magic": "npm:^1.9.0"
+  checksum: 10c0/1e213a57ded6f979b1738f98ea915b3843d344b7b6b50755eecc1f0cf46968cf5d96b57dfd2ebdeb63503371c046029e325f02f5c26c8467d4dc89181e7a7ddf
   languageName: node
   linkType: hard
 
@@ -1881,8 +1884,8 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@babel/preset-env": "npm:^7.26.0"
     "@babel/preset-typescript": "npm:^7.26.0"
-    "@imbricate/core": "npm:^3.17.0"
-    "@imbricate/test-origin-jest": "npm:^3.7.0"
+    "@imbricate/core": "npm:^3.19.0"
+    "@imbricate/test-origin-jest": "npm:^3.8.0"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/uuid": "npm:^1.1.0"
@@ -1900,12 +1903,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@imbricate/test-origin-jest@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "@imbricate/test-origin-jest@npm:3.7.0"
+"@imbricate/test-origin-jest@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "@imbricate/test-origin-jest@npm:3.8.0"
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/1da89581b999173d835c4a7b682d7d0c356148cdf53a7b69960a08876e324b72219f6acc2b20495409feb23a70f488e22ca5bccff6ed8dd46be186bb76707a9d
+  checksum: 10c0/d5cb2db7b6ad3da082eb018ce9fba24c6ee5f71e8c74314cc28b1c936a0224da54e97fd791967539e4fe40736d0f8dc88dff3cc698f1bb9e50c519de5959b24a
   languageName: node
   linkType: hard
 
@@ -2327,6 +2330,20 @@ __metadata:
     "@sudoo/bark": "npm:^2.7.2"
     connor: "npm:^2.7.0"
   checksum: 10c0/c268c1abf09734af64ec51954367f4a7328297b980bc99c4d795c0d86f6ca6c82c9bd25bfeb178f37cfe2d39d3a3116c783ac14472c07d6aa6893796b4285d7c
+  languageName: node
+  linkType: hard
+
+"@sudoo/locale@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@sudoo/locale@npm:2.0.0"
+  checksum: 10c0/889d5e03c36f029b26d5267578191ead6e3da9b27955338af4e809358882c65b3518736b2c9850208fa44e76dc2a86c0ba1aadd7a60def1a6fc9f1bb6ad9199b
+  languageName: node
+  linkType: hard
+
+"@sudoo/magic@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@sudoo/magic@npm:1.9.0"
+  checksum: 10c0/8c596684ea28e5de28d73000f18ae085e091accd58001d987bcbd7b4ad9ce784545229d6be2d24d11fc6fa9a2598cc72f5e6263c0964969867d432b62088446d
   languageName: node
   linkType: hard
 
