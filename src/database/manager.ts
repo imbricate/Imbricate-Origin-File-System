@@ -4,7 +4,7 @@
  * @description Manager
  */
 
-import { DatabaseEditRecord, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseManagerCreateDatabaseOutcome, ImbricateDatabaseManagerFullFeatureBase, ImbricateDatabaseManagerGetDatabaseOutcome, ImbricateDatabaseManagerListDatabasesOutcome, ImbricateDatabaseManagerRemoveDatabaseOutcome, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, S_DatabaseManager_CreateDatabase_DatabaseNameDuplicated, S_DatabaseManager_CreateDatabase_IdentifierDuplicated, S_DatabaseManager_CreateDatabase_InvalidSchema, S_DatabaseManager_GetDatabase_NotFound, S_DatabaseManager_RemoveDatabase_NotFound, validateImbricateSchema } from "@imbricate/core";
+import { DatabaseEditRecord, IImbricateDatabaseManager, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateAuthor, ImbricateDatabaseAuditOptions, ImbricateDatabaseManagerCreateDatabaseOutcome, ImbricateDatabaseManagerFullFeatureBase, ImbricateDatabaseManagerGetDatabaseOutcome, ImbricateDatabaseManagerQueryDatabasesOutcome, ImbricateDatabaseManagerRemoveDatabaseOutcome, ImbricateDatabaseQuery, ImbricateDatabaseSchema, ImbricateDatabaseSchemaForCreation, S_DatabaseManager_CreateDatabase_DatabaseNameDuplicated, S_DatabaseManager_CreateDatabase_IdentifierDuplicated, S_DatabaseManager_CreateDatabase_InvalidSchema, S_DatabaseManager_GetDatabase_NotFound, S_DatabaseManager_RemoveDatabase_NotFound, validateImbricateSchema } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { fixDatabaseSchema } from "../util/fix-schema";
 import { deleteDatabaseMeta, getDatabaseMeta, getDatabaseMetaList, putDatabaseMeta } from "./action";
@@ -38,7 +38,9 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
         this._basePath = basePath;
     }
 
-    public async listDatabases(): Promise<ImbricateDatabaseManagerListDatabasesOutcome> {
+    public async queryDatabases(
+        _query: ImbricateDatabaseQuery,
+    ): Promise<ImbricateDatabaseManagerQueryDatabasesOutcome> {
 
         const databaseMetaList: ImbricateFileSystemDatabaseMeta[] = await getDatabaseMetaList(
             this._basePath,
@@ -56,6 +58,7 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
                     item.annotations,
                 );
             }),
+            count: databaseMetaList.length,
         };
     }
 
@@ -88,7 +91,7 @@ export class ImbricateFileSystemDatabaseManager extends ImbricateDatabaseManager
         _auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<ImbricateDatabaseManagerCreateDatabaseOutcome> {
 
-        const databases: ImbricateDatabaseManagerListDatabasesOutcome = await this.listDatabases();
+        const databases: ImbricateDatabaseManagerQueryDatabasesOutcome = await this.queryDatabases({});
 
         if (typeof databases === "symbol") {
             return S_DatabaseManager_CreateDatabase_IdentifierDuplicated;

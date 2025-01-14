@@ -4,7 +4,7 @@
  * @description Search
  */
 
-import { IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateDatabaseManagerListDatabasesOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateOriginSearchOutcome, ImbricateSearchItem, ImbricateTextGetContentOutcome, ImbricateTextManagerGetTextOutcome, S_Origin_Search_Unknown, findPrimaryProperty } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateDatabaseManagerQueryDatabasesOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateOriginSearchOutcome, ImbricateSearchItem, ImbricateTextGetContentOutcome, ImbricateTextManagerGetTextOutcome, S_Origin_Search_Unknown, findPrimaryProperty } from "@imbricate/core";
 
 export const performSearch = async (
     keyword: string,
@@ -15,7 +15,7 @@ export const performSearch = async (
 
     const keywordRegex: RegExp = new RegExp(keyword, "i");
 
-    const databases: ImbricateDatabaseManagerListDatabasesOutcome = await databaseManager.listDatabases();
+    const databases: ImbricateDatabaseManagerQueryDatabasesOutcome = await databaseManager.queryDatabases({});
 
     if (typeof databases === "symbol") {
         return S_Origin_Search_Unknown;

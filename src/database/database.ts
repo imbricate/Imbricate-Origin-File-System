@@ -306,6 +306,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
 
         return {
             documents,
+            count: documents.length,
         };
     }
 
