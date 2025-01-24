@@ -4,13 +4,14 @@
  * @description Database
  */
 
-import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, DocumentProperties, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, ImbricateDatabaseAddEditRecordsOutcome, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabaseGetEditRecordsOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, S_Database_CreateDocument_InvalidProperties, S_Database_DeleteAnnotation_Unknown, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_QueryDocuments_InvalidQuery, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
+import { DatabaseAnnotationValue, DatabaseAnnotations, DatabaseEditRecord, IImbricateDocument, IMBRICATE_DATABASE_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateDatabaseAddEditRecordsOutcome, ImbricateDatabaseAuditOptions, ImbricateDatabaseCountDocumentsOutcome, ImbricateDatabaseCreateDocumentOutcome, ImbricateDatabaseDeleteAnnotationOutcome, ImbricateDatabaseFullFeatureBase, ImbricateDatabaseGetDocumentOutcome, ImbricateDatabaseGetEditRecordsOutcome, ImbricateDatabasePutAnnotationOutcome, ImbricateDatabasePutSchemaOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDatabaseRemoveDocumentOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentQuery, ImbricatePropertiesDrafter, ImbricatePropertyGenerator, ImbricatePropertyRecord, S_Database_CreateDocument_InvalidProperties, S_Database_DeleteAnnotation_Unknown, S_Database_GetDocument_NotFound, S_Database_PutAnnotation_Unknown, S_Database_PutSchema_Unknown, S_Database_QueryDocuments_InvalidQuery, S_Database_RemoveDocument_NotFound, validateImbricateDocumentQuery, validateImbricateProperties } from "@imbricate/core";
 import { IImbricateDatabase } from "@imbricate/core/database/interface";
 import { ImbricateDatabaseSchema } from "@imbricate/core/database/schema";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { deleteDocument, getDocumentByUniqueIdentifier } from "../document/action";
 import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
+import { draftImbricateProperties } from "../property/draft";
 import { getDatabaseMeta, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
 import { queryDocuments } from "./query";
@@ -211,9 +212,11 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
     }
 
     public async createDocument(
-        properties: DocumentProperties,
+        propertiesDraft: ImbricatePropertiesDrafter,
         auditOptions?: ImbricateDatabaseAuditOptions,
     ): Promise<ImbricateDatabaseCreateDocumentOutcome> {
+
+        const properties: ImbricatePropertyRecord = draftImbricateProperties(propertiesDraft);
 
         const validationResult: string | null = validateImbricateProperties(
             properties,
@@ -227,13 +230,22 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
 
         const documentUniqueIdentifier: string = UUIDVersion1.generateString();
 
+        const drafter: ImbricatePropertiesDrafter = (
+            generator: ImbricatePropertyGenerator<IMBRICATE_PROPERTY_TYPE>,
+        ) => {
+
+            return Object.entries(properties).map(([key, value]) => {
+                return generator(key, value.propertyType, value.propertyValue);
+            });
+        };
+
         const document: IImbricateDocument = await ImbricateFileSystemDocument
             .fromScratchAndSave(
                 this.schema,
                 this._basePath,
                 this.uniqueIdentifier,
                 documentUniqueIdentifier,
-                properties,
+                drafter,
                 auditOptions?.author,
             );
 

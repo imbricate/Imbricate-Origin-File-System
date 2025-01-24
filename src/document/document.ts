@@ -4,10 +4,12 @@
  * @description Document
  */
 
-import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, DocumentProperties, DocumentPropertyKey, DocumentPropertyValue, IImbricateDocument, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, S_Document_AddEditRecords_Unknown, S_Document_DeleteAnnotation_Unknown, S_Document_PutAnnotation_Unknown, S_Document_PutProperty_InvalidValue, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
+import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, IImbricateDocument, IImbricateProperty, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentGetPropertiesOutcome, ImbricateDocumentGetPropertyOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, ImbricatePropertiesDrafter, ImbricatePropertyKey, ImbricatePropertyRecord, S_Document_AddEditRecords_Unknown, S_Document_DeleteAnnotation_Unknown, S_Document_PutAnnotation_Unknown, S_Document_PutProperty_InvalidValue, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
+import { draftImbricateProperties } from "../property/draft";
+import { instanceRecordToPropertyRecord, propertyRecordToInstanceRecord } from "../property/parse";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
-import { ImbricateFileSystemDocumentInstance } from "./definition";
+import { ImbricateFileSystemDocumentInstance, createImbricateFileSystemDocumentInstance } from "./definition";
 
 export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBase implements IImbricateDocument {
 
@@ -16,21 +18,24 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         basePath: string,
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
-        properties: DocumentProperties,
+        propertiesDrafter: ImbricatePropertiesDrafter,
         author?: ImbricateAuthor,
     ): Promise<ImbricateFileSystemDocument> {
 
         const operations: Array<DocumentEditOperation<IMBRICATE_DOCUMENT_EDIT_TYPE>> = [];
 
+        const properties: ImbricatePropertyRecord = draftImbricateProperties(propertiesDrafter);
+
         for (const key of Object.keys(properties)) {
 
-            const value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE> = properties[key as DocumentPropertyKey];
+            const value: IImbricateProperty<IMBRICATE_PROPERTY_TYPE> = properties[key as ImbricatePropertyKey];
 
             operations.push({
                 action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_PROPERTY,
                 value: {
                     key,
-                    value,
+                    type: value.propertyType,
+                    value: value.propertyValue,
                 },
             });
         }
@@ -44,14 +49,11 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
             operations,
         }];
 
-        const instance: ImbricateFileSystemDocumentInstance = {
-
-            uniqueIdentifier: documentUniqueIdentifier,
-            documentVersion: "0",
+        const instance: ImbricateFileSystemDocumentInstance = createImbricateFileSystemDocumentInstance(
+            documentUniqueIdentifier,
             properties,
-            editRecords: initialEditRecords,
-            annotations: {},
-        };
+            initialEditRecords,
+        );
 
         await putDocument(basePath, databaseUniqueIdentifier, instance);
 
@@ -80,7 +82,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
             databaseUniqueIdentifier,
             instance.uniqueIdentifier,
             instance.documentVersion,
-            instance.properties,
+            instanceRecordToPropertyRecord(instance.properties),
             instance.editRecords,
             instance.annotations,
         );
@@ -94,7 +96,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
 
     private _documentVersion: string;
 
-    private _properties: DocumentProperties;
+    private _properties: ImbricatePropertyRecord;
     private _editRecords: DocumentEditRecord[];
     private _annotations: DocumentAnnotations;
 
@@ -104,7 +106,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         databaseUniqueIdentifier: string,
         documentUniqueIdentifier: string,
         documentVersion: string,
-        properties: DocumentProperties,
+        properties: ImbricatePropertyRecord,
         editRecords: DocumentEditRecord[],
         annotations: DocumentAnnotations,
     ) {
@@ -132,7 +134,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         return this._documentVersion;
     }
 
-    public get properties(): DocumentProperties {
+    public get properties(): ImbricatePropertyRecord {
         return this._properties;
     }
 
@@ -140,12 +142,32 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
         return this._annotations;
     }
 
+    public getProperty(
+        propertyKey: ImbricatePropertyKey,
+    ): ImbricateDocumentGetPropertyOutcome {
+
+        const property: IImbricateProperty<IMBRICATE_PROPERTY_TYPE> = this._properties[propertyKey];
+
+        return {
+            property,
+        };
+    }
+
+    public getProperties(): ImbricateDocumentGetPropertiesOutcome {
+
+        return {
+            properties: this._properties,
+        };
+    }
+
     public async mergeProperties(
-        properties: DocumentProperties,
+        propertiesDrafter: ImbricatePropertiesDrafter,
         auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<ImbricateDocumentPutPropertyOutcome> {
 
-        const mergedProperties = {
+        const properties = draftImbricateProperties(propertiesDrafter);
+
+        const mergedProperties: ImbricatePropertyRecord = {
             ...this._properties,
             ...properties,
         };
@@ -174,13 +196,14 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
 
         for (const key of Object.keys(properties)) {
 
-            const value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE> = properties[key as DocumentPropertyKey];
+            const value: IImbricateProperty<IMBRICATE_PROPERTY_TYPE> = properties[key as ImbricatePropertyKey];
 
             operations.push({
                 action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_PROPERTY,
                 value: {
                     key,
-                    value,
+                    type: value.propertyType,
+                    value: value.propertyValue,
                 },
             });
         }
@@ -199,7 +222,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
 
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
             ...currentDocument,
-            properties: mergedProperties,
+            properties: propertyRecordToInstanceRecord(mergedProperties),
         };
 
         await putDocument(
@@ -214,9 +237,11 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
     }
 
     public async replaceProperties(
-        properties: DocumentProperties,
+        propertiesDrafter: ImbricatePropertiesDrafter,
         auditOptions?: ImbricateDocumentAuditOptions,
     ): Promise<ImbricateDocumentPutPropertyOutcome> {
+
+        const properties: ImbricatePropertyRecord = draftImbricateProperties(propertiesDrafter);
 
         const currentDocument = await getDocumentByUniqueIdentifier(
             this._basePath,
@@ -242,13 +267,14 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
 
         for (const key of Object.keys(properties)) {
 
-            const value: DocumentPropertyValue<IMBRICATE_PROPERTY_TYPE> = properties[key as DocumentPropertyKey];
+            const value: IImbricateProperty<IMBRICATE_PROPERTY_TYPE> = properties[key as ImbricatePropertyKey];
 
             operations.push({
                 action: IMBRICATE_DOCUMENT_EDIT_TYPE.PUT_PROPERTY,
                 value: {
                     key,
-                    value,
+                    type: value.propertyType,
+                    value: value.propertyValue,
                 },
             });
         }
@@ -267,7 +293,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
 
         const updatedDocument: ImbricateFileSystemDocumentInstance = {
             ...currentDocument,
-            properties,
+            properties: propertyRecordToInstanceRecord(properties),
         };
 
         await putDocument(

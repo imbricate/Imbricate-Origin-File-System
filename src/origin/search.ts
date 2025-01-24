@@ -4,7 +4,7 @@
  * @description Search
  */
 
-import { IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateDatabaseManagerQueryDatabasesOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateOriginSearchOutcome, ImbricateSearchItem, ImbricateTextGetContentOutcome, ImbricateTextManagerGetTextOutcome, S_Origin_Search_Unknown, findPrimaryProperty } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateTextManager, IMBRICATE_PROPERTY_TYPE, IMBRICATE_SEARCH_TARGET_TYPE, ImbricateDatabaseManagerQueryDatabasesOutcome, ImbricateDatabaseQueryDocumentsOutcome, ImbricateDocumentGetPropertiesOutcome, ImbricateOriginSearchOutcome, ImbricateSearchItem, ImbricateTextGetContentOutcome, ImbricateTextManagerGetTextOutcome, S_Origin_Search_Unknown, findPrimaryProperty } from "@imbricate/core";
 
 export const performSearch = async (
     keyword: string,
@@ -33,16 +33,22 @@ export const performSearch = async (
 
         for (const document of documents.documents) {
 
-            const propertyKeys: string[] = Object.keys(document.properties);
+            const properties: ImbricateDocumentGetPropertiesOutcome = document.getProperties();
+
+            if (typeof properties === "symbol") {
+                continue;
+            }
+
+            const propertyKeys: string[] = Object.keys(properties);
             properties: for (const propertyKey of propertyKeys) {
 
-                const property = document.properties[propertyKey];
+                const property = properties.properties[propertyKey];
 
-                if (property.type === IMBRICATE_PROPERTY_TYPE.MARKDOWN) {
+                if (property.propertyType === IMBRICATE_PROPERTY_TYPE.MARKDOWN) {
 
-                    if (typeof property.value === "string") {
+                    if (typeof property.propertyValue === "string") {
 
-                        const text: ImbricateTextManagerGetTextOutcome = await textManager.getText(property.value);
+                        const text: ImbricateTextManagerGetTextOutcome = await textManager.getText(property.propertyValue);
 
                         if (typeof text === "symbol") {
                             continue properties;
@@ -62,9 +68,15 @@ export const performSearch = async (
 
                             if (keywordRegex.test(line)) {
 
+                                const properties: ImbricateDocumentGetPropertiesOutcome = document.getProperties();
+
+                                if (typeof properties === "symbol") {
+                                    continue properties;
+                                }
+
                                 const documentPrimaryKey = findPrimaryProperty(
                                     database.schema,
-                                    document.properties,
+                                    properties.properties,
                                 );
 
                                 items.push({
@@ -78,9 +90,9 @@ export const performSearch = async (
                                             lineNumber: i + 1,
                                         },
                                     },
-                                    primary: documentPrimaryKey ? String(documentPrimaryKey.value) : line,
+                                    primary: documentPrimaryKey ? String(documentPrimaryKey.propertyValue) : line,
                                     sourceDatabaseName: database.databaseName,
-                                    sourceDocumentPrimaryKey: documentPrimaryKey ? String(documentPrimaryKey.value) : undefined,
+                                    sourceDocumentPrimaryKey: documentPrimaryKey ? String(documentPrimaryKey.propertyValue) : undefined,
                                     secondaryPrevious: lines[i - 1] ? [lines[i - 1]] : [],
                                     secondary: line,
                                     secondaryNext: lines[i + 1] ? [lines[i + 1]] : [],
@@ -94,11 +106,11 @@ export const performSearch = async (
                     continue properties;
                 }
 
-                if (property.type === IMBRICATE_PROPERTY_TYPE.STRING) {
+                if (property.propertyType === IMBRICATE_PROPERTY_TYPE.STRING) {
 
-                    if (typeof property.value === "string") {
+                    if (typeof property.propertyValue === "string") {
 
-                        if (keywordRegex.test(property.value)) {
+                        if (keywordRegex.test(property.propertyValue)) {
 
                             items.push({
                                 target: {
@@ -109,8 +121,8 @@ export const performSearch = async (
                                         documentUniqueIdentifier: document.uniqueIdentifier,
                                     },
                                 },
-                                primary: property.value,
-                                secondary: property.value,
+                                primary: property.propertyValue,
+                                secondary: property.propertyValue,
                             });
                         }
                     }

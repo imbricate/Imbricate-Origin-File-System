@@ -55,7 +55,7 @@ export const queryDocuments = async (
                             continue documents;
                         }
 
-                        if (property.type !== filter.value) {
+                        if (property.propertyType !== filter.value) {
                             continue documents;
                         }
                     }
@@ -69,19 +69,19 @@ export const queryDocuments = async (
                             continue documents;
                         }
 
-                        if (Array.isArray(property.value) && Array.isArray(filter.value)) {
+                        if (Array.isArray(property.propertyValue) && Array.isArray(filter.value)) {
 
-                            if (property.value.length !== filter.value.length) {
+                            if (property.propertyValue.length !== filter.value.length) {
                                 continue documents;
                             }
 
                             for (const value of filter.value) {
 
-                                if (!property.value.includes(value)) {
+                                if (!property.propertyValue.includes(value)) {
                                     continue documents;
                                 }
                             }
-                        } else if (property.value !== filter.value) {
+                        } else if (property.propertyValue !== filter.value) {
                             continue documents;
                         }
                     }
