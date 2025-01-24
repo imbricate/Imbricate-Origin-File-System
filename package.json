@@ -43,7 +43,7 @@
     "@imbricate/core": "^3.19.0",
     "@imbricate/test-origin-jest": "^3.8.0",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.10.10",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "babel-jest": "^29.7.0",
