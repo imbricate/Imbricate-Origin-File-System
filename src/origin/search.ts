@@ -39,7 +39,7 @@ export const performSearch = async (
                 continue;
             }
 
-            const propertyKeys: string[] = Object.keys(properties);
+            const propertyKeys: string[] = Object.keys(properties.properties);
             properties: for (const propertyKey of propertyKeys) {
 
                 const property = properties.properties[propertyKey];
