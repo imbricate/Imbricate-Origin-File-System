@@ -4,13 +4,13 @@
  * @description Origin
  */
 
-import { IImbricateDatabaseManager, IImbricateOrigin, ImbricateOriginExcludeStaticBase, ImbricateOriginSearchOutcome } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricateOriginFullFeatureBase, ImbricateOriginSearchOutcome, S_Action_ActionNotFound, S_Common_QueryOriginActions_Stale } from "@imbricate/core";
 import { ImbricateFileSystemDatabaseManager } from "../database/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
 import { performSearch } from "./search";
 
-export class ImbricateFileSystemOrigin extends ImbricateOriginExcludeStaticBase implements IImbricateOrigin {
+export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureBase implements IImbricateOrigin {
 
     public static create(
         payloads: Record<string, any>,
@@ -52,6 +52,13 @@ export class ImbricateFileSystemOrigin extends ImbricateOriginExcludeStaticBase 
         );
     }
 
+    public getStaticManager(): IImbricateStaticManager {
+
+        return ImbricateFileSystemStaticManager.create(
+            this.payloads.basePath,
+        );
+    }
+
     public async search(
         keyword: string,
     ): Promise<ImbricateOriginSearchOutcome> {
@@ -64,5 +71,19 @@ export class ImbricateFileSystemOrigin extends ImbricateOriginExcludeStaticBase 
         );
 
         return searchResult;
+    }
+
+    public async queryOriginActions(
+        _query: ImbricateCommonQueryOriginActionsQuery,
+    ): Promise<ImbricateCommonQueryOriginActionsOutcome> {
+
+        return S_Common_QueryOriginActions_Stale;
+    }
+
+    public async executeOriginAction(
+        _input: ImbricateOriginActionInput,
+    ): Promise<ImbricateOriginActionOutcome> {
+
+        return S_Action_ActionNotFound;
     }
 }
