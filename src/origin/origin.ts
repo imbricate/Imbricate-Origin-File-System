@@ -6,6 +6,7 @@
 
 import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricateOriginFullFeatureBase, ImbricateOriginSearchOutcome, S_Action_ActionNotFound, S_Common_QueryOriginActions_Stale } from "@imbricate/core";
 import { ImbricateFileSystemDatabaseManager } from "../database/manager";
+import { ImbricateFileSystemStaticManager } from "../static/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
 import { performSearch } from "./search";
