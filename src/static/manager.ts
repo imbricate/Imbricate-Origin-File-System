@@ -4,9 +4,10 @@
  * @description Manager
  */
 
-import { IImbricateStatic, IImbricateStaticManager, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
+import { IImbricateStatic, IImbricateStaticManager, IMBRICATE_STATIC_MIME_TYPE, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
 import { digestBuffer } from "../util/digest";
 import { getStaticByUniqueIdentifier } from "./action";
+import { getMimeTypeFromExtension } from "./mimetype";
 import { ImbricateFileSystemStatic } from "./static";
 
 export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFullFeatureBase implements IImbricateStaticManager {
@@ -32,22 +33,26 @@ export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFull
     }
 
     public async getStatic(
-        uniqueIdentifier: string,
+        staticUniqueIdentifier: string,
     ): Promise<ImbricateStaticManagerGetStaticOutcome> {
 
         const content: Buffer | null = await getStaticByUniqueIdentifier(
             this._basePath,
-            uniqueIdentifier,
+            staticUniqueIdentifier,
         );
 
         if (!content) {
             return S_StaticManager_GetStatic_NotFound;
         }
 
-        const staticInstance: IImbricateStatic = ImbricateFileSystemStatic.createFromContent(
-            uniqueIdentifier,
-            content,
-        );
+        const mimeType: IMBRICATE_STATIC_MIME_TYPE = getMimeTypeFromExtension(staticUniqueIdentifier);
+
+        const staticInstance: IImbricateStatic =
+            ImbricateFileSystemStatic.createFromContent(
+                staticUniqueIdentifier,
+                content,
+                mimeType,
+            );
 
         return {
             static: staticInstance,
@@ -56,6 +61,7 @@ export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFull
 
     public async createInBase64(
         base64Content: string,
+        mimeType: IMBRICATE_STATIC_MIME_TYPE,
         _auditOptions?: ImbricateStaticAuditOptions,
     ): Promise<ImbricateStaticManagerCreateStaticOutcome> {
 
@@ -67,6 +73,7 @@ export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFull
             this._basePath,
             uniqueIdentifier,
             content,
+            mimeType,
         );
 
         return {
