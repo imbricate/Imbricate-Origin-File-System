@@ -21,6 +21,21 @@ export const joinTextFileRoute = (
     ];
 };
 
+export const joinStaticFileRoute = (
+    staticUniqueIdentifier: string,
+): string[] => {
+
+    const firstTwoHash: string = staticUniqueIdentifier.substring(0, 2);
+    const secondTwoHash: string = staticUniqueIdentifier.substring(2, 4);
+
+    return [
+        "static",
+        firstTwoHash,
+        secondTwoHash,
+        staticUniqueIdentifier,
+    ];
+};
+
 export const joinDocumentFileRoute = (
     databaseUniqueIdentifier: string,
     documentUniqueIdentifier?: string,

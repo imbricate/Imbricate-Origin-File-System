@@ -4,7 +4,7 @@
  * @description IO
  */
 
-import { attemptMarkDir, directoryFiles, readTextFile, removeFile, writeTextFile } from "@sudoo/io";
+import { attemptMarkDir, directoryFiles, readBufferFile, readTextFile, removeFile, writeBufferFile, writeTextFile } from "@sudoo/io";
 import * as Path from "path";
 
 export const listFileFromDirectory = async (
@@ -48,12 +48,43 @@ export const putFile = async (
     );
 };
 
+export const putBuffer = async (
+    basePath: string,
+    pathRoute: string[],
+    content: Buffer,
+): Promise<void> => {
+
+    await attemptMarkDir(basePath);
+    for (let i = 0; i < pathRoute.length - 1; i++) {
+
+        const currentPath: string = Path.join(basePath, ...pathRoute.slice(0, i + 1));
+
+        await attemptMarkDir(currentPath);
+    }
+
+    await writeBufferFile(
+        Path.join(basePath, ...pathRoute),
+        content,
+    );
+};
+
 export const readFile = async (
     basePath: string,
     pathRoute: string[],
 ): Promise<string> => {
 
     const content: string = await readTextFile(
+        Path.join(basePath, ...pathRoute),
+    );
+    return content;
+};
+
+export const readBuffer = async (
+    basePath: string,
+    pathRoute: string[],
+): Promise<Buffer> => {
+
+    const content: Buffer = await readBufferFile(
         Path.join(basePath, ...pathRoute),
     );
     return content;
