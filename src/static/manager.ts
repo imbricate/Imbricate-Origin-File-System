@@ -45,7 +45,8 @@ export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFull
             return S_StaticManager_GetStatic_NotFound;
         }
 
-        const mimeType: IMBRICATE_STATIC_MIME_TYPE = getMimeTypeFromExtension(staticUniqueIdentifier);
+        const extension: string = staticUniqueIdentifier.split(".").pop() || "";
+        const mimeType: IMBRICATE_STATIC_MIME_TYPE = getMimeTypeFromExtension(extension);
 
         const staticInstance: IImbricateStatic =
             ImbricateFileSystemStatic.createFromContent(
