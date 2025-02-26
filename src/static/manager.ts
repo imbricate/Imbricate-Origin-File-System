@@ -4,7 +4,9 @@
  * @description Manager
  */
 
-import { IImbricateStaticManager, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_CreateStatic_Unknown, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
+import { IImbricateStatic, IImbricateStaticManager, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_CreateStatic_Unknown, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
+import { getStaticByUniqueIdentifier } from "./action";
+import { ImbricateFileSystemStatic } from "./static";
 
 export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFullFeatureBase implements IImbricateStaticManager {
 
@@ -29,10 +31,26 @@ export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFull
     }
 
     public async getStatic(
-        _uniqueIdentifier: string,
+        uniqueIdentifier: string,
     ): Promise<ImbricateStaticManagerGetStaticOutcome> {
 
-        return S_StaticManager_GetStatic_NotFound;
+        const content: Buffer | null = await getStaticByUniqueIdentifier(
+            this._basePath,
+            uniqueIdentifier,
+        );
+
+        if (!content) {
+            return S_StaticManager_GetStatic_NotFound;
+        }
+
+        const staticInstance: IImbricateStatic = ImbricateFileSystemStatic.createFromContent(
+            uniqueIdentifier,
+            content,
+        );
+
+        return {
+            static: staticInstance,
+        };
     }
 
     public async createInBase64(
