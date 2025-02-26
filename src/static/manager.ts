@@ -4,7 +4,8 @@
  * @description Manager
  */
 
-import { IImbricateStatic, IImbricateStaticManager, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_CreateStatic_Unknown, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
+import { IImbricateStatic, IImbricateStaticManager, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
+import { digestBuffer } from "../util/digest";
 import { getStaticByUniqueIdentifier } from "./action";
 import { ImbricateFileSystemStatic } from "./static";
 
@@ -54,10 +55,22 @@ export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFull
     }
 
     public async createInBase64(
-        _base64Content: string,
+        base64Content: string,
         _auditOptions?: ImbricateStaticAuditOptions,
     ): Promise<ImbricateStaticManagerCreateStaticOutcome> {
 
-        return S_StaticManager_CreateStatic_Unknown;
+        const content: Buffer = Buffer.from(base64Content, "base64");
+
+        const uniqueIdentifier: string = digestBuffer(content);
+
+        const staticInstance: IImbricateStatic = await ImbricateFileSystemStatic.createAndSave(
+            this._basePath,
+            uniqueIdentifier,
+            content,
+        );
+
+        return {
+            static: staticInstance,
+        };
     }
 }
