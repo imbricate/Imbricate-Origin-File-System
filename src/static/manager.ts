@@ -4,13 +4,13 @@
  * @description Manager
  */
 
-import { IImbricateStatic, IImbricateStaticManager, IMBRICATE_STATIC_MIME_TYPE, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
+import { IImbricateStatic, IImbricateStaticManager, IMBRICATE_STATIC_MIME_TYPE, ImbricateStaticAuditOptions, ImbricateStaticManagerCreateStaticOutcome, ImbricateStaticManagerFullFeatureBlobBase, ImbricateStaticManagerGetStaticOutcome, S_StaticManager_GetStatic_NotFound } from "@imbricate/core";
 import { digestBuffer } from "../util/digest";
 import { getStaticByUniqueIdentifier } from "./action";
 import { getMimeTypeFromExtension } from "./mimetype";
 import { ImbricateFileSystemStatic } from "./static";
 
-export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFullFeatureBase implements IImbricateStaticManager {
+export class ImbricateFileSystemStaticManager extends ImbricateStaticManagerFullFeatureBlobBase implements IImbricateStaticManager {
 
     public static create(
         basePath: string,
