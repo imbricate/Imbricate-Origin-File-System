@@ -34,22 +34,24 @@
     "@sudoo/uuid": "^1.1.0"
   },
   "peerDependencies": {
-    "@imbricate/core": "*"
+    "@imbricate/core": "*",
+    "@sudoo/locale": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-typescript": "^7.26.0",
-    "@imbricate/core": "^3.26.0",
+    "@imbricate/core": "^3.27.0",
     "@imbricate/test-origin-jest": "^3.9.2",
+    "@sudoo/locale": "^2.0.0",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.8",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "babel-jest": "^29.7.0",
     "eslint": "^9.21.0",
     "jest": "^29.7.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
