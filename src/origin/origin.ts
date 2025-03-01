@@ -4,11 +4,13 @@
  * @description Origin
  */
 
-import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricateOriginFullFeatureBase, ImbricateOriginSearchOutcome, S_Action_ActionNotFound, S_Common_QueryOriginActions_Stale } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, IMBRICATE_ORIGIN_ACTION_RESULT_STATUS, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricateOriginFullFeatureBase, ImbricateOriginSearchOutcome, S_Action_ActionNotFound } from "@imbricate/core";
 import { ImbricateFileSystemDatabaseManager } from "../database/manager";
 import { ImbricateFileSystemStaticManager } from "../static/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
+import { originExecuteGetBasePathOriginAction } from "./origin-action/get-base-path";
+import { getOriginOriginAction } from "./origin-actions";
 import { performSearch } from "./search";
 
 export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureBase implements IImbricateOrigin {
@@ -78,12 +80,32 @@ export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureBase im
         _query: ImbricateCommonQueryOriginActionsQuery,
     ): Promise<ImbricateCommonQueryOriginActionsOutcome> {
 
-        return S_Common_QueryOriginActions_Stale;
+        const originActions = getOriginOriginAction();
+
+        return {
+            actions: originActions,
+            count: originActions.length,
+        };
     }
 
     public async executeOriginAction(
-        _input: ImbricateOriginActionInput,
+        input: ImbricateOriginActionInput,
     ): Promise<ImbricateOriginActionOutcome> {
+
+        switch (input.actionIdentifier) {
+
+            case "get-base-path": {
+
+                return {
+                    response: IMBRICATE_ORIGIN_ACTION_RESULT_STATUS.SUCCESS,
+                    outputs: [originExecuteGetBasePathOriginAction(
+                        input.parameters.basePath,
+                        input.parameters,
+                    )],
+                    references: [],
+                };
+            }
+        }
 
         return S_Action_ActionNotFound;
     }

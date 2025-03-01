@@ -7,10 +7,11 @@
 import { ImbricateOriginActionResultOutput } from "@imbricate/core";
 
 export const originExecuteGetBasePathOriginAction = (
-    parameters: Record<string, any>,
+    basePath: string,
+    _parameters: Record<string, any>,
 ): ImbricateOriginActionResultOutput => {
 
     return {
-        content: "Hello World",
+        content: basePath,
     };
 };
