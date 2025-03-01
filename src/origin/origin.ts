@@ -4,7 +4,7 @@
  * @description Origin
  */
 
-import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, IMBRICATE_ORIGIN_ACTION_RESULT_STATUS, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricateOriginFullFeatureBase, ImbricateOriginSearchOutcome, S_Action_ActionNotFound } from "@imbricate/core";
+import { IImbricateDatabaseManager, IImbricateOrigin, IImbricateStaticManager, IMBRICATE_ORIGIN_ACTION_RESULT_STATUS, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricateOriginFullFeatureWithActionBase, ImbricateOriginSearchOutcome, S_Action_ActionNotFound } from "@imbricate/core";
 import { ImbricateFileSystemDatabaseManager } from "../database/manager";
 import { ImbricateFileSystemStaticManager } from "../static/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
@@ -13,7 +13,7 @@ import { originExecuteGetBasePathOriginAction } from "./origin-action/get-base-p
 import { getOriginOriginAction } from "./origin-actions";
 import { performSearch } from "./search";
 
-export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureBase implements IImbricateOrigin {
+export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureWithActionBase implements IImbricateOrigin {
 
     public static create(
         payloads: Record<string, any>,
@@ -98,10 +98,12 @@ export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureBase im
 
                 return {
                     response: IMBRICATE_ORIGIN_ACTION_RESULT_STATUS.SUCCESS,
-                    outputs: [originExecuteGetBasePathOriginAction(
-                        input.parameters.basePath,
-                        input.parameters,
-                    )],
+                    outputs: [
+                        originExecuteGetBasePathOriginAction(
+                            this.payloads.basePath,
+                            input.parameters,
+                        ),
+                    ],
                     references: [],
                 };
             }
