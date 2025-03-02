@@ -9,7 +9,7 @@ import { ImbricateFileSystemDatabaseManager } from "../database/manager";
 import { ImbricateFileSystemStaticManager } from "../static/manager";
 import { ImbricateFileSystemTextManager } from "../text/manager";
 import { digestString } from "../util/digest";
-import { originExecuteGetBasePathOriginAction } from "./origin-action/get-base-path";
+import { GET_BASE_PATH_ORIGIN_ACTION_IDENTIFIER, originExecuteGetBasePathOriginAction } from "./origin-action/get-base-path";
 import { getOriginOriginAction } from "./origin-actions";
 import { performSearch } from "./search";
 
@@ -94,7 +94,7 @@ export class ImbricateFileSystemOrigin extends ImbricateOriginFullFeatureWithAct
 
         switch (input.actionIdentifier) {
 
-            case "get-base-path": {
+            case GET_BASE_PATH_ORIGIN_ACTION_IDENTIFIER: {
 
                 return {
                     response: IMBRICATE_ORIGIN_ACTION_RESULT_STATUS.SUCCESS,
