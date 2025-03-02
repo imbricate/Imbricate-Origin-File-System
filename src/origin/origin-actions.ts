@@ -11,7 +11,7 @@ export const getOriginOriginAction = (): ImbricateOriginAction[] => {
 
     return [
         {
-            actionIdentifier: "get-origin-action",
+            actionIdentifier: "get-base-path",
             defaultLocale: IETF_LOCALE.ENGLISH_UNITED_STATES,
             actionName: {
                 [IETF_LOCALE.CHINESE_SIMPLIFIED]: "获取基础路径",
