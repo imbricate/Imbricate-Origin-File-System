@@ -42,7 +42,7 @@
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-typescript": "^7.26.0",
     "@imbricate/core": "^3.27.1",
-    "@imbricate/test-origin-jest": "^3.9.2",
+    "@imbricate/test-origin-jest": "^3.10.0",
     "@sudoo/locale": "^2.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.8",
