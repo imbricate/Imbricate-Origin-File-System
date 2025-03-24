@@ -2029,7 +2029,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.26.9"
     "@babel/preset-typescript": "npm:^7.26.0"
     "@imbricate/core": "npm:^3.27.1"
-    "@imbricate/test-origin-jest": "npm:^3.10.0"
+    "@imbricate/test-origin-jest": "npm:^3.10.1"
     "@sudoo/asynchronous": "npm:^2.4.0"
     "@sudoo/io": "npm:^1.8.0"
     "@sudoo/locale": "npm:^2.0.0"
@@ -2049,12 +2049,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@imbricate/test-origin-jest@npm:^3.10.0":
-  version: 3.10.0
-  resolution: "@imbricate/test-origin-jest@npm:3.10.0"
+"@imbricate/test-origin-jest@npm:^3.10.1":
+  version: 3.10.1
+  resolution: "@imbricate/test-origin-jest@npm:3.10.1"
   peerDependencies:
     "@imbricate/core": "*"
-  checksum: 10c0/2f3e446cd92b8bd780ae0c95098181bbc3c6fb520fdf86ec54788ba6f56a54be2046e1df370de99c3e4670ce326e54b0dff3da2fd6dfd6f12d0fc40dc9e81885
+  checksum: 10c0/34ec3e7c507ac39d605c29e8641b3f82d46179d40e8b14e5e50373daffd170e02b2e89eeb4a300f73a7c58768b16ab554fa762fb6c94784acf4e6143c8077183
   languageName: node
   linkType: hard
 
