@@ -9,26 +9,30 @@ import { getDocumentList } from "../document/action";
 import { ImbricateFileSystemDocumentInstance } from "../document/definition";
 import { ImbricateFileSystemDocument } from "../document/document";
 
+export type QueryDocumentsResult = {
+
+    readonly documents: IImbricateDocument[];
+    readonly count: number;
+};
+
 export const queryDocuments = async (
     basePath: string,
     databaseUniqueIdentifier: string,
     schema: ImbricateDatabaseSchema,
     query: ImbricateDocumentQuery,
-): Promise<IImbricateDocument[]> => {
+): Promise<QueryDocumentsResult> => {
 
     const documents: ImbricateFileSystemDocumentInstance[] = await getDocumentList(
         basePath,
         databaseUniqueIdentifier,
     );
 
+    let count: number = 0;
+    let limitFilled: number = 0;
     const results: IImbricateDocument[] = [];
 
     let restSkips: number = query.skip ?? 0;
     documents: for (let i = 0; i < documents.length; i++) {
-
-        if (typeof query.limit === "number" && results.length >= query.limit) {
-            break documents;
-        }
 
         const documentInstance: ImbricateFileSystemDocumentInstance = documents[i];
         const document = ImbricateFileSystemDocument.fromInstance(
@@ -100,13 +104,22 @@ export const queryDocuments = async (
             }
         }
 
+
+        count++;
+
         if (restSkips > 0) {
             restSkips--;
             continue documents;
         }
 
-        results.push(document);
+        if (typeof query.limit !== "number" || limitFilled < query.limit) {
+            limitFilled++;
+            results.push(document);
+        }
     }
 
-    return results;
+    return {
+        documents: results,
+        count,
+    };
 };

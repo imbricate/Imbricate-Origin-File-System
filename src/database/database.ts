@@ -14,7 +14,7 @@ import { ImbricateFileSystemDocument } from "../document/document";
 import { draftImbricateProperties } from "../property/draft";
 import { getDatabaseMeta, putDatabaseMeta } from "./action";
 import { ImbricateFileSystemDatabaseMeta } from "./definition";
-import { queryDocuments } from "./query";
+import { QueryDocumentsResult, queryDocuments } from "./query";
 
 export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBase implements IImbricateDatabase {
 
@@ -285,7 +285,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         query: ImbricateDocumentQuery,
     ): Promise<ImbricateDatabaseCountDocumentsOutcome> {
 
-        const documents: IImbricateDocument[] = await queryDocuments(
+        const documents: QueryDocumentsResult = await queryDocuments(
             this._basePath,
             this.uniqueIdentifier,
             this.schema,
@@ -293,7 +293,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         );
 
         return {
-            count: documents.length,
+            count: documents.count,
         };
     }
 
@@ -309,7 +309,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
             return S_Database_QueryDocuments_InvalidQuery;
         }
 
-        const documents: IImbricateDocument[] = await queryDocuments(
+        const documents: QueryDocumentsResult = await queryDocuments(
             this._basePath,
             this.uniqueIdentifier,
             this.schema,
@@ -317,8 +317,8 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         );
 
         return {
-            documents,
-            count: documents.length,
+            documents: documents.documents,
+            count: documents.count,
         };
     }
 
