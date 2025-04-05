@@ -8,6 +8,7 @@
     "coverage": "jest --coverage",
     "lint": "eslint src",
     "build": "tsc --project typescript/tsconfig.build.json",
+    "lock-dedupe": "yarn dedupe --strategy highest",
     "license": "sdb license",
     "release": "yarn lint && yarn test && yarn license && yarn build",
     "publish-dry-run": "yarn release && sdb --only publish-dry-run",
