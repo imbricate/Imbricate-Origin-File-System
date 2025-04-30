@@ -235,7 +235,7 @@ export class ImbricateFileSystemDatabase extends ImbricateDatabaseFullFeatureBas
         ) => {
 
             return Object.entries(properties).map(([key, value]) => {
-                return generator(key, value.propertyType, value.propertyValue);
+                return generator(key, value.propertyType, value.propertyValue, value.propertyVariant);
             });
         };
 

@@ -4,7 +4,7 @@
  * @description Draft
  */
 
-import { IImbricateProperty, IMBRICATE_PROPERTY_TYPE, ImbricatePropertiesDrafter, ImbricatePropertyKey, ImbricatePropertyRecord, ImbricatePropertyValueObject } from "@imbricate/core";
+import { IImbricateProperty, IMBRICATE_PROPERTY_TYPE, ImbricatePropertiesDrafter, ImbricatePropertyKey, ImbricatePropertyRecord, ImbricatePropertyValueObject, ImbricatePropertyVariant } from "@imbricate/core";
 import { ImbricateFileSystemProperty } from "./property";
 
 export const draftImbricateProperties = (
@@ -15,12 +15,14 @@ export const draftImbricateProperties = (
         propertyKey: ImbricatePropertyKey,
         propertyType: IMBRICATE_PROPERTY_TYPE,
         propertyValue: ImbricatePropertyValueObject<IMBRICATE_PROPERTY_TYPE>,
+        propertyVariant: ImbricatePropertyVariant,
     ) => {
 
         return ImbricateFileSystemProperty.create(
             propertyKey,
             propertyType,
             propertyValue,
+            propertyVariant,
         );
     });
 

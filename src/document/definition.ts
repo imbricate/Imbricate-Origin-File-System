@@ -4,13 +4,14 @@
  * @description Definition
  */
 
-import { DocumentAnnotations, DocumentEditRecord, IMBRICATE_PROPERTY_TYPE, ImbricatePropertyKey, ImbricatePropertyRecord, ImbricatePropertyValueObject } from "@imbricate/core";
+import { DocumentAnnotations, DocumentEditRecord, IMBRICATE_PROPERTY_TYPE, ImbricatePropertyKey, ImbricatePropertyRecord, ImbricatePropertyValueObject, ImbricatePropertyVariant } from "@imbricate/core";
 import { propertyRecordToInstanceRecord } from "../property/parse";
 
 export type ImbricateFileSystemDocumentInstanceProperty = {
 
     readonly type: IMBRICATE_PROPERTY_TYPE;
     readonly value: ImbricatePropertyValueObject<IMBRICATE_PROPERTY_TYPE>;
+    readonly variant: ImbricatePropertyVariant;
 };
 
 export type ImbricateFileSystemDocumentInstancePropertyRecord = Record<ImbricatePropertyKey, ImbricateFileSystemDocumentInstanceProperty>;

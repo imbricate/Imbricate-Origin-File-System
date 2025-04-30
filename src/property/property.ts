@@ -4,7 +4,7 @@
  * @description Property
  */
 
-import { IImbricateProperty, IMBRICATE_PROPERTY_TYPE, ImbricatePropertyFullFeatureBase, ImbricatePropertyKey, ImbricatePropertyValueObject } from "@imbricate/core";
+import { IImbricateProperty, IMBRICATE_PROPERTY_TYPE, ImbricatePropertyFullFeatureBase, ImbricatePropertyKey, ImbricatePropertyValueObject, ImbricatePropertyVariant } from "@imbricate/core";
 
 export class ImbricateFileSystemProperty<T extends IMBRICATE_PROPERTY_TYPE> extends ImbricatePropertyFullFeatureBase<T> implements IImbricateProperty<T> {
 
@@ -12,23 +12,27 @@ export class ImbricateFileSystemProperty<T extends IMBRICATE_PROPERTY_TYPE> exte
         propertyKey: ImbricatePropertyKey,
         propertyType: T,
         propertyValue: ImbricatePropertyValueObject<T>,
+        propertyVariant: ImbricatePropertyVariant,
     ): ImbricateFileSystemProperty<T> {
 
         return new ImbricateFileSystemProperty(
             propertyKey,
             propertyType,
             propertyValue,
+            propertyVariant,
         );
     }
 
     private readonly _propertyKey: ImbricatePropertyKey;
     private readonly _propertyType: T;
     private readonly _propertyValue: ImbricatePropertyValueObject<T>;
+    private readonly _propertyVariant: ImbricatePropertyVariant;
 
     private constructor(
         propertyKey: ImbricatePropertyKey,
         propertyType: T,
         propertyValue: ImbricatePropertyValueObject<T>,
+        propertyVariant: ImbricatePropertyVariant,
     ) {
 
         super();
@@ -36,6 +40,7 @@ export class ImbricateFileSystemProperty<T extends IMBRICATE_PROPERTY_TYPE> exte
         this._propertyKey = propertyKey;
         this._propertyType = propertyType;
         this._propertyValue = propertyValue;
+        this._propertyVariant = propertyVariant;
     }
 
     public get propertyKey(): ImbricatePropertyKey {
@@ -48,5 +53,9 @@ export class ImbricateFileSystemProperty<T extends IMBRICATE_PROPERTY_TYPE> exte
 
     public get propertyValue(): ImbricatePropertyValueObject<T> {
         return this._propertyValue;
+    }
+
+    public get propertyVariant(): ImbricatePropertyVariant {
+        return this._propertyVariant;
     }
 }

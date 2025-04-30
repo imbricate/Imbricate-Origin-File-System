@@ -17,6 +17,7 @@ export const propertyRecordToInstanceRecord = (propertyRecord: ImbricateProperty
         property[key] = {
             type: value.propertyType,
             value: value.propertyValue,
+            variant: value.propertyVariant,
         };
 
         return property;
@@ -34,6 +35,7 @@ export const instanceRecordToPropertyRecord = (instanceRecord: ImbricateFileSyst
             key,
             value.type,
             value.value,
+            value.variant,
         );
 
         return property;

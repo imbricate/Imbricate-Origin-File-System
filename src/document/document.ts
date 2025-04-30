@@ -36,6 +36,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
                     key,
                     type: value.propertyType,
                     value: value.propertyValue,
+                    variant: value.propertyVariant,
                 },
             });
         }
@@ -204,6 +205,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
                     key,
                     type: value.propertyType,
                     value: value.propertyValue,
+                    variant: value.propertyVariant,
                 },
             });
         }
@@ -275,6 +277,7 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureBas
                     key,
                     type: value.propertyType,
                     value: value.propertyValue,
+                    variant: value.propertyVariant,
                 },
             });
         }
