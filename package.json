@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.7",
-    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-env": "^7.28.3",
     "@babel/preset-typescript": "^7.27.1",
     "@imbricate/core": "^3.32.0",
     "@imbricate/test-origin-jest": "^3.12.0",
