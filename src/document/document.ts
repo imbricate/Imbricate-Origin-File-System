@@ -10,6 +10,7 @@ import { draftImbricateProperties } from "../property/draft";
 import { instanceRecordToPropertyRecord, propertyRecordToInstanceRecord } from "../property/parse";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance, createImbricateFileSystemDocumentInstance } from "./definition";
+import { getDocumentDocumentAction } from "./document-actions";
 
 export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureWithActionBase implements IImbricateDocument {
 
@@ -474,10 +475,15 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureWit
     }
 
     public async queryOriginActions(
-        query: ImbricateCommonQueryOriginActionsQuery,
+        _query: ImbricateCommonQueryOriginActionsQuery,
     ): Promise<ImbricateCommonQueryOriginActionsOutcome> {
 
-        throw new Error("Method not implemented.");
+        const actions = getDocumentDocumentAction();
+
+        return {
+            actions,
+            count: actions.length,
+        };
     }
 
     public async executeOriginAction(
