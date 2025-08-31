@@ -4,12 +4,13 @@
  * @description Document
  */
 
-import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, IImbricateDocument, IImbricateProperty, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureWithActionBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentGetPropertiesOutcome, ImbricateDocumentGetPropertyOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricatePropertiesDrafter, ImbricatePropertyKey, ImbricatePropertyRecord, S_Document_AddEditRecords_Unknown, S_Document_DeleteAnnotation_Unknown, S_Document_PutAnnotation_Unknown, S_Document_PutProperty_InvalidValue, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
+import { DocumentAnnotationValue, DocumentAnnotations, DocumentEditOperation, DocumentEditRecord, IImbricateDocument, IImbricateProperty, IMBRICATE_DOCUMENT_EDIT_TYPE, IMBRICATE_ORIGIN_ACTION_RESULT_STATUS, IMBRICATE_PROPERTY_TYPE, ImbricateAuthor, ImbricateCommonQueryOriginActionsOutcome, ImbricateCommonQueryOriginActionsQuery, ImbricateDatabaseSchema, ImbricateDocumentAddEditRecordsOutcome, ImbricateDocumentAuditOptions, ImbricateDocumentDeleteAnnotationOutcome, ImbricateDocumentFullFeatureWithActionBase, ImbricateDocumentGetEditRecordsOutcome, ImbricateDocumentGetPropertiesOutcome, ImbricateDocumentGetPropertyOutcome, ImbricateDocumentPutAnnotationOutcome, ImbricateDocumentPutPropertyOutcome, ImbricateOriginActionInput, ImbricateOriginActionOutcome, ImbricatePropertiesDrafter, ImbricatePropertyKey, ImbricatePropertyRecord, S_Action_ActionNotFound, S_Document_AddEditRecords_Unknown, S_Document_DeleteAnnotation_Unknown, S_Document_PutAnnotation_Unknown, S_Document_PutProperty_InvalidValue, S_Document_PutProperty_Unknown, validateImbricateProperties } from "@imbricate/core";
 import { UUIDVersion1 } from "@sudoo/uuid";
 import { draftImbricateProperties } from "../property/draft";
 import { instanceRecordToPropertyRecord, propertyRecordToInstanceRecord } from "../property/parse";
 import { getDocumentByUniqueIdentifier, putDocument } from "./action";
 import { ImbricateFileSystemDocumentInstance, createImbricateFileSystemDocumentInstance } from "./definition";
+import { GET_DOCUMENT_PATH_ORIGIN_ACTION_IDENTIFIER, documentExecuteGetDocumentPathOriginAction } from "./document-action/get-document-path";
 import { getDocumentDocumentAction } from "./document-actions";
 
 export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureWithActionBase implements IImbricateDocument {
@@ -490,6 +491,25 @@ export class ImbricateFileSystemDocument extends ImbricateDocumentFullFeatureWit
         input: ImbricateOriginActionInput,
     ): Promise<ImbricateOriginActionOutcome> {
 
-        throw new Error("Method not implemented.");
+        switch (input.actionIdentifier) {
+
+            case GET_DOCUMENT_PATH_ORIGIN_ACTION_IDENTIFIER: {
+
+                return {
+                    response: IMBRICATE_ORIGIN_ACTION_RESULT_STATUS.SUCCESS,
+                    outputs: [
+                        documentExecuteGetDocumentPathOriginAction(
+                            this._basePath,
+                            this._databaseUniqueIdentifier,
+                            this._documentUniqueIdentifier,
+                            input.parameters,
+                        ),
+                    ],
+                    references: [],
+                };
+            }
+        }
+
+        return S_Action_ActionNotFound;
     }
 }
